@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import StudentHome from "./pages/student/StudentHome";
 import StudentAnnonce from "./pages/student/StudentAnnonce";
+import StudentTest from "./pages/student/StudentTest";
 
 function App() {
   return (
@@ -25,6 +26,10 @@ function App() {
           <Route path="/student/announce" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <StudentAnnonce />
+          </Suspense>} />
+          <Route path="/student/test" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <StudentTest />
           </Suspense>} />
       </Routes>
   )

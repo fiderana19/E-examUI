@@ -1,5 +1,6 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Input } from "@/components/ui/input";
+import { CloseOutlined } from "@ant-design/icons";
 import React from "react";
 
 const StudentAnnonce: React.FC  = () => {
@@ -10,6 +11,10 @@ const StudentAnnonce: React.FC  = () => {
             <div className="flex justify-between">
                 <div className="text-gray-800 text-3xl font-medium mb-10">Les annonces</div>
                 <Input className="w-60" placeholder="Fitrer..." />
+            </div>
+            <div className="w-max mx-auto text-center text-gray-600">
+                <CloseOutlined className="text-7xl" />
+                <div className="mt-4 text-xl">Aucune annonce pour l'instant.</div>
             </div>
             <div className="">
                 <div className="mb-2">
