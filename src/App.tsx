@@ -4,6 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import StudentHome from "./pages/student/StudentHome";
+import StudentAnnonce from "./pages/student/StudentAnnonce";
 
 function App() {
   return (
@@ -20,6 +21,10 @@ function App() {
           <Route path="/student/home" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <StudentHome />
+          </Suspense>} />
+          <Route path="/student/announce" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <StudentAnnonce />
           </Suspense>} />
       </Routes>
   )
