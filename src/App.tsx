@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import StudentHome from "./pages/student/StudentHome";
 
 function App() {
   return (
@@ -15,6 +16,10 @@ function App() {
           <Route path="/signup" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <SignupPage />
+          </Suspense>} />
+          <Route path="/student/home" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <StudentHome />
           </Suspense>} />
       </Routes>
   )
