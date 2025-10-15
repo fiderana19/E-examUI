@@ -3,20 +3,70 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescript
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CloseOutlined } from "@ant-design/icons";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { AnnounceAddInterface } from "@/interfaces/announce.interface";
+import { AddAnnounceValidation } from "@/validation/announce.validation";
+import { CloseOutlined, NotificationOutlined } from "@ant-design/icons";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit, Plus, Trash } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const TeacherAnnounce: React.FC  = () => {
+    const navigate = useNavigate();
+    const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<AnnounceAddInterface>({
+        resolver: yupResolver(AddAnnounceValidation)
+    })
+
+    useEffect(() => {
+        setValue('date_creation', '')
+        setValue('id_createur', '')
+    }, [])
+
+    const handleSubmit = async (data: AnnounceAddInterface) => {
+        console.log(data);
+    }
 
     return <div className="pl-64 pr-6">
         <TeacherNavigation />
         <div className="my-6">
             <div className="flex justify-between items-center">
-                <div className="text-gray-800 text-3xl font-medium mb-10">Vos annonces</div>
+                <div className="text-gray-800 text-3xl font-medium mb-10"><NotificationOutlined /> Vos annonces</div>
                 <div className="flex gap-2 items-center">
                     <Input className="w-60" placeholder="Fitrer..." />
-                    <Button><Plus /> Nouvelle annonce</Button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                        <Button><Plus /> Nouvelle annonce</Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto mr-6">
+                        <div className="mb-2 text-gray-700 font-medium">Nouvelle annonce</div>
+                    <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
+                        <Label className="mb-1">Groupe :</Label>
+                        <Controller
+                            control={control}
+                            name="id_groupe"
+                            render={({ field: { value, onChange } }) => (
+                                <Input value={value} onChange={onChange} className={`${errors?.id_groupe && 'border border-red-500 text-red-500 rounded'}`} />
+                            )}
+                        />
+                        { errors?.id_groupe && <div className="text-xs w-full text-red-500 text-left">{ errors?.id_groupe.message }</div> }
+                        <Label className="mb-1 mt-4">Description :</Label>
+                        <Controller
+                            control={control}
+                            name="texte_annonce"
+                            render={({ field: { value, onChange } }) => (
+                                <Input value={value} onChange={onChange} className={`${errors?.texte_annonce && 'border border-red-500 text-red-500 rounded'}`} />
+                            )}
+                        />
+                        { errors?.texte_annonce && <div className="text-xs w-full text-red-500 text-left">{ errors?.texte_annonce.message }</div> }
+                        <div className="flex justify-center mt-4">
+                            <Button type="submit"><NotificationOutlined /> Annoncer</Button>
+                        </div>
+                    </form>
+                    </PopoverContent>
+                  </Popover>  
                 </div>
             </div>
             <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
@@ -35,7 +85,7 @@ const TeacherAnnounce: React.FC  = () => {
                             Bonne chance !
                         </blockquote>
                         <div className="flex justify-end mt-2 gap-2">
-                            <Button><Edit /> Modifier</Button>
+                            <Button onClick={() => navigate("/teacher/announce/edit")} ><Edit /> Modifier</Button>
                             <AlertDialog>
                                 <AlertDialogTrigger>
                                     <Button variant={'destructive'}><Trash /> Supprimer</Button>
