@@ -1,43 +1,36 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
+import ClokcTest from "@/components/Test/ClockTest";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TOAST_TYPE } from "@/constants/ToastType";
-import { formatTestTotalSecondTime } from "@/utils/TestRoomUtils";
+import { useTest } from "@/context/TestContext";
 import { showToast } from "@/utils/Toast";
-import { ClockCircleOutlined, LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { AlertTriangleIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, {  } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TestRoom: React.FC  = () => {
-    const initialSeconds = 0.3 * 60;
-    const [tempsRestant, setTempsRestant] = useState(initialSeconds);
-    const [isFinished, setIsFinished] = useState<boolean>(false);
+    const { updateIsInTest, isFinished, updateIsFinished } = useTest();
+    const navigate = useNavigate();
 
-    const q1 = "courte";
-    const q2 = "dev";
-    const q3 = "qcm";
-
-     useEffect(() => {
-        if (tempsRestant <= 0) {
-            onTimeUp();
-            return;
-        }
-
-        const intervalID = setInterval(() => {
-            setTempsRestant(prevTime => prevTime - 1);
-        }, 1000);
-
-        return () => clearInterval(intervalID);
-    }, [tempsRestant]);
+    let q1 = "courte";
+    let q2 = "dev";
+    let q3 = "qcm";
 
     const onTimeUp = () => {
-        setIsFinished(true)
+        updateIsFinished(true)
         showToast({
             type: TOAST_TYPE.ERROR,
             message: "Soumission automatique des reponses suite au temps ecoulé !"
         })
+    }
+
+    const finishTest = () => {
+        updateIsInTest(false);
+        navigate("/student/home")
     }
 
     return <div>
@@ -56,9 +49,7 @@ const TestRoom: React.FC  = () => {
         <div className="fixed pt-14 w-full px-[12%]">
             <div className="shadow p-4 bg-white flex justify-between items-center">
                 <div className="font-bold text-lg">Test de HTML</div>
-                    <div className={`${tempsRestant < 11 ? "bg-red-500 animate-pulse" : "bg-gray-400"} border rounded-full py-1 px-3 bg-gray-400 text-white font-bold`}>
-                        <ClockCircleOutlined /> {formatTestTotalSecondTime(tempsRestant)}
-                    </div>
+                    <ClokcTest afterTimeOver={onTimeUp} />
                     <div className="font-bold text-gray-800">Mr Andry</div>
                 </div>
             </div>
@@ -165,7 +156,7 @@ const TestRoom: React.FC  = () => {
                     </Card>
                 </div>
                 <div className="flex justify-center mt-4">
-                    <Button>Soumettre</Button>
+                    <Button onClick={() => finishTest()}>Soumettre</Button>
                 </div>
             </div>
         </div>

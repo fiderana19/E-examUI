@@ -4,13 +4,21 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
+import { useTest } from "@/context/TestContext";
 
 const StudentNavigation: React.FC = () => {
+    const { isInTest } = useTest();
     const location = useLocation();
     const navigate = useNavigate();
 
     return(
         <div className="z-40 fixed w-full px-4 top-0 left-0 flex justify-between items-center bg-second-custom text-center">
+            {
+                isInTest && (location.pathname === "/student/test/room") &&
+                <div className="z-50 fixed w-full opacity-5 h-16 px-4 top-0 left-0 flex justify-between items-center bg-red-500 text-center">
+
+                </div>
+            }
             <Link  to="/student/home" className="font-extrabold">E-exam</Link>
             <div className="flex gap-8 items-center font-medium ">
                 <Link to="/student/home" className={`${(location.pathname === "/student/home") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Accueil</Link>

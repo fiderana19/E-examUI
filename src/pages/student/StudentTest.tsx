@@ -1,11 +1,21 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Button } from "@/components/ui/button";
+import { useTest } from "@/context/TestContext";
 import { ClockCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentTest: React.FC  = () => {
+    const { updateIsInTest, updateSecondsLeft, updateIsFinished } = useTest();
+    const initial = 0.2 *60;
     const navigate = useNavigate();
+
+    const test = () => {
+        updateIsFinished(false);
+        updateIsInTest(true);
+        updateSecondsLeft(initial + 2);
+        navigate("/student/test/room")
+    }
 
     return <div className="pt-20 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />
@@ -30,7 +40,7 @@ const StudentTest: React.FC  = () => {
                         <div className="text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. A, expedita quidem non sint esse perferendis ex exercitationem molestias cum</div>
                     </div>
                     <div className="flex justify-end">
-                        <Button onClick={() => navigate("/student/test/room")} >Faire le test</Button>
+                        <Button onClick={() => test()} >Faire le test</Button>
                     </div>
                 </div>
             </div>
