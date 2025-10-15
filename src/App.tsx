@@ -8,6 +8,7 @@ import StudentAnnonce from "./pages/student/StudentAnnonce";
 import StudentTest from "./pages/student/StudentTest";
 import StudentProfile from "./pages/student/StudentProfile";
 import StudentResult from "./pages/student/StudentResult";
+import TestRoom from "./pages/student/ExamenSpace/TestRoom";
 
 function App() {
   return (
@@ -40,6 +41,10 @@ function App() {
           <Route path="/student/result" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <StudentResult />
+          </Suspense>} />
+          <Route path="/student/test/room" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TestRoom />
           </Suspense>} />
       </Routes>
   )

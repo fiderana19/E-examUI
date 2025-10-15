@@ -10,8 +10,8 @@ const StudentNavigation: React.FC = () => {
     const navigate = useNavigate();
 
     return(
-        <div className="z-50 fixed w-full px-4 top-0 left-0 flex justify-between items-center bg-second-custom text-center">
-            <Link to="/student/home" className="font-extrabold">E-exam</Link>
+        <div className="z-40 fixed w-full px-4 top-0 left-0 flex justify-between items-center bg-second-custom text-center">
+            <Link  to="/student/home" className="font-extrabold">E-exam</Link>
             <div className="flex gap-8 items-center font-medium ">
                 <Link to="/student/home" className={`${(location.pathname === "/student/home") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Accueil</Link>
                 <Link to="/student/announce" className={`${(location.pathname === "/student/announce") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Annonce</Link>
