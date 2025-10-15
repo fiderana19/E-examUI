@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -10,6 +10,8 @@ import StudentProfile from "./pages/student/StudentProfile";
 import StudentResult from "./pages/student/StudentResult";
 import TestRoom from "./pages/student/ExamenSpace/TestRoom";
 import AdminHome from "./pages/admin/AdminHome";
+import AdminGroupe from "./pages/admin/AdminGroupe";
+import AdminGroupeEdit from "./pages/admin/groupe/AdminGroupeAdd";
 
 function App() {
   return (
@@ -50,6 +52,14 @@ function App() {
           <Route path="/admin/home" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <AdminHome />
+          </Suspense>} />
+          <Route path="/admin/groupe" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminGroupe />
+          </Suspense>} />
+          <Route path="/admin/groupe/edit" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminGroupeEdit />
           </Suspense>} />
       </Routes>
   )

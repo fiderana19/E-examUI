@@ -13,7 +13,7 @@ const AdminNavigation: React.FC = () => {
                 <Link to="/admin/home">
                     <Button className="w-full" variant={'secondary'}><HomeOutlined /> Accueil</Button>
                 </Link>
-                <Link to="/admin/home">
+                <Link to="/admin/groupe">
                     <Button className="w-full" variant={'ghost'}><BookOutlined /> Groupe</Button>
                 </Link>
                 <Link to="/admin/home">
