@@ -11,7 +11,7 @@ import StudentResult from "./pages/student/StudentResult";
 import TestRoom from "./pages/student/ExamenSpace/TestRoom";
 import AdminHome from "./pages/admin/AdminHome";
 import AdminGroupe from "./pages/admin/AdminGroupe";
-import AdminGroupeEdit from "./pages/admin/groupe/AdminGroupeAdd";
+import AdminGroupeEdit from "./pages/admin/groupe/AdminGroupeEdit";
 
 function App() {
   return (
