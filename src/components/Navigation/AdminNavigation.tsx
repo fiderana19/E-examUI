@@ -9,7 +9,7 @@ const AdminNavigation: React.FC = () => {
 
     return(
         <div className="z-50 w-60 fixed top-0 left-0 p-4 flex flex-col justify-between h-screen bg-second-custom">
-            <Link  to="/student/home" className="font-extrabold text-center">E-exam</Link>
+            <Link  to="/admin/home" className="font-extrabold text-center">E-exam</Link>
             <div className="flex flex-col gap-2 font-medium w-full">
                 <Link to="/admin/home">
                     <Button className="w-full" variant={location.pathname === "/admin/home" ? 'secondary' : 'ghost'}><HomeOutlined /> Accueil</Button>

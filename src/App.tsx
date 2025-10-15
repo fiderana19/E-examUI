@@ -13,6 +13,7 @@ import AdminHome from "./pages/admin/AdminHome";
 import AdminGroupe from "./pages/admin/AdminGroupe";
 import AdminGroupeEdit from "./pages/admin/groupe/AdminGroupeEdit";
 import AdminAccount from "./pages/admin/AdminAccount";
+import TeacherHome from "./pages/teacher/TeacherHome";
 
 function App() {
   return (
@@ -65,6 +66,10 @@ function App() {
           <Route path="/admin/account" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <AdminAccount />
+          </Suspense>} />
+          <Route path="/teacher/home" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherHome />
           </Suspense>} />
       </Routes>
   )
