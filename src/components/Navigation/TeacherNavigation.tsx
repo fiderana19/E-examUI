@@ -14,11 +14,8 @@ const TeacherNavigation: React.FC = () => {
                 <Link to="/teacher/home">
                     <Button className="w-full" variant={location.pathname === "/teacher/home" ? 'secondary' : 'ghost'}><HomeOutlined /> Accueil</Button>
                 </Link>
-                <Link to="/admin/groupe">
-                    <Button className="w-full" variant={location.pathname === "/admin/groupe" ? 'secondary' : 'ghost'}><NotificationOutlined /> Annonce</Button>
-                </Link>
-                <Link to="/admin/account">
-                    <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><FileQuestion /> Question</Button>
+                <Link to="/teacher/announce">
+                    <Button className="w-full" variant={location.pathname === "/teacher/announce" ? 'secondary' : 'ghost'}><NotificationOutlined /> Annonce</Button>
                 </Link>
                 <Link to="/admin/account">
                     <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><CalendarClock /> Test</Button>
