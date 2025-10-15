@@ -8,4 +8,5 @@ export interface SignupInterface {
     matricule: string;
     email: string;
     motdepasse: string;
+    groupe: string;
 }

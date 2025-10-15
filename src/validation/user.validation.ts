@@ -10,4 +10,5 @@ export const SignupValidation = yup.object({
     motdepasse: yup.string().min(6, "Le mot de passe doit contenir au moins 6 caractères !").required("Mot de passe requis !"),
     nom: yup.string().required("Le champ nom requis !"),
     matricule: yup.string().required("Matricule requis !"),
+    groupe: yup.string().required("Veuillez selectionner un groupe !"),
 })

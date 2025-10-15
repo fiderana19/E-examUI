@@ -42,6 +42,15 @@ const SignupPage: React.FC  = () => {
                         )}
                     />
                     { errors?.matricule && <div className="text-xs w-full text-red-500 text-left">{ errors?.matricule.message }</div> }
+                    <Label className="mb-1 mt-4">Groupe :</Label>
+                    <Controller
+                        control={control}
+                        name="groupe"
+                        render={({ field: { value, onChange } }) => (
+                            <Input value={value} onChange={onChange} className={`${errors?.groupe && 'border border-red-500 text-red-500 rounded'}`} />
+                        )}
+                    />
+                    { errors?.groupe && <div className="text-xs w-full text-red-500 text-left">{ errors?.groupe.message }</div> }
                     <Label className="mb-1 mt-4">Adresse mail :</Label>
                     <Controller
                         control={control}
