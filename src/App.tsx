@@ -9,6 +9,7 @@ import StudentTest from "./pages/student/StudentTest";
 import StudentProfile from "./pages/student/StudentProfile";
 import StudentResult from "./pages/student/StudentResult";
 import TestRoom from "./pages/student/ExamenSpace/TestRoom";
+import AdminHome from "./pages/admin/AdminHome";
 
 function App() {
   return (
@@ -45,6 +46,10 @@ function App() {
           <Route path="/student/test/room" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <TestRoom />
+          </Suspense>} />
+          <Route path="/admin/home" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminHome />
           </Suspense>} />
       </Routes>
   )
