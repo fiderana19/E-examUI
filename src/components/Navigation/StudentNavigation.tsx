@@ -16,7 +16,7 @@ const StudentNavigation: React.FC = () => {
                 <Link to="/student/home" className={`${(location.pathname === "/student/home") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Accueil</Link>
                 <Link to="/student/announce" className={`${(location.pathname === "/student/announce") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Annonce</Link>
                 <Link to="/student/test" className={`${(location.pathname === "/student/test") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Test</Link>
-                <Link to="/student/" className={`${(location.pathname === "/student/") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Resultat</Link>
+                <Link to="/student/result" className={`${(location.pathname === "/student/result") ? "border-b-white text-white" : "border-b-transparent" } hover:border-b-white hover:text-white border-b-4 py-4 transition-all duration-300`}>Resultat</Link>
             </div>
             <Popover>
                 <PopoverTrigger asChild>

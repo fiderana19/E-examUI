@@ -7,6 +7,7 @@ import StudentHome from "./pages/student/StudentHome";
 import StudentAnnonce from "./pages/student/StudentAnnonce";
 import StudentTest from "./pages/student/StudentTest";
 import StudentProfile from "./pages/student/StudentProfile";
+import StudentResult from "./pages/student/StudentResult";
 
 function App() {
   return (
@@ -35,6 +36,10 @@ function App() {
           <Route path="/student/profile" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <StudentProfile />
+          </Suspense>} />
+          <Route path="/student/result" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <StudentResult />
           </Suspense>} />
       </Routes>
   )
