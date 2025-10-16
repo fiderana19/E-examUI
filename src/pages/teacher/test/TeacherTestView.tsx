@@ -1,4 +1,5 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -126,8 +127,24 @@ const TeacherTestView: React.FC  = () => {
                                 <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
                                 <div className="flex justify-end gap-2 items-center">
                                     <Button onClick={() => navigate("/teacher/qcm")} variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
-                                    <Button variant={'secondary'}><EditOutlined/> Modifier</Button>
-                                    <Button variant={'destructive'}><Trash/> Supprimer</Button>
+                                    <Button onClick={() => navigate("/teacher/question/edit")} variant={'secondary'}><EditOutlined/> Modifier</Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger>
+                                            <Button variant={'destructive'}><Trash/> Supprimer</Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Suppression d'une question</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                            Voulez-vous vraiment supprimer cette question ?
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                            <Button variant={'destructive'}>Supprimer</Button>
+                                        </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                             </div>
                         </Card>
