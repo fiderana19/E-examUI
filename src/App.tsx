@@ -23,6 +23,8 @@ import TeacherTestView from "./pages/teacher/test/TeacherTestView";
 import TeacherQCMView from "./pages/teacher/test/TeacherQCMView";
 import TeacherQuestionEdit from "./pages/teacher/test/TeacherQuestionEdit";
 import TeacherCorrection from "./pages/teacher/TeacherCorrection";
+import TeacherCorrectionView from "./pages/teacher/correction/TeacherCorrectionView";
+import TeacherCorrectionAction from "./pages/teacher/correction/TeacherCorrectionAction";
 
 function App() {
   return (
@@ -115,6 +117,14 @@ function App() {
           <Route path="/teacher/correction" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <TeacherCorrection />
+          </Suspense>} />
+          <Route path="/teacher/correction/view" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherCorrectionView />
+          </Suspense>} />
+          <Route path="/teacher/correction/action" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherCorrectionAction />
           </Suspense>} />
       </Routes>
   )

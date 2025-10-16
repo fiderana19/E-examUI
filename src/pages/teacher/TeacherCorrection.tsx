@@ -44,7 +44,7 @@ const TeacherCorrection: React.FC  = () => {
                     </div>
                     <div className="flex justify-between my-1">
                         <div className="font-bold text-gray-800">Feuille(s) à corriger : 20</div>
-                        <Button variant={'secondary'}><Edit /> Corriger</Button>
+                        <Button onClick={() => navigate("/teacher/correction/view")} variant={'secondary'}><Edit /> Corriger</Button>
                     </div>
                 </div>
                 <div className="shadow px-4 py-2 bg-white my-2">
