@@ -16,6 +16,7 @@ import AdminAccount from "./pages/admin/AdminAccount";
 import TeacherHome from "./pages/teacher/TeacherHome";
 import TeacherAnnounce from "./pages/teacher/TeacherAnnounce";
 import TeacherAnnounceEdit from "./pages/teacher/annonce/TeacherAnnonceEdit";
+import TeacherTest from "./pages/teacher/TeacherTest";
 
 function App() {
   return (
@@ -80,6 +81,10 @@ function App() {
           <Route path="/teacher/announce/edit" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <TeacherAnnounceEdit />
+          </Suspense>} />
+          <Route path="/teacher/test" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherTest />
           </Suspense>} />
       </Routes>
   )

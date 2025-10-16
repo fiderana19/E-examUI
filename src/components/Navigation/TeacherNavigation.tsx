@@ -1,8 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
-import { CalendarClock, Edit, FileQuestion, LogOut, User } from "lucide-react";
-import { AlertOutlined, BookOutlined, HomeOutlined, NotificationOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { CalendarClock, Edit, LogOut, User } from "lucide-react";
+import { HomeOutlined, NotificationOutlined } from "@ant-design/icons";
 
 const TeacherNavigation: React.FC = () => {
     const location = useLocation();
@@ -17,8 +17,8 @@ const TeacherNavigation: React.FC = () => {
                 <Link to="/teacher/announce">
                     <Button className="w-full" variant={location.pathname === "/teacher/announce" ? 'secondary' : 'ghost'}><NotificationOutlined /> Annonce</Button>
                 </Link>
-                <Link to="/admin/account">
-                    <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><CalendarClock /> Test</Button>
+                <Link to="/teacher/test">
+                    <Button className="w-full" variant={location.pathname === "/teacher/test" ? 'secondary' : 'ghost'}><CalendarClock /> Test</Button>
                 </Link>
                 <Link to="/admin/account">
                     <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><Edit /> Correction</Button>
