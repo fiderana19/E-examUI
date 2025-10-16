@@ -125,7 +125,7 @@ const TeacherTestView: React.FC  = () => {
                                 <div className="font-semibold">Question : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque alias, tempora modi exercitationem voluptas eaque</div>
                                 <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
                                 <div className="flex justify-end gap-2 items-center">
-                                    <Button variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
+                                    <Button onClick={() => navigate("/teacher/qcm")} variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
                                     <Button variant={'secondary'}><EditOutlined/> Modifier</Button>
                                     <Button variant={'destructive'}><Trash/> Supprimer</Button>
                                 </div>

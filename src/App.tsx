@@ -20,6 +20,7 @@ import TeacherTest from "./pages/teacher/TeacherTest";
 import TeacherTestAdd from "./pages/teacher/test/TeacherTestAdd";
 import TeacherTestEdit from "./pages/teacher/test/TeacherTestEdit";
 import TeacherTestView from "./pages/teacher/test/TeacherTestView";
+import TeacherQCMView from "./pages/teacher/test/TeacherQCMView";
 
 function App() {
   return (
@@ -100,6 +101,10 @@ function App() {
           <Route path="/teacher/test/view" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <TeacherTestView />
+          </Suspense>} />
+          <Route path="/teacher/qcm" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherQCMView />
           </Suspense>} />
       </Routes>
   )
