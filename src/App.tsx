@@ -17,6 +17,7 @@ import TeacherHome from "./pages/teacher/TeacherHome";
 import TeacherAnnounce from "./pages/teacher/TeacherAnnounce";
 import TeacherAnnounceEdit from "./pages/teacher/annonce/TeacherAnnonceEdit";
 import TeacherTest from "./pages/teacher/TeacherTest";
+import TeacherTestAdd from "./pages/teacher/test/TeacherTestAdd";
 
 function App() {
   return (
@@ -85,6 +86,10 @@ function App() {
           <Route path="/teacher/test" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <TeacherTest />
+          </Suspense>} />
+          <Route path="/teacher/test/create" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherTestAdd />
           </Suspense>} />
       </Routes>
   )
