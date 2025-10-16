@@ -20,8 +20,8 @@ const TeacherNavigation: React.FC = () => {
                 <Link to="/teacher/test">
                     <Button className="w-full" variant={location.pathname === "/teacher/test" ? 'secondary' : 'ghost'}><CalendarClock /> Test</Button>
                 </Link>
-                <Link to="/admin/account">
-                    <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><Edit /> Correction</Button>
+                <Link to="/teacher/correction">
+                    <Button className="w-full" variant={location.pathname === "/teacher/correction" ? 'secondary' : 'ghost'}><Edit /> Correction</Button>
                 </Link>
             </div>
             <div className="w-52 flex flex-col gap-2">
