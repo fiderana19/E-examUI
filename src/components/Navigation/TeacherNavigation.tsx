@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
-import { CalendarClock, Edit, LogOut, User } from "lucide-react";
+import { BookText, CalendarClock, Edit, LogOut, User } from "lucide-react";
 import { HomeOutlined, NotificationOutlined } from "@ant-design/icons";
 
 const TeacherNavigation: React.FC = () => {
@@ -22,6 +22,9 @@ const TeacherNavigation: React.FC = () => {
                 </Link>
                 <Link to="/teacher/correction">
                     <Button className="w-full" variant={location.pathname === "/teacher/correction" ? 'secondary' : 'ghost'}><Edit /> Correction</Button>
+                </Link>
+                <Link to="/teacher/result">
+                    <Button className="w-full" variant={location.pathname === "/teacher/result" ? 'secondary' : 'ghost'}><BookText /> Resultat</Button>
                 </Link>
             </div>
             <div className="w-52 flex flex-col gap-2">

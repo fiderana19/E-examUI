@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { GivePointsInterface } from "@/interfaces/response.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { GivePointsValidation } from "@/validation/response.validation";
-import { CloseOutlined, HourglassOutlined } from "@ant-design/icons";
+import { HourglassOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "lucide-react";
 import React, { useEffect } from "react";
