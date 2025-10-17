@@ -1,5 +1,6 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Button } from "@/components/ui/button";
+import { mock_tests } from "@/constants/mock";
 import { useTest } from "@/context/TestContext";
 import { ClockCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import React from "react";
@@ -26,23 +27,27 @@ const StudentTest: React.FC  = () => {
                 <div className="mt-4 text-xl">Aucun test disponible.</div>
             </div>
             <div className="">
-                <div className="shadow p-4 bg-white">
-                    <div className="mb-4">
-                        <div className="flex justify-between">
-                            <div className="flex gap-4">
-                                <div className="font-bold text-lg">Test de HTML</div>
-                                <div className="border rounded-full px-2 bg-gray-400 text-white">
-                                    <ClockCircleOutlined /> 45:00
+                {
+                    mock_tests.slice(0,1).map((test: any, index: any) => {
+                        return <div key={index} className="shadow p-4 bg-white">
+                            <div className="mb-4">
+                                <div className="flex justify-between">
+                                    <div className="flex gap-4">
+                                        <div className="font-bold text-lg"> { test.titre } </div>
+                                        <div className="border rounded-full px-2 bg-gray-400 text-white">
+                                            <ClockCircleOutlined /> { test.duree_minutes }:00
+                                        </div>
+                                    </div>
+                                    <div className="font-bold text-gray-800"> { test.id_utilisateur } </div>
                                 </div>
+                                <div className="text-gray-700"> { test.description } </div>
                             </div>
-                            <div className="font-bold text-gray-800">Mr Andry</div>
+                            <div className="flex justify-end">
+                                <Button onClick={() => test()} >Faire le test</Button>
+                            </div>
                         </div>
-                        <div className="text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. A, expedita quidem non sint esse perferendis ex exercitationem molestias cum</div>
-                    </div>
-                    <div className="flex justify-end">
-                        <Button onClick={() => test()} >Faire le test</Button>
-                    </div>
-                </div>
+                    }) 
+                }
             </div>
         </div>
     </div>

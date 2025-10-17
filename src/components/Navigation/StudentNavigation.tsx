@@ -5,9 +5,11 @@ import { Button } from "../ui/button";
 import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import { useTest } from "@/context/TestContext";
+import { mock_utilisateurs } from "@/constants/mock";
 
 const StudentNavigation: React.FC = () => {
     const { isInTest } = useTest();
+    const user = mock_utilisateurs[0];
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -28,12 +30,15 @@ const StudentNavigation: React.FC = () => {
             </div>
             <Popover>
                 <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                >
-                    <UserOutlined />
-                    antsafider@gmail.com
-                </Button>
+                    {
+                    user &&
+                    <Button
+                        variant={"outline"}
+                    >
+                        <UserOutlined />
+                        { user.email }
+                    </Button>
+                    }
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-4 mr-4">
                     <div className="mb-2 text-gray-700 font-medium">Menu</div>

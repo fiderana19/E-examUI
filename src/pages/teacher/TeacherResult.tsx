@@ -1,5 +1,6 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Input } from "@/components/ui/input";
+import { mock_tests } from "@/constants/mock";
 import { CloseOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React from "react";
@@ -11,7 +12,7 @@ const TeacherResult: React.FC  = () => {
     return <div className="pl-64 pr-6">
         <TeacherNavigation />
         <div className="my-6">
-            <div className="flex justify-between items-center mb-10">
+            <div className="flex justify-between items-center mb-6">
                 <div className="text-gray-800 text-xl font-bold flex items-center gap-2"><BookText /> Les tests corrigés</div>
                 <Input className="w-48" placeholder="Filter..." />
             </div>
@@ -20,39 +21,21 @@ const TeacherResult: React.FC  = () => {
                 <div className="mt-4 text-xl">Vous avez aucune resultat</div>
             </div>
             <div className="">
-                <div onClick={() =>navigate("/teacher/result/view")} className="shadow p-4 bg-white my-2 cursor-pointer">
-                    <div className="flex justify-between">
-                        <div className="flex gap-4 text-lg">
-                            <div className="">Test de HTML du</div>
-                            <div className="text-gray-800 font-bold">
-                                2025-12-12
+                {
+                    mock_tests.map((test: any, index: any) => {
+                        return <div key={index} onClick={() =>navigate("/teacher/result/view")} className="shadow p-4 bg-white my-2 cursor-pointer">
+                            <div className="flex justify-between">
+                                <div className="flex gap-4 text-lg">
+                                    <div className=""> { test.titre } du</div>
+                                    <div className="text-gray-800 font-bold">
+                                        { test.date_declenchement }
+                                    </div>
+                                </div>
+                                <div className="font-bold text-gray-800"> { test.id_groupe } </div>
                             </div>
                         </div>
-                        <div className="font-bold text-gray-800">M1</div>
-                    </div>
-                </div>
-                <div className="shadow p-4 bg-white my-2 cursor-pointer">
-                    <div className="flex justify-between">
-                        <div className="flex gap-4 text-lg">
-                            <div className="">Test de HTML du</div>
-                            <div className="text-gray-800 font-bold">
-                                2025-12-12
-                            </div>
-                        </div>
-                        <div className="font-bold text-gray-800">M1</div>
-                    </div>
-                </div>
-                <div className="shadow p-4 bg-white my-2 cursor-pointer">
-                    <div className="flex justify-between">
-                        <div className="flex gap-4 text-lg">
-                            <div className="">Test de HTML du</div>
-                            <div className="text-gray-800 font-bold">
-                                2025-12-12
-                            </div>
-                        </div>
-                        <div className="font-bold text-gray-800">M1</div>
-                    </div>
-                </div>
+                    })
+                }
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { mock_questions, mock_tests } from "@/constants/mock";
 import { QuestionCreateInterface } from "@/interfaces/question.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { QuestionCreateValidation } from "@/validation/question.validation";
@@ -17,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherTestView: React.FC  = () => {
     const navigate = useNavigate();
+    const test = mock_tests[0];
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<QuestionCreateInterface>({
         resolver: yupResolver(QuestionCreateValidation)
     })
@@ -31,36 +33,45 @@ const TeacherTestView: React.FC  = () => {
     }
     return <div className="pl-64 pt-24 pr-6">
         <TeacherNavigation />
-                        <div className="shadow p-4 bg-white fixed top-0 right-0 w-[1110px]">
-                    <div className="">
-                        <div className="flex justify-between"> 
-                            <div className="flex gap-4">
-                                <div className="font-bold text-lg">Test de HTML</div>
-                                <div className="border rounded-full px-2 bg-gray-400 text-white">
-                                    <ClockCircleOutlined /> 45:00
-                                </div>
+        {
+            test &&
+            <div className="shadow p-4 bg-white fixed top-0 right-0 w-[1110px]">
+                <div className="">
+                    <div className="flex justify-between"> 
+                        <div className="flex gap-4">
+                            <div className="font-bold text-lg"> { test.titre } </div>
+                            <div className="border rounded-full px-2 bg-gray-400 text-white">
+                                <ClockCircleOutlined /> { test.duree_minutes }:00
                             </div>
-                            <div className="font-bold text-gray-800">M1</div>
+                        </div>
+                        <div className="font-bold text-gray-800"> { test.id_groupe } </div>
+                        {
+                            (test.status === "Terminé") ?
+                            <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
+                                <HourglassOutlined /> <div>Terminé</div>
+                            </div>                            
+                            :
+                            ((test.status === "En cours") ? 
+                            <div className="border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
+                                <HourglassOutlined /> <div>En cours</div>
+                            </div>                        
+                            :
                             <div className="border rounded-full px-2 bg-yellow-200 text-white flex items-center gap-2">
                                 <HourglassOutlined /> <div>En attente</div>
                             </div>
-                            <div className="border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                                <HourglassOutlined /> <div>En cours</div>
-                            </div>
-                            <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                                <HourglassOutlined /> <div>Terminé</div>
-                            </div>
-                        </div>
-                        <div className="flex justify-between my-1">
-                            <div className="flex gap-4">
-                                <div className="font-bold text-lg text-gray-600">2/20 questions</div>
-                            </div>
-                            <div className="font-bold text-gray-800">Note maximum : 20</div>
-                        </div>
-                        <div className="text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. A, expedita quidem non sint esse perferendis ex exercitationem molestias cum</div>
+                        )
+                        }
                     </div>
+                    <div className="flex justify-between my-1">
+                        <div className="flex gap-4">
+                            <div className="font-bold text-lg text-gray-600">{ test.max_questions } questions max</div>
+                        </div>
+                        <div className="font-bold text-gray-800">Note maximum : { test.note_max } </div>
+                    </div>
+                    <div className="text-gray-700"> { test.description } </div>
                 </div>
-
+            </div>
+        }
         <div className="my-6">
             <div className="">
                 <div className="px-10 py-4">
@@ -117,82 +128,42 @@ const TeacherTestView: React.FC  = () => {
                         </Popover>  
                     </div>
                     <div className="my-2">
-                        <Card className="mb-2 px-4">
-                            <div>
-                                <div className="flex justify-between">
-                                    <div className="text-gray-600">Type: QCM</div>
-                                    <div className="my-1 font-semibold">Note pour la question : 3 point(s)</div>
-                                </div>
-                                <div className="font-semibold">Question : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque alias, tempora modi exercitationem voluptas eaque</div>
-                                <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
-                                <div className="flex justify-end gap-2 items-center">
-                                    <Button onClick={() => navigate("/teacher/qcm")} variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
-                                    <Button onClick={() => navigate("/teacher/question/edit")} variant={'secondary'}><EditOutlined/> Modifier</Button>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger>
-                                            <Button variant={'destructive'}><Trash/> Supprimer</Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Suppression d'une question</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                            Voulez-vous vraiment supprimer cette question ?
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button variant={'destructive'}>Supprimer</Button>
-                                        </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </div>
-                            </div>
-                        </Card>
-                        <Card className="mb-2 px-4">
-                            <div>
-                                <div className="flex justify-between">
-                                    <div className="text-gray-600">Type: QCM</div>
-                                    <div className="my-1 font-semibold">Note pour la question : 3 point(s)</div>
-                                </div>
-                                <div className="font-semibold">Question : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque alias, tempora modi exercitationem voluptas eaque</div>
-                                <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
-                                <div className="flex justify-end gap-2 items-center">
-                                    <Button variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
-                                    <Button variant={'secondary'}><EditOutlined/> Modifier</Button>
-                                    <Button variant={'destructive'}><Trash/> Supprimer</Button>
-                                </div>
-                            </div>
-                        </Card>
-                        <Card className="mb-2 px-4">
-                            <div>
-                                <div className="flex justify-between">
-                                    <div className="text-gray-600">Type: QCM</div>
-                                    <div className="my-1 font-semibold">Note pour la question : 3 point(s)</div>
-                                </div>
-                                <div className="font-semibold">Question : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque alias, tempora modi exercitationem voluptas eaque</div>
-                                <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
-                                <div className="flex justify-end gap-2 items-center">
-                                    <Button variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
-                                    <Button variant={'secondary'}><EditOutlined/> Modifier</Button>
-                                    <Button variant={'destructive'}><Trash/> Supprimer</Button>
-                                </div>
-                            </div>
-                        </Card>
-                        <Card className="mb-2 px-4">
-                            <div>
-                                <div className="flex justify-between">
-                                    <div className="text-gray-600">Type: QCM</div>
-                                    <div className="my-1 font-semibold">Note pour la question : 3 point(s)</div>
-                                </div>
-                                <div className="font-semibold">Question : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque alias, tempora modi exercitationem voluptas eaque</div>
-                                <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
-                                <div className="flex justify-end gap-2 items-center">
-                                    <Button variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button>
-                                    <Button variant={'secondary'}><EditOutlined/> Modifier</Button>
-                                    <Button variant={'destructive'}><Trash/> Supprimer</Button>
-                                </div>
-                            </div>
-                        </Card>
+                        {
+                            mock_questions.map((question: any, index: any) => {
+                                return <Card key={index} className="mb-2 px-4">
+                                    <div>
+                                        <div className="flex justify-between">
+                                            <div className="text-gray-600">Type: { question.type_question }</div>
+                                            <div className="my-1 font-semibold">Note pour la question : { question.points } point(s)</div>
+                                        </div>
+                                        <div className="font-semibold">Question : { question.texte_question } </div>
+                                        <div className="text-gray-700">Reponse correcte : { question.reponse_correcte }</div>
+                                        <div className="flex justify-end gap-2 items-center">
+                                            { 
+                                                (question.type_question === "qcm") && <Button onClick={() => navigate("/teacher/qcm")} variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button> }
+                                            <Button onClick={() => navigate("/teacher/question/edit")} variant={'secondary'}><EditOutlined/> Modifier</Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger>
+                                                    <Button variant={'destructive'}><Trash/> Supprimer</Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Suppression d'une question</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                    Voulez-vous vraiment supprimer cette question ?
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                                    <Button variant={'destructive'}>Supprimer</Button>
+                                                </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
+                                    </div>
+                                </Card>
+                            })
+                        }
                     </div>
                 </div>
             </div>

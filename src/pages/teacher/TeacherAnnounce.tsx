@@ -5,9 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { mock_annonces } from "@/constants/mock";
 import { AnnounceAddInterface } from "@/interfaces/announce.interface";
 import { AddAnnounceValidation } from "@/validation/announce.validation";
-import { CloseOutlined, NotificationOutlined } from "@ant-design/icons";
+import { CloseOutlined, NotificationOutlined, NotificationTwoTone } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit, Plus, Trash } from "lucide-react";
 import React, { useEffect } from "react";
@@ -74,70 +75,41 @@ const TeacherAnnounce: React.FC  = () => {
                 <div className="mt-4 text-xl">Vous avez fait aucune annonce </div>
             </div>
             <div className="">
-                <Card className="mb-2">
-                    <div className="px-4">
-                        <div className="flex justify-between">
-                            <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                            <div className="font-medium">M1</div>
-                        </div>
-                        <blockquote className="border-l-2 pl-6 italic">
-                            Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                            Bonne chance !
-                        </blockquote>
-                        <div className="flex justify-end mt-2 gap-2">
-                            <Button onClick={() => navigate("/teacher/announce/edit")} ><Edit /> Modifier</Button>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    <Button variant={'destructive'}><Trash /> Supprimer</Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Suppression d'une annonce</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                    Voulez-vous vraiment supprimer l'annonce ?
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                    <Button variant={'destructive'}>Supprimer</Button>
-                                </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
-                    </div>
-                </Card>
-                <Card className="mb-2">
-                    <div className="px-4">
-                        <div className="flex justify-between">
-                            <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                            <div className="font-medium">M1</div>
-                        </div>
-                        <blockquote className="border-l-2 pl-6 italic">
-                            Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                            Bonne chance !
-                        </blockquote>
-                        <div className="flex justify-end mt-2 gap-2">
-                            <Button><Edit /> Modifier</Button>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    <Button variant={'destructive'}><Trash /> Supprimer</Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Suppression d'une annonce</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                    Voulez-vous vraiment supprimer l'annonce ?
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                    <Button variant={'destructive'}>Supprimer</Button>
-                                </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
-                    </div>
-                </Card>
+                {
+                    mock_annonces.map((announce: any, index: any) => {
+                        return <Card key={index} className="mb-2">
+                            <div className="px-4">
+                                <div className="flex justify-between">
+                                    <div className="text-xs text-gray-600 mb-1"> { announce.creation_annonce } </div>
+                                </div>
+                                <blockquote className="border-l-2 pl-6 italic">
+                                    <NotificationTwoTone /> { announce.titre_annonce } <br />
+                                    { announce.texte_annonce }
+                                </blockquote>
+                                <div className="flex justify-end mt-2 gap-2">
+                                    <Button onClick={() => navigate("/teacher/announce/edit")} ><Edit /> Modifier</Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger>
+                                            <Button variant={'destructive'}><Trash /> Supprimer</Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Suppression d'une annonce</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                            Voulez-vous vraiment supprimer l'annonce ?
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                            <Button variant={'destructive'}>Supprimer</Button>
+                                        </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </div>
+                        </Card>
+                    })
+                }
             </div>
         </div>
     </div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { mock_groupes } from "@/constants/mock";
 import { AddGroupInterface } from "@/interfaces/groupe.interface";
 import { AddGroupValidation } from "@/validation/group.validation";
 import { BookOutlined } from "@ant-design/icons";
@@ -74,32 +75,36 @@ const AdminGroupe: React.FC  = () => {
                   </tr>
                 </thead> 
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  <tr>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> d </td>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> f </td>
-                    <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
-                      <div className='flex justify-end gap-1'>
-                        <Button onClick={() => navigate("/admin/groupe/edit")} variant={'outline'} size={'icon'}><Edit2 /></Button>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button onClick={() => setSelectedGroup("ito")} variant={'destructive'} size={'icon'}><Trash /></Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Suppression du groupe</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer ce groupe ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'destructive'}>Supprimer</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </td>
-                  </tr>
+                  {
+                    mock_groupes.map((group: any, index: any) => {
+                      return <tr key={index}>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { group.nom_groupe } </td>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { group.description } </td>
+                        <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
+                          <div className='flex justify-end gap-1'>
+                            <Button onClick={() => navigate("/admin/groupe/edit")} variant={'outline'} size={'icon'}><Edit2 /></Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger>
+                                  <Button onClick={() => setSelectedGroup("ito")} variant={'destructive'} size={'icon'}><Trash /></Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Suppression du groupe</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                    Voulez-vous vraiment supprimer ce groupe ?
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                    <Button variant={'destructive'}>Supprimer</Button>
+                                </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </td>
+                      </tr>
+                    })
+                  }
                 </tbody>
             </table>
         </div>

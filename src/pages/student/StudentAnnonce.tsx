@@ -1,6 +1,7 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Input } from "@/components/ui/input";
-import { CloseOutlined } from "@ant-design/icons";
+import { mock_annonces } from "@/constants/mock";
+import { CloseOutlined, NotificationTwoTone } from "@ant-design/icons";
 import React from "react";
 
 const StudentAnnonce: React.FC  = () => {
@@ -17,86 +18,18 @@ const StudentAnnonce: React.FC  = () => {
                 <div className="mt-4 text-xl">Aucune annonce pour l'instant.</div>
             </div>
             <div className="">
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
-                <div className="mb-2">
-                    <div className="text-xs text-gray-600 mb-1">2025-10-17 16:00</div>
-                    <blockquote className="border-l-2 pl-6 italic">
-                        Un examen HTML de 45 minutes aura lieu ce samedi a 14h sur la plateforme.
-                        Bonne chance !
-                    </blockquote>
-                    <div className="text-right font-medium">Mr Andry</div>
-                </div>
+                {
+                    mock_annonces.map((announce: any, index: any) => {
+                        return <div key={index} className="mb-2">
+                            <div className="text-xs text-gray-600 mb-1"> { announce.creation_annonce } </div>
+                            <blockquote className="border-l-2 pl-6 italic">
+                                <NotificationTwoTone /> { announce.titre_annonce } <br />
+                                { announce.texte_annonce }
+                            </blockquote>
+                            <div className="text-right font-medium"> { announce.id_utilisateur } </div>
+                        </div>
+                    })
+                }
             </div>
         </div>
     </div>

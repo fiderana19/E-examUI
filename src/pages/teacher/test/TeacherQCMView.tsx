@@ -5,9 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { mock_optionsqcm, mock_questions } from "@/constants/mock";
 import { OptionCreateInterface } from "@/interfaces/option.interface";
 import { OptionAddValidation } from "@/validation/option.validation";
-import { QuestionCircleFilled, QuestionCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined, QuestionCircleFilled, QuestionCircleOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash } from "lucide-react";
 import React, { useEffect } from "react";
@@ -16,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherQCMView: React.FC  = () => {
     const navigate = useNavigate();
+    const question = mock_questions[0];
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<OptionCreateInterface>({
         resolver: yupResolver(OptionAddValidation)
     })
@@ -64,83 +66,52 @@ const TeacherQCMView: React.FC  = () => {
                         </Popover>  
                     </div>
                     <div className="my-2">
-                        <Card className="mb-2 px-4">
-                            <div>
-                                <div className="flex justify-between">
-                                    <div className="text-gray-600">Type: QCM</div>
-                                    <div className="my-1 font-semibold">Note pour la question : 3 point(s)</div>
+                        {
+                            question &&
+                            <Card className="mb-2 px-4">
+                                <div>
+                                    <div className="flex justify-between">
+                                        <div className="text-gray-600">Type: { question.type_question }</div>
+                                        <div className="my-1 font-semibold">Note pour la question : { question.points } point(s)</div>
+                                    </div>
+                                    <div className="font-semibold">Question : { question.texte_question } </div>
+                                    <div className="text-gray-700">Reponse correcte : { question.reponse_correcte }</div>
                                 </div>
-                                <div className="font-semibold">Question : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Atque alias, tempora modi exercitationem voluptas eaque</div>
-                                <div className="text-gray-700">Reponse correcte : Lorem ipsum, dolor sit amet consectetur</div>
-                            </div>
-                        </Card>
+                            </Card>
+                        }
                     </div>
                     <div className="px-10 my-4">
-                        <div className="flex items-center my-2 gap-4">
-                            <div className="text-green-500">
-                                <QuestionCircleOutlined />
-                            </div>
-                            <div>uvbujvhv</div>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    <Button size={'icon'} variant={'destructive'}><Trash /></Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Suppression d'une option</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                    Voulez-vous vraiment supprimer cette option ?
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                    <Button variant={'destructive'}>Supprimer</Button>
-                                </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
-                        <div className="flex items-center my-2 gap-4">
-                            <QuestionCircleOutlined />
-                            <div>uvbujvhv</div>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    <Button size={'icon'} variant={'destructive'}><Trash /></Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Suppression d'une option</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                    Voulez-vous vraiment supprimer cette option ?
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                    <Button variant={'destructive'}>Supprimer</Button>
-                                </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
-                        <div className="flex items-center my-2 gap-4">
-                            <QuestionCircleOutlined />
-                            <div>uvbujvhv</div>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    <Button size={'icon'} variant={'destructive'}><Trash /></Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Suppression d'une option</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                    Voulez-vous vraiment supprimer cette option ?
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                    <Button variant={'destructive'}>Supprimer</Button>
-                                </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
+                        {
+                            mock_optionsqcm.map((option: any, idex: any) => {
+                                return <div className="flex justify-between items-center my-2 gap-4">
+                                    <div className="flex gap-2">
+                                        <div className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}>
+                                            {
+                                                option.est_correcte ? <CheckCircleOutlined /> : <CloseCircleOutlined /> 
+                                            }
+                                        </div>
+                                        <div> { option.texte_option } </div>
+                                    </div>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger>
+                                            <Button size={'icon'} variant={'destructive'}><Trash /></Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Suppression d'une option</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                            Voulez-vous vraiment supprimer cette option ?
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                            <Button variant={'destructive'}>Supprimer</Button>
+                                        </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            })
+                        }                        
                     </div>
                 </div>
             </div>

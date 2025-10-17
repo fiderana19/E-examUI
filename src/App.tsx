@@ -1,6 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import { Suspense } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import StudentHome from "./pages/student/StudentHome";
@@ -32,135 +30,52 @@ import AdminHistory from "./pages/admin/AdminHistory";
 import AdminHistoryView from "./pages/admin/history/AdminHistoryView";
 import AdminResponseView from "./pages/admin/history/AdminResponseView";
 import AdminResult from "./pages/admin/AdminResult";
+import RoleBasedRoute from "./routes/RoleBasedRoute";
 
 function App() {
   return (
       <Routes>
         {/* Public routes */}
-        <Route index path="/" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <LoginPage />
-          </Suspense>} />
-          <Route path="/signup" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <SignupPage />
-          </Suspense>} />
-          <Route path="/student/home" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <StudentHome />
-          </Suspense>} />
-          <Route path="/student/announce" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <StudentAnnonce />
-          </Suspense>} />
-          <Route path="/student/test" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <StudentTest />
-          </Suspense>} />
-          <Route path="/student/profile" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <StudentProfile />
-          </Suspense>} />
-          <Route path="/student/result" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <StudentResult />
-          </Suspense>} />
-          <Route path="/student/test/room" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TestRoom />
-          </Suspense>} />
-          <Route path="/admin/home" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminHome />
-          </Suspense>} />
-          <Route path="/admin/groupe" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminGroupe />
-          </Suspense>} />
-          <Route path="/admin/history" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminHistory />
-          </Suspense>} />
-          <Route path="/admin/history/view" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminHistoryView />
-          </Suspense>} />
-          <Route path="/admin/result" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminResult />
-          </Suspense>} />
-          <Route path="/admin/response/view" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminResponseView />
-          </Suspense>} />
-          <Route path="/admin/groupe/edit" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminGroupeEdit />
-          </Suspense>} />
-          <Route path="/admin/account" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <AdminAccount />
-          </Suspense>} />
-          <Route path="/teacher/home" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherHome />
-          </Suspense>} />
-          <Route path="/teacher/announce" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherAnnounce />
-          </Suspense>} />
-          <Route path="/teacher/announce/edit" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherAnnounceEdit />
-          </Suspense>} />
-          <Route path="/teacher/test" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherTest />
-          </Suspense>} />
-          <Route path="/teacher/test/create" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherTestAdd />
-          </Suspense>} />
-          <Route path="/teacher/test/edit" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherTestEdit />
-          </Suspense>} />
-          <Route path="/teacher/test/view" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherTestView />
-          </Suspense>} />
-          <Route path="/teacher/qcm" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherQCMView />
-          </Suspense>} />
-          <Route path="/teacher/question/edit" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherQuestionEdit />
-          </Suspense>} />
-          <Route path="/teacher/correction" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherCorrection />
-          </Suspense>} />
-          <Route path="/teacher/correction/view" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherCorrectionView />
-          </Suspense>} />
-          <Route path="/teacher/correction/action" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherCorrectionAction />
-          </Suspense>} />
-          <Route path="/teacher/result" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherResult />
-          </Suspense>} />
-          <Route path="/teacher/result/view" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherResultView />
-          </Suspense>} />
-          <Route path="/teacher/profile" element={
-          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
-            <TeacherProfile />
-          </Suspense>} />
+        <Route index path="/" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        {/* Student route */}
+        <Route path="/student" element={<RoleBasedRoute allowedRoles={['student']} />} >
+          <Route path="home" element={<StudentHome />} />
+          <Route path="announce" element={<StudentAnnonce />} />
+          <Route path="test" element={<StudentTest />} />
+          <Route path="profile" element={<StudentProfile />} />
+          <Route path="result" element={<StudentResult />} />
+          <Route path="test/room" element={<TestRoom />} />
+        </Route>
+        {/* Admin route */}
+        <Route path="/admin" element={<RoleBasedRoute allowedRoles={['admin']} />} >
+          <Route path="home" element={<AdminHome />} />
+          <Route path="groupe" element={<AdminGroupe />} />
+          <Route path="history" element={<AdminHistory />} />
+          <Route path="history/view" element={<AdminHistoryView />} />
+          <Route path="result" element={<AdminResult />} />
+          <Route path="response/view" element={<AdminResponseView />} />
+          <Route path="groupe/edit" element={<AdminGroupeEdit />} />
+          <Route path="account" element={<AdminAccount />} />
+        </Route>
+        {/* Teacher route */}
+        <Route path="/teacher" element={<RoleBasedRoute allowedRoles={['teacher']} />} >
+          <Route path="home" element={<TeacherHome />} />
+          <Route path="announce" element={<TeacherAnnounce />} />
+          <Route path="announce/edit" element={<TeacherAnnounceEdit />} />
+          <Route path="test" element={ <TeacherTest />} />
+          <Route path="test/create" element={<TeacherTestAdd />} />
+          <Route path="test/edit" element={<TeacherTestEdit />} />
+          <Route path="test/view" element={<TeacherTestView />} />
+          <Route path="qcm" element={<TeacherQCMView />} />
+          <Route path="question/edit" element={<TeacherQuestionEdit />} />
+          <Route path="correction" element={<TeacherCorrection />} />
+          <Route path="correction/view" element={<TeacherCorrectionView />} />
+          <Route path="correction/action" element={<TeacherCorrectionAction />} />
+          <Route path="result" element={<TeacherResult />} />
+          <Route path="result/view" element={<TeacherResultView />} />
+          <Route path="profile" element={<TeacherProfile />} />
+        </Route>
       </Routes>
   )
 }

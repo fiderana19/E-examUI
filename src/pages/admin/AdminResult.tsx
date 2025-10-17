@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { mock_resultats } from "@/constants/mock";
 import { AddGroupInterface } from "@/interfaces/groupe.interface";
 import { PostCreateInterface } from "@/interfaces/post.interface";
 import { AddGroupValidation } from "@/validation/group.validation";
@@ -82,118 +83,38 @@ const AdminResult: React.FC  = () => {
             </div>
         </div>
         <div className="my-6">
-            <Card className="px-4 my-1">
-                <div>
-                    <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
-                    <div className="flex justify-between">
-                        <div className="font-medium">M1 | vuefnbv</div>
-                        <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
-                    </div>
-                    <div className='flex justify-end gap-1 mt-2'>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button variant={'destructive'}><Trash /> Supprimer</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Suppression de la publication d'un resultat</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer cette publication ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'destructive'}>Supprimer</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                </div>
-            </Card>
-            <Card className="px-4 my-1">
-                <div>
-                    <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
-                    <div className="flex justify-between">
-                        <div className="font-medium">M1 | vuefnbv</div>
-                        <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
-                    </div>
-                    <div className='flex justify-end gap-1 mt-2'>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button variant={'destructive'}><Trash /> Supprimer</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Suppression de la publication d'un resultat</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer cette publication ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'destructive'}>Supprimer</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                </div>
-            </Card>
-            <Card className="px-4 my-1">
-                <div>
-                    <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
-                    <div className="flex justify-between">
-                        <div className="font-medium">M1 | vuefnbv</div>
-                        <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
-                    </div>
-                    <div className='flex justify-end gap-1 mt-2'>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button variant={'destructive'}><Trash /> Supprimer</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Suppression de la publication d'un resultat</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer cette publication ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'destructive'}>Supprimer</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                </div>
-            </Card>
-            <Card className="px-4 my-1">
-                <div>
-                    <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
-                    <div className="flex justify-between">
-                        <div className="font-medium">M1 | vuefnbv</div>
-                        <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
-                    </div>
-                    <div className='flex justify-end gap-1 mt-2'>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button variant={'destructive'}><Trash /> Supprimer</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Suppression de la publication d'un resultat</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer cette publication ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'destructive'}>Supprimer</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
-                </div>
-            </Card>
+            {
+                mock_resultats.map((res: any, index:any) => {
+                    return <Card key={index} className="px-4 my-1">
+                        <div>
+                            <div className="text-xs text-gray-600">Publié le { res.date_publication }</div>
+                            <div className="flex justify-between">
+                                <div className="font-medium">{ res.id_groupe } | { res.titre_resultat } </div>
+                                <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" /> { res.fichier_resultat } </div>
+                            </div>
+                            <div className='flex justify-end gap-1 mt-2'>
+                                <AlertDialog>
+                                    <AlertDialogTrigger>
+                                    <Button variant={'destructive'}><Trash /> Supprimer</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Suppression de la publication d'un resultat</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                        Voulez-vous vraiment supprimer cette publication ?
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                        <Button variant={'destructive'}>Supprimer</Button>
+                                    </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        </div>
+                    </Card>
+                })
+            }
         </div>
     </div>
 }

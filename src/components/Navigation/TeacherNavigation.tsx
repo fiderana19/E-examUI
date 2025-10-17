@@ -3,9 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { BookText, CalendarClock, Edit, LogOut, User } from "lucide-react";
 import { HomeOutlined, NotificationOutlined } from "@ant-design/icons";
+import { mock_utilisateurs } from "@/constants/mock";
 
 const TeacherNavigation: React.FC = () => {
     const location = useLocation();
+    const user = mock_utilisateurs[0];
 
     return(
         <div className="z-50 w-60 fixed top-0 left-0 p-4 flex flex-col justify-between h-screen bg-second-custom">
@@ -29,7 +31,9 @@ const TeacherNavigation: React.FC = () => {
             </div>
             <div className="w-52 flex flex-col gap-2">
                 <Link to="/teacher/profile">
-                    <Button className="w-full" variant={location.pathname === "/teacher/profile" ? 'secondary' : 'ghost'}><User /> antsafider@gmail.com</Button>
+                    {
+                    user && <Button className="w-full" variant={location.pathname === "/teacher/profile" ? 'secondary' : 'ghost'}><User /> { user.email } </Button>
+                    }
                 </Link>
                 <Button variant={'ghost'}><LogOut /> Deconnecter</Button>
             </div>

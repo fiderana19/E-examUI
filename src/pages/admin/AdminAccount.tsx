@@ -3,6 +3,7 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescript
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { mock_utilisateurs } from "@/constants/mock";
 import { CloseOutlined } from "@ant-design/icons";
 import { Check, Edit2, Filter, Trash, User } from "lucide-react";
 import React, { useState } from "react";
@@ -50,51 +51,60 @@ const AdminAccount: React.FC  = () => {
                   </tr>
                 </thead> 
                 <tbody className='bg-white divide-y divide-gray-200'>
-                  <tr>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> d </td>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> f </td>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> f </td>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> f </td>
-                    <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> f </td>
-                    <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
-                      <div className='flex justify-end gap-1'>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button onClick={() => setSelectedAccount("ito")} variant={'success'} size={'icon'}><Check /></Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Validation du compte</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment valider ce compte ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'success'}>Valider</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                              <Button onClick={() => setSelectedAccount("ito")} variant={'destructive'} size={'icon'}><CloseOutlined /></Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Invalidation du compte</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                Voulez-vous vraiment invalider ce compte ?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button variant={'destructive'}>Invalider</Button>
-                            </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </td>
-                  </tr>
+                  {
+                    mock_utilisateurs.map((et: any, index: any) => {
+                      return <tr key={index}>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.nom } </td>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.matricule } </td>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.email } </td>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.role } </td>
+                        <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.creation_utilisateur } </td>
+                        <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
+                          <div className='flex justify-end gap-1'>
+                            {
+                              et.est_valider ?
+                              <AlertDialog>
+                                  <AlertDialogTrigger>
+                                    <Button onClick={() => setSelectedAccount("ito")} variant={'destructive'} size={'icon'}><CloseOutlined /></Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                      <AlertDialogTitle>Invalidation du compte</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                      Voulez-vous vraiment invalider ce compte ?
+                                      </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                      <Button variant={'destructive'}>Invalider</Button>
+                                  </AlertDialogFooter>
+                                  </AlertDialogContent>
+                              </AlertDialog>
+                              :
+                              <AlertDialog>
+                                  <AlertDialogTrigger>
+                                    <Button onClick={() => setSelectedAccount("ito")} variant={'success'} size={'icon'}><Check /></Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                      <AlertDialogTitle>Validation du compte</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                      Voulez-vous vraiment valider ce compte ?
+                                      </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                      <Button variant={'success'}>Valider</Button>
+                                  </AlertDialogFooter>
+                                  </AlertDialogContent>
+                              </AlertDialog>
+                            }
+                          </div>
+                        </td>
+                      </tr>
+                    })
+                  }
+                  
                 </tbody>
             </table>
         </div>
