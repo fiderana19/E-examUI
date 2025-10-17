@@ -3,9 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { BookOutlined, ClockCircleOutlined, HomeOutlined, NotificationOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { useAuth } from "@/context/AuthContext";
 
 const AdminNavigation: React.FC = () => {
     const location = useLocation();
+    const { logout } = useAuth();
 
     return(
         <div className="z-50 w-60 fixed top-0 left-0 p-4 flex flex-col justify-between h-screen bg-second-custom">
@@ -28,7 +30,7 @@ const AdminNavigation: React.FC = () => {
                 </Link>
             </div>
             <div className="w-52 flex flex-col gap-2">
-                <Button variant={'ghost'}><LogOut /> Deconnecter</Button>
+                <Button onClick={() => logout()} variant={'ghost'}><LogOut /> Deconnecter</Button>
             </div>
         </div>
     )

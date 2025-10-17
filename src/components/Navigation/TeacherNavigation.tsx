@@ -4,8 +4,10 @@ import { Button } from "../ui/button";
 import { BookText, CalendarClock, Edit, LogOut, User } from "lucide-react";
 import { HomeOutlined, NotificationOutlined } from "@ant-design/icons";
 import { mock_utilisateurs } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
 
 const TeacherNavigation: React.FC = () => {
+    const { logout } = useAuth();
     const location = useLocation();
     const user = mock_utilisateurs[0];
 
@@ -35,7 +37,7 @@ const TeacherNavigation: React.FC = () => {
                     user && <Button className="w-full" variant={location.pathname === "/teacher/profile" ? 'secondary' : 'ghost'}><User /> { user.email } </Button>
                     }
                 </Link>
-                <Button variant={'ghost'}><LogOut /> Deconnecter</Button>
+                <Button onClick={() => logout()} variant={'ghost'}><LogOut /> Deconnecter</Button>
             </div>
         </div>
     )

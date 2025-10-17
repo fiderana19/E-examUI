@@ -8,14 +8,16 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { LoginInterface } from "@/interfaces/user.interface";
 import { LoginValidation } from "@/validation/user.validation";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginPage: React.FC  = () => {
+    const { login } = useAuth();
     const { handleSubmit: submit, formState: { errors }, control } = useForm<LoginInterface>({
         resolver: yupResolver(LoginValidation)
     })
 
     const handleSubmit = async (data: LoginInterface) => {
-        console.log(data);
+        await login(data);
     }
 
     return <div className="flex min-h-screen flex-col justify-center">

@@ -2,11 +2,13 @@ import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { mock_utilisateurs } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
 import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import React from "react";
 
 const StudentProfile: React.FC  = () => {
+    const { logout } = useAuth();
     const user = mock_utilisateurs[0];
 
 
@@ -39,7 +41,7 @@ const StudentProfile: React.FC  = () => {
                 </Card>
             }
             <div className="flex justify-center mt-4">
-                <Button className="w-max"><LogOut /> Se deconnecter</Button>
+                <Button onClick={() => logout()} className="w-max"><LogOut /> Se deconnecter</Button>
             </div>
         </div>
     </div>

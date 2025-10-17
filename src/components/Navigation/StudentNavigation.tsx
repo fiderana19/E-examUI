@@ -6,8 +6,10 @@ import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import { useTest } from "@/context/TestContext";
 import { mock_utilisateurs } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
 
 const StudentNavigation: React.FC = () => {
+    const { logout } = useAuth();
     const { isInTest } = useTest();
     const user = mock_utilisateurs[0];
     const location = useLocation();
@@ -44,7 +46,7 @@ const StudentNavigation: React.FC = () => {
                     <div className="mb-2 text-gray-700 font-medium">Menu</div>
                     <div className="w-52 flex flex-col gap-2">
                         <Button onClick={() => navigate("/student/profile")} variant={'outline'}><UserOutlined /> Profile</Button>
-                        <Button variant={'outline'}><LogOut /> Deconnecter</Button>
+                        <Button onClick={() => logout()} variant={'outline'}><LogOut /> Deconnecter</Button>
                     </div>
                 </PopoverContent>
             </Popover>  
