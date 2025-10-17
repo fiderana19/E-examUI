@@ -28,7 +28,9 @@ const TeacherNavigation: React.FC = () => {
                 </Link>
             </div>
             <div className="w-52 flex flex-col gap-2">
-                <Button variant={'ghost'}><User /> antsafider@gmail.com</Button>
+                <Link to="/teacher/profile">
+                    <Button className="w-full" variant={location.pathname === "/teacher/profile" ? 'secondary' : 'ghost'}><User /> antsafider@gmail.com</Button>
+                </Link>
                 <Button variant={'ghost'}><LogOut /> Deconnecter</Button>
             </div>
         </div>

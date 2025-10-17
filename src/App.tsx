@@ -27,6 +27,7 @@ import TeacherCorrectionView from "./pages/teacher/correction/TeacherCorrectionV
 import TeacherCorrectionAction from "./pages/teacher/correction/TeacherCorrectionAction";
 import TeacherResult from "./pages/teacher/TeacherResult";
 import TeacherResultView from "./pages/teacher/result/TeacherResultView";
+import TeacherProfile from "./pages/teacher/TeacherProfile";
 
 function App() {
   return (
@@ -135,6 +136,10 @@ function App() {
           <Route path="/teacher/result/view" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <TeacherResultView />
+          </Suspense>} />
+          <Route path="/teacher/profile" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <TeacherProfile />
           </Suspense>} />
       </Routes>
   )
