@@ -1,4 +1,4 @@
-import { EditGroupInterface } from "@/interfaces/groupe.interface";
+import { AddGroupInterface, EditGroupInterface } from "@/interfaces/groupe.interface";
 import axiosAuthInstance from "./Config"
 
 const GroupAPIUrl = `${import.meta.env.VITE_BASE_URL}/groupe`;
@@ -9,6 +9,10 @@ export const getAllGroup = async () => {
 
 export const getGroupById = async (id: number) => {
   return await axiosAuthInstance.get(`${GroupAPIUrl}/get/${id}`)
+}
+
+export const postGroup = async (data: AddGroupInterface) => {
+  return await axiosAuthInstance.post(`${GroupAPIUrl}/create`, data)
 }
 
 export const patchGroup = async (data: EditGroupInterface) => {
