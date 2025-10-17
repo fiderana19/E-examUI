@@ -66,8 +66,8 @@ function App() {
           <Route path="test" element={ <TeacherTest />} />
           <Route path="test/create" element={<TeacherTestAdd />} />
           <Route path="test/edit/:id" element={<TeacherTestEdit />} />
-          <Route path="test/view/id" element={<TeacherTestView />} />
-          <Route path="qcm" element={<TeacherQCMView />} />
+          <Route path="test/view/:id" element={<TeacherTestView />} />
+          <Route path="qcm/:id" element={<TeacherQCMView />} />
           <Route path="question/edit/:id" element={<TeacherQuestionEdit />} />
           <Route path="correction" element={<TeacherCorrection />} />
           <Route path="correction/view/:id" element={<TeacherCorrectionView />} />

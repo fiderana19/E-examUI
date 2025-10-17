@@ -99,9 +99,9 @@ const TeacherTest: React.FC  = () => {
                                 }
                                 {
                                     (test.status === "En attente") &&
-                                    <Button onClick={() => navigate("/teacher/test/edit")} variant={'secondary'}><Edit /> Modifier</Button>
+                                    <Button onClick={() => navigate(`/teacher/test/edit/${ test.id_test }`)} variant={'secondary'}><Edit /> Modifier</Button>
                                 }
-                                <Button onClick={() => navigate("/teacher/test/view")} variant={'secondary'} ><QuestionCircleOutlined /> Voir les questions</Button>
+                                <Button onClick={() => navigate(`/teacher/test/view/${ test.id_test }`)} variant={'secondary'} ><QuestionCircleOutlined /> Voir les questions</Button>
                                 {
                                     (test.status === "En attente") &&
                                     <AlertDialog>

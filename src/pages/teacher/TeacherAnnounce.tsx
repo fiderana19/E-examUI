@@ -87,7 +87,7 @@ const TeacherAnnounce: React.FC  = () => {
                                     { announce.texte_annonce }
                                 </blockquote>
                                 <div className="flex justify-end mt-2 gap-2">
-                                    <Button onClick={() => navigate("/teacher/announce/edit")} ><Edit /> Modifier</Button>
+                                    <Button onClick={() => navigate(`/teacher/announce/edit/${ announce.id_annonce }`)} ><Edit /> Modifier</Button>
                                     <AlertDialog>
                                         <AlertDialogTrigger>
                                             <Button variant={'destructive'}><Trash /> Supprimer</Button>

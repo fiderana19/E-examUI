@@ -142,8 +142,8 @@ const TeacherTestView: React.FC  = () => {
                                         <div className="text-gray-700">Reponse correcte : { question.reponse_correcte }</div>
                                         <div className="flex justify-end gap-2 items-center">
                                             { 
-                                                (question.type_question === "qcm") && <Button onClick={() => navigate("/teacher/qcm")} variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button> }
-                                            <Button onClick={() => navigate("/teacher/question/edit")} variant={'secondary'}><EditOutlined/> Modifier</Button>
+                                                (question.type_question === "qcm") && <Button onClick={() => navigate(`/teacher/qcm/${ question.id_question }`)} variant={'secondary'}><QuestionCircleOutlined /> Voir les options</Button> }
+                                            <Button onClick={() => navigate(`/teacher/question/edit/${ question.id_question }`)} variant={'secondary'}><EditOutlined/> Modifier</Button>
                                             <AlertDialog>
                                                 <AlertDialogTrigger>
                                                     <Button variant={'destructive'}><Trash/> Supprimer</Button>

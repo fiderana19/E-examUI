@@ -23,7 +23,7 @@ const TeacherResult: React.FC  = () => {
             <div className="">
                 {
                     mock_tests.map((test: any, index: any) => {
-                        return <div key={index} onClick={() =>navigate("/teacher/result/view")} className="shadow p-4 bg-white my-2 cursor-pointer">
+                        return <div key={index} onClick={() =>navigate(`/teacher/result/view/${ test.id_test }`)} className="shadow p-4 bg-white my-2 cursor-pointer">
                             <div className="flex justify-between">
                                 <div className="flex gap-4 text-lg">
                                     <div className=""> { test.titre } du</div>

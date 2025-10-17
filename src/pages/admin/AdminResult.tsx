@@ -6,14 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_resultats } from "@/constants/mock";
-import { AddGroupInterface } from "@/interfaces/groupe.interface";
 import { PostCreateInterface } from "@/interfaces/post.interface";
-import { AddGroupValidation } from "@/validation/group.validation";
 import { PostCreateValidation } from "@/validation/post.validation";
-import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { FilePdfOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { BookText, Plus, Trash } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Plus, Trash } from "lucide-react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 

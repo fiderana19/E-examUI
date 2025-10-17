@@ -13,9 +13,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash } from "lucide-react";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherQCMView: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const navigate = useNavigate();
     const question = mock_questions[0];
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<OptionCreateInterface>({
@@ -82,8 +84,8 @@ const TeacherQCMView: React.FC  = () => {
                     </div>
                     <div className="px-10 my-4">
                         {
-                            mock_optionsqcm.map((option: any, idex: any) => {
-                                return <div className="flex justify-between items-center my-2 gap-4">
+                            mock_optionsqcm.map((option: any, index: any) => {
+                                return <div key={index} className="flex justify-between items-center my-2 gap-4">
                                     <div className="flex gap-2">
                                         <div className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}>
                                             {

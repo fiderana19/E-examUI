@@ -1,5 +1,6 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import { Input } from "@/components/ui/input";
+import { mock_tests } from "@/constants/mock";
 import { CloseOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React from "react";
@@ -20,39 +21,21 @@ const AdminHistory: React.FC  = () => {
                 <div className="mt-4 text-xl">Vous avez aucune resultat</div>
             </div>
             <div className="">
-                <div onClick={() =>navigate("/admin/history/view")} className="shadow p-4 bg-white my-2 cursor-pointer">
-                    <div className="flex justify-between">
-                        <div className="flex gap-4 text-lg">
-                            <div className="">Test de HTML du</div>
-                            <div className="text-gray-800 font-bold">
-                                2025-12-12
+                {
+                    mock_tests.map((res: any, index: any) => {
+                        return <div key={index} onClick={() =>navigate(`/admin/history/view/${ res.id_test }`)} className="shadow p-4 bg-white my-2 cursor-pointer">
+                            <div className="flex justify-between">
+                                <div className="flex gap-4 text-lg">
+                                    <div className=""> { res.titre } du</div>
+                                    <div className="text-gray-800 font-bold">
+                                        { res.date_declenchement }
+                                    </div>
+                                </div>
+                                <div className="font-bold text-gray-800"> { res.id_groupe } </div>
                             </div>
                         </div>
-                        <div className="font-bold text-gray-800">M1</div>
-                    </div>
-                </div>
-                <div className="shadow p-4 bg-white my-2 cursor-pointer">
-                    <div className="flex justify-between">
-                        <div className="flex gap-4 text-lg">
-                            <div className="">Test de HTML du</div>
-                            <div className="text-gray-800 font-bold">
-                                2025-12-12
-                            </div>
-                        </div>
-                        <div className="font-bold text-gray-800">M1</div>
-                    </div>
-                </div>
-                <div className="shadow p-4 bg-white my-2 cursor-pointer">
-                    <div className="flex justify-between">
-                        <div className="flex gap-4 text-lg">
-                            <div className="">Test de HTML du</div>
-                            <div className="text-gray-800 font-bold">
-                                2025-12-12
-                            </div>
-                        </div>
-                        <div className="font-bold text-gray-800">M1</div>
-                    </div>
-                </div>
+                    })
+                }
             </div>
         </div>
     </div>

@@ -82,7 +82,7 @@ const AdminGroupe: React.FC  = () => {
                         <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { group.description } </td>
                         <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
                           <div className='flex justify-end gap-1'>
-                            <Button onClick={() => navigate("/admin/groupe/edit")} variant={'outline'} size={'icon'}><Edit2 /></Button>
+                            <Button onClick={() => navigate(`/admin/groupe/edit/${group.id_groupe}`)} variant={'outline'} size={'icon'}><Edit2 /></Button>
                             <AlertDialog>
                                 <AlertDialogTrigger>
                                   <Button onClick={() => setSelectedGroup("ito")} variant={'destructive'} size={'icon'}><Trash /></Button>

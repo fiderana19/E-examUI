@@ -54,7 +54,7 @@ const TeacherCorrectionView: React.FC  = () => {
             <div>
                 {
                     mock_reponseetudiants_a_corriger.map((reponse: any, index: any) => {
-                        return <div key={index} onClick={() => navigate("/teacher/correction/action")} className="mb-2 px-4 py-2 cursor-pointer border rounded">
+                        return <div key={index} onClick={() => navigate(`/teacher/correction/action/${ reponse.id_reponseetudiants }`)} className="mb-2 px-4 py-2 cursor-pointer border rounded">
                             <div>
                                 <div className="flex justify-end">
                                     <div className="my-1 font-semibold">Note maximum : { reponse.id_tentative } point(s)</div>
