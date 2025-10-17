@@ -9,8 +9,11 @@ import { BookOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 const AdminGroupeEdit: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const { handleSubmit: submit, formState: { errors }, control } = useForm<EditGroupInterface>({
         resolver: yupResolver(EditGroupValidation)
     })

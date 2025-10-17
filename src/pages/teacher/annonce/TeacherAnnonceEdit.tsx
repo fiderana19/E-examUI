@@ -9,8 +9,11 @@ import { NotificationOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
 const TeacherAnnounceEdit: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<AnnounceEditInterface>({
         resolver: yupResolver(EditAnnounceValidation)
     })

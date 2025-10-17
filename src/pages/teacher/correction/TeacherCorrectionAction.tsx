@@ -12,9 +12,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit } from "lucide-react";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherCorrectionAction: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const navigate = useNavigate();
     const test = mock_tests[0];
     const reponse = mock_reponseetudiants_a_corriger[0]

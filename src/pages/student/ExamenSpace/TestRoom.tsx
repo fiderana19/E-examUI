@@ -10,9 +10,11 @@ import { showToast } from "@/utils/Toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { AlertTriangleIcon } from "lucide-react";
 import React, {  } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TestRoom: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const { updateIsInTest, isFinished, updateIsFinished } = useTest();
     const navigate = useNavigate();
 

@@ -45,35 +45,35 @@ function App() {
           <Route path="test" element={<StudentTest />} />
           <Route path="profile" element={<StudentProfile />} />
           <Route path="result" element={<StudentResult />} />
-          <Route path="test/room" element={<TestRoom />} />
+          <Route path="test/room/:id" element={<TestRoom />} />
         </Route>
         {/* Admin route */}
         <Route path="/admin" element={<RoleBasedRoute allowedRoles={['admin']} />} >
           <Route path="home" element={<AdminHome />} />
           <Route path="groupe" element={<AdminGroupe />} />
           <Route path="history" element={<AdminHistory />} />
-          <Route path="history/view" element={<AdminHistoryView />} />
+          <Route path="history/view/:id" element={<AdminHistoryView />} />
           <Route path="result" element={<AdminResult />} />
-          <Route path="response/view" element={<AdminResponseView />} />
-          <Route path="groupe/edit" element={<AdminGroupeEdit />} />
+          <Route path="response/view/:id" element={<AdminResponseView />} />
+          <Route path="groupe/edit/:id" element={<AdminGroupeEdit />} />
           <Route path="account" element={<AdminAccount />} />
         </Route>
         {/* Teacher route */}
         <Route path="/teacher" element={<RoleBasedRoute allowedRoles={['teacher']} />} >
           <Route path="home" element={<TeacherHome />} />
           <Route path="announce" element={<TeacherAnnounce />} />
-          <Route path="announce/edit" element={<TeacherAnnounceEdit />} />
+          <Route path="announce/edit/:id" element={<TeacherAnnounceEdit />} />
           <Route path="test" element={ <TeacherTest />} />
           <Route path="test/create" element={<TeacherTestAdd />} />
-          <Route path="test/edit" element={<TeacherTestEdit />} />
-          <Route path="test/view" element={<TeacherTestView />} />
+          <Route path="test/edit/:id" element={<TeacherTestEdit />} />
+          <Route path="test/view/id" element={<TeacherTestView />} />
           <Route path="qcm" element={<TeacherQCMView />} />
-          <Route path="question/edit" element={<TeacherQuestionEdit />} />
+          <Route path="question/edit/:id" element={<TeacherQuestionEdit />} />
           <Route path="correction" element={<TeacherCorrection />} />
-          <Route path="correction/view" element={<TeacherCorrectionView />} />
-          <Route path="correction/action" element={<TeacherCorrectionAction />} />
+          <Route path="correction/view/:id" element={<TeacherCorrectionView />} />
+          <Route path="correction/action/:id" element={<TeacherCorrectionAction />} />
           <Route path="result" element={<TeacherResult />} />
-          <Route path="result/view" element={<TeacherResultView />} />
+          <Route path="result/view/:id" element={<TeacherResultView />} />
           <Route path="profile" element={<TeacherProfile />} />
         </Route>
       </Routes>

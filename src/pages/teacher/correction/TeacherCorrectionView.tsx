@@ -3,9 +3,11 @@ import { mock_reponseetudiants_a_corriger, mock_tests } from "@/constants/mock";
 import { HourglassOutlined } from "@ant-design/icons";
 import { Edit } from "lucide-react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherCorrectionView: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const navigate = useNavigate();
     const test = mock_tests[0];
 

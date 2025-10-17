@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherResultView: React.FC  = () => {
+    const req = useParams();
+    const Id = req.id;
     const navigate = useNavigate();
 
     return <div className="pl-64 pr-6">
