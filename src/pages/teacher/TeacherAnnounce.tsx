@@ -32,8 +32,8 @@ const TeacherAnnounce: React.FC  = () => {
     return <div className="pl-64 pr-6">
         <TeacherNavigation />
         <div className="my-6">
-            <div className="flex justify-between items-center">
-                <div className="text-gray-800 text-3xl font-medium mb-10"><NotificationOutlined /> Vos annonces</div>
+            <div className="flex justify-between items-center mb-10">
+                <div className="text-gray-800 text-xl font-bold"><NotificationOutlined /> Vos annonces</div>
                 <div className="flex gap-2 items-center">
                     <Input className="w-60" placeholder="Fitrer..." />
                   <Popover>

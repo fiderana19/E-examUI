@@ -13,8 +13,8 @@ const TeacherCorrectionView: React.FC  = () => {
     return <div className="pl-64 pr-6">
         <TeacherNavigation />
         <div className="my-6">
-            <div className="flex justify-between items-center">
-                <div className="text-gray-800 text-3xl font-medium mb-4 flex items-center gap-2"><Edit /> Correction d'un test</div>
+            <div className="flex justify-between items-center mb-4">
+                <div className="text-gray-800 text-xl font-bold flex items-center gap-2"><Edit /> Correction d'un test</div>
             </div>
             <div className="">
                 <div className="shadow px-4 py-2 bg-white my-2">

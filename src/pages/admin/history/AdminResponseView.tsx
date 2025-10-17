@@ -13,7 +13,7 @@ const AdminResponseView: React.FC  = () => {
         <AdminNavigation />
         <div className="my-6">
             <div className="flex justify-between items-center">
-                <div className="text-gray-800 text-3xl font-medium mb-4 flex items-center gap-2"> Reponse d'un étudiant</div>
+                <div className="text-gray-800 text-xl font-bold mb-4 flex items-center gap-2"> Reponse d'un étudiant</div>
             </div>
             <div className="">
                 <div className="shadow px-4 py-2 bg-white my-2">

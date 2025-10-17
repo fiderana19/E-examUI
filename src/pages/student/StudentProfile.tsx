@@ -10,7 +10,7 @@ const StudentProfile: React.FC  = () => {
     return <div className="pt-20 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />
         <div>
-            <div className="text-gray-800 text-3xl font-medium mb-4">Profile</div>
+            <div className="text-gray-800 text-xl font-bold mb-4">Profile</div>
             <Card className="px-4 py-10 w-1/3 mx-auto">
                 <div className="p-4 border w-max rounded-full mx-auto"><UserOutlined className="text-6xl" /></div>
                 <div className="flex flex-col gap-4">

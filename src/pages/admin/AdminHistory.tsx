@@ -12,7 +12,7 @@ const AdminHistory: React.FC  = () => {
         <AdminNavigation />
         <div className="my-6">
             <div className="flex justify-between items-center">
-                <div className="text-gray-800 text-3xl font-medium mb-4 flex items-center gap-2"><BookText /> Les resultats dejà corrigés</div>
+                <div className="text-xl uppercase font-bold"> Les resultats dejà corrigés</div>
                 <Input className="w-48" placeholder="Filter..." />
             </div>
             <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">

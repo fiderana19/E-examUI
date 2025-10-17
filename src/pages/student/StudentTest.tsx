@@ -20,7 +20,7 @@ const StudentTest: React.FC  = () => {
     return <div className="pt-20 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />
         <div>
-            <div className="text-gray-800 text-3xl font-medium mb-10">Test</div>
+            <div className="text-gray-800 text-xl font-bold mb-10">Les tests</div>
             <div className="w-max mx-auto text-center text-gray-600">
                 <CloseOutlined className="text-7xl" />
                 <div className="mt-4 text-xl">Aucun test disponible.</div>

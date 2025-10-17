@@ -9,7 +9,7 @@ const StudentResult: React.FC  = () => {
     return <div className="pt-20 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />
         <div>
-            <div className="text-gray-800 text-3xl font-medium mb-10">Resultats</div>
+            <div className="text-gray-800 text-xl font-bold mb-10">Les resultats</div>
             <div className="w-max mx-auto text-center text-gray-600">
                 <CloseOutlined className="text-7xl" />
                 <div className="mt-4 text-xl">Aucun resultat disponible.</div>
@@ -19,7 +19,7 @@ const StudentResult: React.FC  = () => {
                     <div>
                         <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
                         <div className="flex justify-between">
-                            <div className="font-medium">M1 | vuefnbv</div>
+                            <div className="font-medium">vuefnbv</div>
                             <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@ const StudentResult: React.FC  = () => {
                     <div>
                         <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
                         <div className="flex justify-between">
-                            <div className="font-medium">M1 | vuefnbv</div>
+                            <div className="font-medium">vuefnbv</div>
                             <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@ const StudentResult: React.FC  = () => {
                     <div>
                         <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
                         <div className="flex justify-between">
-                            <div className="font-medium">M1 | vuefnbv</div>
+                            <div className="font-medium">vuefnbv</div>
                             <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@ const StudentResult: React.FC  = () => {
                     <div>
                         <div className="text-xs text-gray-600">Publié le 2025-12-12 08:00</div>
                         <div className="flex justify-between">
-                            <div className="font-medium">M1 | vuefnbv</div>
+                            <div className="font-medium">vuefnbv</div>
                             <div className="text-gray-700 font-bold"><FilePdfOutlined className=" mr-2" />result.pdf</div>
                         </div>
                     </div>

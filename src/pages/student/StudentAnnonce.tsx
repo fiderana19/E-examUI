@@ -9,7 +9,7 @@ const StudentAnnonce: React.FC  = () => {
         <StudentNavigation />
         <div>
             <div className="flex justify-between">
-                <div className="text-gray-800 text-3xl font-medium mb-10">Les annonces</div>
+                <div className="text-gray-800 text-xl font-bold mb-10">Les annonces</div>
                 <Input className="w-60" placeholder="Fitrer..." />
             </div>
             <div className="w-max mx-auto text-center text-gray-600">

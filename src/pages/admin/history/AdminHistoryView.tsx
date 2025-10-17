@@ -12,8 +12,8 @@ const AdminHistoryView: React.FC  = () => {
     return <div className="pl-64 pr-6">
         <AdminNavigation />
         <div className="my-6">
-            <div className="flex justify-between items-center">
-                <div className="text-gray-800 text-3xl font-medium mb-4 flex items-center gap-2"><BookText /> Resultat du 2025-12-12</div>
+            <div className="flex justify-between items-center mb-4 ">
+                <div className="text-gray-800 text-xl font-bold flex items-center gap-2"><BookText /> Resultat du 2025-12-12</div>
                 <Button><FilePdfOutlined /> Generer</Button>
             </div>
             <div className="">
