@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 const AdminAccount: React.FC  = () => {
     const navigate = useNavigate();
     const [selectedAccount, setSelectedAccount] = useState<string>('')
+    const [searchRef, setSearchRef] = useState<string>('');
 
     const deleteConfirm = async (id: string) => {
       console.log(id);
@@ -23,7 +24,7 @@ const AdminAccount: React.FC  = () => {
             <div className="flex justify-between items-center">
                 <div className="text-xl uppercase font-bold">Les comptes</div>
                 <div className="flex items-center gap-2">
-                  <Input placeholder="Saisir le nom..." />
+                  <Input placeholder="Matricule..." onChange={(e) => setSearchRef(e.target.value)}  />
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button><Filter /> Filtrer</Button>
@@ -53,6 +54,9 @@ const AdminAccount: React.FC  = () => {
                 <tbody className='bg-white divide-y divide-gray-200'>
                   {
                     mock_utilisateurs.map((et: any, index: any) => {
+                      if (searchRef && !et.matricule.includes(searchRef)) {
+                        return null;
+                      }
                       return <tr key={index}>
                         <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.nom } </td>
                         <td className='lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900'> { et.matricule } </td>

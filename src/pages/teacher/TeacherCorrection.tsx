@@ -4,18 +4,19 @@ import { Input } from "@/components/ui/input";
 import { mock_tests } from "@/constants/mock";
 import { CloseOutlined, HourglassOutlined } from "@ant-design/icons";
 import { Edit } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherCorrection: React.FC  = () => {
     const navigate = useNavigate();
+    const [searchRef, setSearchRef] = useState<string>('');
 
     return <div className="pl-64 pr-6">
         <TeacherNavigation />
         <div className="my-6">
             <div className="flex justify-between items-center mb-10">
                 <div className="text-gray-800 text-xl font-bold flex items-center gap-2"><Edit /> Vos corrections à faire</div>
-                <Input className="w-48" placeholder="Filter..." />
+                <Input className="w-48" onChange={(e) => setSearchRef(e.target.value)} placeholder="Titre du test..." />
             </div>
             <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
                 <CloseOutlined className="text-7xl" />
@@ -24,6 +25,9 @@ const TeacherCorrection: React.FC  = () => {
             <div className="">
                 {
                     mock_tests.map((test: any, index: any) => {
+                        if (searchRef && !test.titre.includes(searchRef)) {
+                            return null;
+                        }
                         return <div key={index} className="shadow px-4 py-2 bg-white my-2">
                             <div className="flex justify-between">
                                 <div className="flex gap-4 text-lg">

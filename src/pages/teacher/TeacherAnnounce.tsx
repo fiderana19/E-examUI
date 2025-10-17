@@ -11,7 +11,7 @@ import { AddAnnounceValidation } from "@/validation/announce.validation";
 import { CloseOutlined, NotificationOutlined, NotificationTwoTone } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit, Plus, Trash } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,7 @@ const TeacherAnnounce: React.FC  = () => {
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<AnnounceAddInterface>({
         resolver: yupResolver(AddAnnounceValidation)
     })
+    const [searchRef, setSearchRef] = useState<string>('');
 
     useEffect(() => {
         setValue('date_creation', '')
@@ -36,7 +37,7 @@ const TeacherAnnounce: React.FC  = () => {
             <div className="flex justify-between items-center mb-10">
                 <div className="text-gray-800 text-xl font-bold"><NotificationOutlined /> Vos annonces</div>
                 <div className="flex gap-2 items-center">
-                    <Input className="w-60" placeholder="Fitrer..." />
+                    <Input className="w-60" onChange={(e) => setSearchRef(e.target.value)} placeholder="Description..." />
                   <Popover>
                     <PopoverTrigger asChild>
                         <Button><Plus /> Nouvelle annonce</Button>
@@ -77,6 +78,9 @@ const TeacherAnnounce: React.FC  = () => {
             <div className="">
                 {
                     mock_annonces.map((announce: any, index: any) => {
+                        if (searchRef && !announce.texte_annonce.includes(searchRef)) {
+                            return null;
+                        }
                         return <Card key={index} className="mb-2">
                             <div className="px-4">
                                 <div className="flex justify-between">

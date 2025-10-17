@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 const AdminGroupe: React.FC  = () => {
     const navigate = useNavigate();
+    const [filterText, setFilterText] = useState<string>('tout');
     const [selectedGroup, setSelectedGroup] = useState<string>('')
     const { handleSubmit: submit, formState: { errors }, control } = useForm<AddGroupInterface>({
       resolver: yupResolver(AddGroupValidation)
