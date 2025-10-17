@@ -20,8 +20,8 @@ const AdminNavigation: React.FC = () => {
                 <Link to="/admin/account">
                     <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><UserSwitchOutlined /> Compte</Button>
                 </Link>
-                <Link to="/admin/account">
-                    <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><NotificationOutlined /> Resultat</Button>
+                <Link to="/admin/result">
+                    <Button className="w-full" variant={location.pathname === "/admin/result" ? 'secondary' : 'ghost'}><NotificationOutlined /> Publication</Button>
                 </Link>
                 <Link to="/admin/history">
                     <Button className="w-full" variant={location.pathname === "/admin/history" ? 'secondary' : 'ghost'}><ClockCircleOutlined /> Historique</Button>

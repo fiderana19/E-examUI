@@ -31,6 +31,7 @@ import TeacherProfile from "./pages/teacher/TeacherProfile";
 import AdminHistory from "./pages/admin/AdminHistory";
 import AdminHistoryView from "./pages/admin/history/AdminHistoryView";
 import AdminResponseView from "./pages/admin/history/AdminResponseView";
+import AdminResult from "./pages/admin/AdminResult";
 
 function App() {
   return (
@@ -83,6 +84,10 @@ function App() {
           <Route path="/admin/history/view" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <AdminHistoryView />
+          </Suspense>} />
+          <Route path="/admin/result" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminResult />
           </Suspense>} />
           <Route path="/admin/response/view" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
