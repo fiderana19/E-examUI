@@ -28,6 +28,9 @@ import TeacherCorrectionAction from "./pages/teacher/correction/TeacherCorrectio
 import TeacherResult from "./pages/teacher/TeacherResult";
 import TeacherResultView from "./pages/teacher/result/TeacherResultView";
 import TeacherProfile from "./pages/teacher/TeacherProfile";
+import AdminHistory from "./pages/admin/AdminHistory";
+import AdminHistoryView from "./pages/admin/history/AdminHistoryView";
+import AdminResponseView from "./pages/admin/history/AdminResponseView";
 
 function App() {
   return (
@@ -72,6 +75,18 @@ function App() {
           <Route path="/admin/groupe" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
             <AdminGroupe />
+          </Suspense>} />
+          <Route path="/admin/history" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminHistory />
+          </Suspense>} />
+          <Route path="/admin/history/view" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminHistoryView />
+          </Suspense>} />
+          <Route path="/admin/response/view" element={
+          <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>
+            <AdminResponseView />
           </Suspense>} />
           <Route path="/admin/groupe/edit" element={
           <Suspense fallback={<div className='text-center my-10'><LoadingOutlined className='text-5xl' /></div>}>

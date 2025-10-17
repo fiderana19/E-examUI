@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
-import { BookOutlined, HomeOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { BookOutlined, ClockCircleOutlined, HomeOutlined, NotificationOutlined, UserSwitchOutlined } from "@ant-design/icons";
 
 const AdminNavigation: React.FC = () => {
     const location = useLocation();
@@ -19,6 +19,12 @@ const AdminNavigation: React.FC = () => {
                 </Link>
                 <Link to="/admin/account">
                     <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><UserSwitchOutlined /> Compte</Button>
+                </Link>
+                <Link to="/admin/account">
+                    <Button className="w-full" variant={location.pathname === "/admin/account" ? 'secondary' : 'ghost'}><NotificationOutlined /> Resultat</Button>
+                </Link>
+                <Link to="/admin/history">
+                    <Button className="w-full" variant={location.pathname === "/admin/history" ? 'secondary' : 'ghost'}><ClockCircleOutlined /> Historique</Button>
                 </Link>
             </div>
             <div className="w-52 flex flex-col gap-2">

@@ -1,7 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CloseOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import React from "react";
 
