@@ -18,7 +18,7 @@ const StudentNavigation: React.FC = () => {
     return(
         <div className="z-40 fixed w-full px-4 top-0 left-0 flex justify-between items-center bg-second-custom text-center">
             {
-                isInTest && (location.pathname === "/student/test/room") &&
+                isInTest &&
                 <div className="z-50 fixed w-full opacity-5 h-16 px-4 top-0 left-0 flex justify-between items-center bg-red-500 text-center">
 
                 </div>
