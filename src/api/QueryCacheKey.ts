@@ -1,2 +1,11 @@
 export enum QueryCacheKey {
+    ANNONCES = "ANNONCES",
+    GROUPS = "GROUPS",
+    OPTIONS = "OPTIONS",
+    QUESTIONS = "QUESTIONS",
+    REPONSES = "REPONSES",
+    RESULTS = "RESULTS",
+    TENTATIVES = "TENTATIVES",
+    TESTS = "TESTS",
+    USERS = "USERS"
 }
