@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { mock_optionsqcm, mock_questions } from "@/constants/mock";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { useTest } from "@/context/TestContext";
 import { showToast } from "@/utils/Toast";
@@ -59,103 +60,42 @@ const TestRoom: React.FC  = () => {
             <StudentNavigation />
             <div className="">
                 <div>
-                    <Card className="mb-2 px-4">
-                        <div>
-                            <div className="text-xs text-gray-600">Question 1</div>
-                            <div className="my-1">
-                                Qui est la president de Madagascar ?
-                            </div>
-                            {
-                                (q1 === "courte") ?
-                                <div className="w-64 mx-auto mt-2">
-                                    <Label className="mb-1">Votre reponse :</Label>
-                                    <Input />
-                                </div> :
-                                ((q1 === "dev") ?
-                                    <div className="w-64 mx-auto mt-2">
-                                        <Label className="mb-1">Votre reponse :</Label>
-                                        <Input />
+                    {
+                        mock_questions.map((question: any, index: any) => {
+                            return <Card className="mb-2 px-4">
+                                <div>
+                                    <div className="text-xs text-gray-600">Question {index + 1}</div>
+                                    <div className="my-1">
+                                        { question.texte_question }
                                     </div>
-                                    : 
-                                    <div className="w-64 mx-auto mt-2">
-                                        <Label className="mb-1">Votre reponse :</Label>
-                                        <div className="flex flex-col gap-4 my-4">
-                                            <div className="flex gap-2"><input type="radio" id="opt1" name="opt" /><Label htmlFor="opt1">Option 1</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt2" name="opt" /><Label htmlFor="opt2">Option 2</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt3" name="opt" /><Label htmlFor="opt3">Option 3</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt4" name="opt" /><Label htmlFor="opt4">Option 4</Label></div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </Card>
-                    <Card className="mb-2 px-4">
-                        <div>
-                            <div className="text-xs text-gray-600">Question 2</div>
-                            <div className="my-1">
-                                Completer ce code:
-                                <div className="border w-1/2 p-2">
-                                    beufivb
-                                    <br/>   ebvuib
+                                    {
+                                        (question.type_question === "dev") ?
+                                        <div className="w-64 mx-auto mt-2">
+                                            <Label className="mb-1">Votre reponse :</Label>
+                                            <Input />
+                                        </div> :
+                                        ((question.type_question === "simple") ?
+                                            <div className="w-64 mx-auto mt-2">
+                                                <Label className="mb-1">Votre reponse :</Label>
+                                                <Input />
+                                            </div>
+                                            : 
+                                            <div className="w-auto mx-auto mt-2">
+                                                <Label className="mb-1">Votre reponse :</Label>
+                                                <div className="flex flex-col gap-4 my-4">
+                                                    {
+                                                        mock_optionsqcm.map((option: any, index: any) => {
+                                                            return <div className="flex gap-2"><input type="radio" id={`opt${index+1}`} name="opt" /><Label htmlFor={`opt${index+1}`}>Option { index + 1 } : {option.texte_option}</Label></div>
+                                                        })
+                                                    }
+                                                </div>
+                                            </div>
+                                        )
+                                    }
                                 </div>
-                            </div>
-                            {
-                                (q2 === "courte") ?
-                                <div className="w-64 mx-auto mt-2">
-                                    <Label className="mb-1">Votre reponse :</Label>
-                                    <Input />
-                                </div> :
-                                ((q2 === "dev") ?
-                                    <div className="w-64 mx-auto mt-2">
-                                        <Label className="mb-1">Votre reponse :</Label>
-                                        <Input />
-                                    </div>
-                                    : 
-                                    <div className="w-64 mx-auto mt-2">
-                                        <Label className="mb-1">Votre reponse :</Label>
-                                        <div className="flex flex-col gap-4 my-4">
-                                            <div className="flex gap-2"><input type="radio" id="opt1" name="opt" /><Label htmlFor="opt1">Option 1</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt2" name="opt" /><Label htmlFor="opt2">Option 2</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt3" name="opt" /><Label htmlFor="opt3">Option 3</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt4" name="opt" /><Label htmlFor="opt4">Option 4</Label></div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </Card>
-                    <Card className="mb-2 px-4">
-                        <div>
-                            <div className="text-xs text-gray-600">Question 3</div>
-                            <div className="my-1">
-                                Qui est la capitale de Madagascar ?
-                            </div>
-                            {
-                                (q3 === "courte") ?
-                                <div className="w-64 mx-auto mt-2">
-                                    <Label className="mb-1">Votre reponse :</Label>
-                                    <Input />
-                                </div> :
-                                ((q3 === "dev") ?
-                                    <div className="w-64 mx-auto mt-2">
-                                        <Label className="mb-1">Votre reponse :</Label>
-                                        <Input />
-                                    </div>
-                                    : 
-                                    <div className="w-64 mx-auto mt-2">
-                                        <Label className="mb-1">Votre reponse :</Label>
-                                        <div className="flex flex-col gap-4 my-4">
-                                            <div className="flex gap-2"><input type="radio" id="opt1" name="opt" /><Label htmlFor="opt1">Option 1</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt2" name="opt" /><Label htmlFor="opt2">Option 2</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt3" name="opt" /><Label htmlFor="opt3">Option 3</Label></div>
-                                            <div className="flex gap-2"><input type="radio" id="opt4" name="opt" /><Label htmlFor="opt4">Option 4</Label></div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </Card>
+                            </Card>
+                        })
+                    }
                 </div>
                 <div className="flex justify-center mt-4">
                     <Button onClick={() => finishTest()}>Soumettre</Button>
