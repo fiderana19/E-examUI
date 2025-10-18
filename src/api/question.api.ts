@@ -7,8 +7,8 @@ export const getQuestionByTestId = async (id: number) => {
   return await axiosAuthInstance.get(`${QuestionAPIUrl}/test/${id}`)
 }
 
-export const getRandomQuestionByTestId = async (test: number, max: number) => {
-  return await axiosAuthInstance.get(`${QuestionAPIUrl}/random/${test}/${max}`)
+export const getRandomQuestionByTestId = async (data: any) => {
+  return await axiosAuthInstance.get(`${QuestionAPIUrl}/random/${data?.test}/${data?.max}`)
 }
 
 export const postQuestion = async (data: QuestionCreateInterface) => {
