@@ -6,31 +6,46 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_optionsqcm, mock_questions } from "@/constants/mock";
+import { useDeleteOption } from "@/hooks/option/useDeleteOption";
+import { useGetAllOptionByQuestionId } from "@/hooks/option/useGetAllOptionByQuestionId";
+import { usePostOption } from "@/hooks/option/usePostOption";
 import { OptionCreateInterface } from "@/interfaces/option.interface";
 import { OptionAddValidation } from "@/validation/option.validation";
-import { CheckCircleOutlined, CloseCircleOutlined, QuestionCircleFilled, QuestionCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherQCMView: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const { data: options, refetch } = useGetAllOptionByQuestionId(Id ? Number(Id) : 0);
+    const { mutateAsync: deleteOption } = useDeleteOption({action() {
+        refetch();
+    },})
+    const { mutateAsync: createOption } = usePostOption({action() {
+        refetch();
+    },})
     const navigate = useNavigate();
     const question = mock_questions[0];
-    const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<OptionCreateInterface>({
+    const { handleSubmit: submit, formState: { errors }, control, setValue, reset } = useForm<OptionCreateInterface>({
         resolver: yupResolver(OptionAddValidation)
-    })
+    });
+    const [selectedOption, setSelectedOption] = useState<number>(0);
 
     useEffect(() => {
-        setValue('id_question', 'd')
+        setValue('id_question', Id ? Id : "")
         setValue('est_correcte', false)
     }, [])
 
     const handleSubmit = async (data: OptionCreateInterface) => {
-        console.log(data);
+        await createOption(data);
+    }
+
+    const deleteConfirm = async () => {
+        await deleteOption(selectedOption);
     }
 
     return <div className="pl-64 pr-6">
@@ -42,12 +57,12 @@ const TeacherQCMView: React.FC  = () => {
                         <div className="uppercase font-bold">Les options de la question QCM</div>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button><Plus /> Nouvelle question</Button>
+                                <Button><Plus /> Nouvelle option</Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto mr-16">
-                                <div className="mb-2 text-gray-700 font-medium">Nouvelle question</div>
+                                <div className="mb-2 text-gray-700 font-medium">Nouvelle option</div>
                                 <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                                    <Label className="mb-1">Question :</Label>
+                                    <Label className="mb-1">Option :</Label>
                                     <Controller
                                         control={control}
                                         name="texte_option"
@@ -96,7 +111,7 @@ const TeacherQCMView: React.FC  = () => {
                                     </div>
                                     <AlertDialog>
                                         <AlertDialogTrigger>
-                                            <Button size={'icon'} variant={'destructive'}><Trash /></Button>
+                                            <Button onClick={() => setSelectedOption(option.id_option)} size={'icon'} variant={'destructive'}><Trash /></Button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -107,7 +122,7 @@ const TeacherQCMView: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button variant={'destructive'}>Supprimer</Button>
+                                            <Button onClick={() => deleteConfirm()} variant={'destructive'}>Supprimer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>

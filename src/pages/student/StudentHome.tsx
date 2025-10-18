@@ -14,7 +14,7 @@ const StudentHome: React.FC  = () => {
     const navigate = useNavigate();
     const { token } = useAuth();
     const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
-    const { data: annonces } = useGetAnnonceByGroupId(user ? Number(user?.id_groupe) : 0)
+    const { data: annonces } = useGetAnnonceByGroupId(user ? Number(user?.id_groupe) : 0);
 
     return <div className="pt-20 pb-6 px-[12%] min-h-screen flex flex-col justify-center">
         <StudentNavigation />

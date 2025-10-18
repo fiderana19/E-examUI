@@ -1,10 +1,16 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Card } from "@/components/ui/card";
 import { mock_annonces } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { CloseOutlined, NotificationTwoTone } from "@ant-design/icons";
 import React from "react";
 
 const TeacherHome: React.FC  = () => {
+    const { token } = useAuth();
+    const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
+    const { data: annonces } = useGetAnnonceByUserId(user ? Number(user?.id_groupe) : 0)
 
     return <div className="pl-64 pr-[4%] min-h-screen flex flex-col justify-center">
         <TeacherNavigation />

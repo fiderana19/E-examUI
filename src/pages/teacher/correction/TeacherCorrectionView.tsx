@@ -1,5 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { mock_reponseetudiants_a_corriger, mock_tests } from "@/constants/mock";
+import { useGetReponseByTentativeId } from "@/hooks/reponse/useGetReponseByTentativeId";
+import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { HourglassOutlined } from "@ant-design/icons";
 import { Edit } from "lucide-react";
 import React from "react";
@@ -10,6 +12,8 @@ const TeacherCorrectionView: React.FC  = () => {
     const Id = req.id;
     const navigate = useNavigate();
     const test = mock_tests[0];
+    const { data } = useGetTestById(Id ? Number(Id) : 0);
+    const { data: rep } = useGetReponseByTentativeId(Id ? Number(Id) : 0);
 
     return <div className="pl-64 pr-6">
         <TeacherNavigation />

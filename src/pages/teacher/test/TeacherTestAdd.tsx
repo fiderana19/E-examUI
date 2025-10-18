@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HttpStatus } from "@/constants/Http_status";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
+import { usePostTest } from "@/hooks/test/usePostTest";
 import { TestCreateInterface } from "@/interfaces/test.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { TestCreateValidation } from "@/validation/test.validation";
@@ -10,18 +14,28 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarClock } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const TeacherTestAdd: React.FC  = () => {
+    const { token } = useAuth();
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<TestCreateInterface>({
         resolver: yupResolver(TestCreateValidation)
-    })
+    });
+    const { refetch } = useGetAllTestByTeacherId(token ? Number(token.split("/")[0]) : 0);
+    const { mutateAsync: createTest } = usePostTest({action() {
+        refetch();
+    },})
+    const navigate = useNavigate();
 
     useEffect(() => {
-        setValue('id_utilisateur', 'd')
+        setValue('id_utilisateur', token ? String(token.split("/")[0]) : "")
     }, [])
 
     const handleSubmit = async (data: TestCreateInterface) => {
-        console.log(data);
+        const response = await createTest(data);
+        if(response?.status === HttpStatus.CREATED) {
+            navigate("/teacher/test")
+        }
     }
     
     return <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">

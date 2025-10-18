@@ -1,10 +1,13 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_groupes } from "@/constants/mock";
+import { useDeleteGroup } from "@/hooks/group/useDeleteGroup";
+import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
+import { usePostGroup } from "@/hooks/group/usePostGroup";
 import { AddGroupInterface } from "@/interfaces/groupe.interface";
 import { AddGroupValidation } from "@/validation/group.validation";
 import { BookOutlined } from "@ant-design/icons";
@@ -16,18 +19,24 @@ import { useNavigate } from "react-router-dom";
 
 const AdminGroupe: React.FC  = () => {
     const navigate = useNavigate();
-    const [filterText, setFilterText] = useState<string>('tout');
-    const [selectedGroup, setSelectedGroup] = useState<string>('')
+    const [selectedGroup, setSelectedGroup] = useState<number>(0);
+    const { data: groupes, refetch } = useGetAllGroup();
+    const { mutateAsync: creerGroupe } = usePostGroup({action() {
+      refetch();
+    },})
+    const { mutateAsync: supprimerGroupe } = useDeleteGroup({action() {
+      refetch();
+    },})
     const { handleSubmit: submit, formState: { errors }, control } = useForm<AddGroupInterface>({
       resolver: yupResolver(AddGroupValidation)
     })
 
     const handleSubmit = async (data: AddGroupInterface) => {
-      console.log(data);
+      await creerGroupe(data);
     }
 
-    const deleteConfirm = async (id: string) => {
-      console.log(id);
+    const deleteConfirm = async () => {
+      await supprimerGroupe(selectedGroup);
     }
 
     return <div className="pl-64 pr-[4%] py-6">
@@ -86,7 +95,7 @@ const AdminGroupe: React.FC  = () => {
                             <Button onClick={() => navigate(`/admin/groupe/edit/${group.id_groupe}`)} variant={'outline'} size={'icon'}><Edit2 /></Button>
                             <AlertDialog>
                                 <AlertDialogTrigger>
-                                  <Button onClick={() => setSelectedGroup("ito")} variant={'destructive'} size={'icon'}><Trash /></Button>
+                                  <Button onClick={() => setSelectedGroup(group.id_groupe)} variant={'destructive'} size={'icon'}><Trash /></Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                 <AlertDialogHeader>
@@ -97,7 +106,7 @@ const AdminGroupe: React.FC  = () => {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                    <Button variant={'destructive'}>Supprimer</Button>
+                                    <Button onClick={() => deleteConfirm()} variant={'destructive'}>Supprimer</Button>
                                 </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>

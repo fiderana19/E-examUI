@@ -4,6 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { mock_reponseetudiants_a_corriger, mock_tests } from "@/constants/mock";
+import { useGetReponseById } from "@/hooks/reponse/useGetReponseById";
+import { usePatchReponseForCorrection } from "@/hooks/reponse/usePatchReponseForCorrection";
+import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { GivePointsInterface } from "@/interfaces/response.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { GivePointsValidation } from "@/validation/response.validation";
@@ -18,18 +21,24 @@ const TeacherCorrectionAction: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
     const navigate = useNavigate();
+    const { data } = useGetTestById(Id ? Number(Id) : 0);
+    const { data: rep, refetch } = useGetReponseById(Id ? Number(Id) : 0);
     const test = mock_tests[0];
+    const { mutateAsync: corrigerReponse } = usePatchReponseForCorrection({action() {
+        refetch();
+    },})
     const reponse = mock_reponseetudiants_a_corriger[0]
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<GivePointsInterface>({
         resolver: yupResolver(GivePointsValidation)
     })
 
     useEffect(() => {
-        setValue('id_reponse', 'd')
+        setValue('id_reponse', Id ? String(Id) : "")
     }, [])
 
     const handleSubmit = async (data: GivePointsInterface) => {
-        console.log(data);
+        await corrigerReponse(data);
+        navigate("/teacher/correction/view")
     }
 
     return <div className="pl-64 pr-6">

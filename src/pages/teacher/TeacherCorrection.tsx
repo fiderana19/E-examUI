@@ -2,6 +2,8 @@ import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { mock_tests } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAllTestForCorrectionByTeacherId } from "@/hooks/test/useGetAllTestForCorrectionByTeacherId";
 import { CloseOutlined, HourglassOutlined } from "@ant-design/icons";
 import { Edit } from "lucide-react";
 import React, { useState } from "react";
@@ -10,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 const TeacherCorrection: React.FC  = () => {
     const navigate = useNavigate();
     const [searchRef, setSearchRef] = useState<string>('');
+    const { token } = useAuth();
+    const { data: tests } = useGetAllTestForCorrectionByTeacherId(token ? Number(token.split("/")[0]) : 0)
 
     return <div className="pl-64 pr-6">
         <TeacherNavigation />

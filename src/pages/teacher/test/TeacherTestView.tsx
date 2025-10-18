@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_questions, mock_tests } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAllQuestionByTestId } from "@/hooks/question/useGetAllQuestionByTestId";
+import { usePostQuestion } from "@/hooks/question/usePostQuestion";
+import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { QuestionCreateInterface } from "@/interfaces/question.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { QuestionCreateValidation } from "@/validation/question.validation";
@@ -19,20 +23,27 @@ import { useNavigate, useParams } from "react-router-dom";
 const TeacherTestView: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const { token } = useAuth();
+    const { data: tes } = useGetTestById(Id ? Number(Id) : 0);
+    const { data: questions, refetch } = useGetAllQuestionByTestId(Id ? Number(Id) : 0);
+    const { mutateAsync: createQuestion } = usePostQuestion({action() {
+        refetch();
+    },})
     const navigate = useNavigate();
     const test = mock_tests[0];
-    const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<QuestionCreateInterface>({
+    const { handleSubmit: submit, formState: { errors }, control, setValue, reset } = useForm<QuestionCreateInterface>({
         resolver: yupResolver(QuestionCreateValidation)
     })
 
     useEffect(() => {
-        setValue('id_utilisateur', 'd')
-        setValue('id_utilisateur', 'd')
+        setValue('id_utilisateur', token ? token.split("/")[0] : "")
     }, [])
 
     const handleSubmit = async (data: QuestionCreateInterface) => {
-        console.log(data);
+        await createQuestion(data);
+        reset();
     }
+
     return <div className="pl-64 pt-24 pr-6">
         <TeacherNavigation />
         {

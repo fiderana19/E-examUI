@@ -4,21 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_utilisateurs } from "@/constants/mock";
+import { useGetAllUser } from "@/hooks/user/useGettAllUser";
+import { useValidateUser } from "@/hooks/user/useValidateUser";
 import { CloseOutlined } from "@ant-design/icons";
-import { Check, Edit2, Filter, Trash, User } from "lucide-react";
+import { Check, Filter, User } from "lucide-react";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const AdminAccount: React.FC  = () => {
-    const navigate = useNavigate();
+    const { data: users, refetch } = useGetAllUser();
+    const { mutateAsync: validerUser } = useValidateUser({action() {
+      refetch();
+    },})
     const [selectedAccount, setSelectedAccount] = useState<string>('')
     const [searchRef, setSearchRef] = useState<string>('');
     const [filtereds, setFiltereds] = useState<any[]>([]);
     const [filterText, setFilterText] = useState<string>('Tout');
     const [filterRef, setFilterRef] = useState<boolean>(false);
 
-    const deleteConfirm = async (id: string) => {
-      console.log(id);
+    const validateConfirm = async () => {
+      await validerUser(selectedAccount);
     }
 
     async function filterData (text: string , value: boolean) {
@@ -77,28 +81,10 @@ const AdminAccount: React.FC  = () => {
                         <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
                           <div className='flex justify-end gap-1'>
                             {
-                              et.est_valider ?
+                              !et.est_valider &&
                               <AlertDialog>
                                   <AlertDialogTrigger>
-                                    <Button onClick={() => setSelectedAccount("ito")} variant={'destructive'} size={'icon'}><CloseOutlined /></Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                      <AlertDialogTitle>Invalidation du compte</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                      Voulez-vous vraiment invalider ce compte ?
-                                      </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                      <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                      <Button variant={'destructive'}>Invalider</Button>
-                                  </AlertDialogFooter>
-                                  </AlertDialogContent>
-                              </AlertDialog>
-                              :
-                              <AlertDialog>
-                                  <AlertDialogTrigger>
-                                    <Button onClick={() => setSelectedAccount("ito")} variant={'success'} size={'icon'}><Check /></Button>
+                                    <Button onClick={() => setSelectedAccount(et.id_utilisateur)} variant={'success'} size={'icon'}><Check /></Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
                                   <AlertDialogHeader>
@@ -109,7 +95,7 @@ const AdminAccount: React.FC  = () => {
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
                                       <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                      <Button variant={'success'}>Valider</Button>
+                                      <Button onClick={() => validateConfirm()} variant={'success'}>Valider</Button>
                                   </AlertDialogFooter>
                                   </AlertDialogContent>
                               </AlertDialog>
@@ -132,28 +118,10 @@ const AdminAccount: React.FC  = () => {
                         <td className='px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900'>
                           <div className='flex justify-end gap-1'>
                             {
-                              et.est_valider ?
+                              !et.est_valider &&
                               <AlertDialog>
                                   <AlertDialogTrigger>
-                                    <Button onClick={() => setSelectedAccount("ito")} variant={'destructive'} size={'icon'}><CloseOutlined /></Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                      <AlertDialogTitle>Invalidation du compte</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                      Voulez-vous vraiment invalider ce compte ?
-                                      </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                      <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                      <Button variant={'destructive'}>Invalider</Button>
-                                  </AlertDialogFooter>
-                                  </AlertDialogContent>
-                              </AlertDialog>
-                              :
-                              <AlertDialog>
-                                  <AlertDialogTrigger>
-                                    <Button onClick={() => setSelectedAccount("ito")} variant={'success'} size={'icon'}><Check /></Button>
+                                    <Button onClick={() => setSelectedAccount(et.id_utilisateur)} variant={'success'} size={'icon'}><Check /></Button>
                                   </AlertDialogTrigger>
                                   <AlertDialogContent>
                                   <AlertDialogHeader>
@@ -164,7 +132,7 @@ const AdminAccount: React.FC  = () => {
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
                                       <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                      <Button variant={'success'}>Valider</Button>
+                                      <Button onClick={() => validateConfirm()} variant={'success'}>Valider</Button>
                                   </AlertDialogFooter>
                                   </AlertDialogContent>
                               </AlertDialog>

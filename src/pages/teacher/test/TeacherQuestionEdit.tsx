@@ -3,6 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HttpStatus } from "@/constants/Http_status";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAllQuestionByTestId } from "@/hooks/question/useGetAllQuestionByTestId";
+import { useGetQuestionById } from "@/hooks/question/useGetQuestionById";
+import { usePatchQuestion } from "@/hooks/question/usePatchQuestion";
 import { QuestionEditInterface } from "@/interfaces/question.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { QuestionEditValidation } from "@/validation/question.validation";
@@ -10,23 +15,33 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherQuestionEdit: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const navigate = useNavigate();
+    const { token } = useAuth();
+    const { data: question } = useGetQuestionById(Id ? Number(Id) : 0)
+    const { refetch } = useGetAllQuestionByTestId(question.id_test)
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<QuestionEditInterface>({
         resolver: yupResolver(QuestionEditValidation)
-    })
+    });
+    const { mutateAsync: modifierQuestion } = usePatchQuestion({action() {
+        refetch()
+    },})
 
     useEffect(() => {
-        setValue('id_question', 'd')
-        setValue('id_test', 'd')
-        setValue('id_utilisateur', 'd')
+        setValue('id_question', Id ? Id : "")
+        setValue('id_test', question.id_test)
+        setValue('id_utilisateur', question.id_utilisateur)
     }, [])
 
     const handleSubmit = async (data: QuestionEditInterface) => {
-        console.log(data);
+        const response = await modifierQuestion(data);
+        if(response?.status === HttpStatus.OK) {
+            navigate("/teacher/test")
+        } 
     }
     
     return <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">

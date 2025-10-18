@@ -4,6 +4,14 @@ import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const QuestionAPIUrl = `${import.meta.env.VITE_BASE_URL}/groupe`;
 
+export const getQuestionById = async (id: number) => {
+  // return await axiosAuthInstance.get(`${QuestionAPIUrl}/test/${id}`)
+
+  initMockAdapter();
+  return await mockedAxios.get(`/question/test/${id}`);
+}
+
+
 export const getQuestionByTestId = async (id: number) => {
   // return await axiosAuthInstance.get(`${QuestionAPIUrl}/test/${id}`)
 

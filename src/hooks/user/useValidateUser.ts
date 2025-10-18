@@ -6,7 +6,7 @@ import { AxiosError } from "axios"
 
 export const useValidateUser = ({action} : {action: () => void}) => {
     const mutation = useMutation({
-        mutationFn: (data: boolean) => patchUserValidation(data),
+        mutationFn: (data: string) => patchUserValidation(data),
         onSuccess: () => {
             if(action) {
                 action();

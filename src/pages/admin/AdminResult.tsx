@@ -6,31 +6,42 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_resultats } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useDeleteResult } from "@/hooks/result/useDeleteResult";
+import { useGetAllResult } from "@/hooks/result/useGetAllResult";
+import { usePostResult } from "@/hooks/result/usePostResult";
 import { PostCreateInterface } from "@/interfaces/post.interface";
 import { PostCreateValidation } from "@/validation/post.validation";
 import { FilePdfOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 const AdminResult: React.FC  = () => {
-    const navigate = useNavigate();
+    const { token } = useAuth();
+    const { data: results, refetch } = useGetAllResult();
+    const { mutateAsync: publierResultat } = usePostResult({action() {
+        refetch();
+    },})
+    const { mutateAsync: supprimerResultat } = useDeleteResult({action() {
+        refetch();
+    },})
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<PostCreateInterface>({
       resolver: yupResolver(PostCreateValidation)
-    })
+    });
+    const [selectedResult, setSelectedResult] = useState<number>(0)
 
     useEffect(() => {
-        setValue('id_utilisateur', 'd')
+        setValue('id_utilisateur', token ? token.split("/")[0] : "")
     }, [])
 
     const handleSubmit = async (data: PostCreateInterface) => {
-      console.log(data);
+      await publierResultat(data);
     }
 
-    const deleteConfirm = async (id: string) => {
-      console.log(id);
+    const deleteConfirm = async () => {
+      await supprimerResultat(selectedResult)
     }
 
     return <div className="pl-64 pr-6">
@@ -93,7 +104,7 @@ const AdminResult: React.FC  = () => {
                             <div className='flex justify-end gap-1 mt-2'>
                                 <AlertDialog>
                                     <AlertDialogTrigger>
-                                    <Button variant={'destructive'}><Trash /> Supprimer</Button>
+                                    <Button onClick={() => setSelectedResult(res.id_result)} variant={'destructive'}><Trash /> Supprimer</Button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                     <AlertDialogHeader>
@@ -104,7 +115,7 @@ const AdminResult: React.FC  = () => {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                        <Button variant={'destructive'}>Supprimer</Button>
+                                        <Button onClick={() => deleteConfirm()} variant={'destructive'}>Supprimer</Button>
                                     </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>

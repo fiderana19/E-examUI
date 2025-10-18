@@ -3,6 +3,10 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescript
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_tests } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useDeleteTest } from "@/hooks/test/useDeleteTest";
+import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
+import { useLaunchTest } from "@/hooks/test/useLaunchTest";
 import { ClockCircleOutlined, CloseOutlined, HourglassOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { CalendarClock, Check, Edit, Filter, History, Plus, Trash } from "lucide-react";
 import React, { useState } from "react";
@@ -10,15 +14,32 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherTest: React.FC  = () => {
     const navigate = useNavigate();
+    const { token } = useAuth();
+    const { data: tests, refetch } = useGetAllTestByTeacherId(token ? Number(token.split("/")[0]) : 0);
+    const { mutateAsync: launchTest } = useLaunchTest({action() {
+        refetch();
+    },})
+    const { mutateAsync: deleteTest } = useDeleteTest({action() {
+        refetch();
+    },})
     const [filtereds, setFiltereds] = useState<any[]>([]);
     const [filterText, setFilterText] = useState<string>('Tout');
     const [filterRef, setFilterRef] = useState<boolean>(false);
+    const [selectedTest, setSelectedTest] = useState<number>(0);
 
     async function filterData (filter: string) {
         setFilterRef(true);
         setFilterText(filter);
         const acc = mock_tests.filter((accounts: any) => accounts.status === filter);
         setFiltereds(acc);
+    }
+
+    const launchConfirm = async () => {
+        await launchTest(selectedTest);
+    }    
+    
+    const deleteConfirm = async () => {
+        await deleteTest(selectedTest);
     }
 
     return <div className="pl-64 pr-6">
@@ -92,7 +113,7 @@ const TeacherTest: React.FC  = () => {
                                     (test.status === "En attente") &&
                                     <AlertDialog>
                                         <AlertDialogTrigger>
-                                            <Button ><History /> Lancer</Button>
+                                            <Button onClick={() => setSelectedTest(test.id_test)} ><History /> Lancer</Button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -103,7 +124,7 @@ const TeacherTest: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button>Confirmer</Button>
+                                            <Button onClick={() => launchConfirm()} >Confirmer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -117,7 +138,7 @@ const TeacherTest: React.FC  = () => {
                                     (test.status === "En attente") &&
                                     <AlertDialog>
                                         <AlertDialogTrigger>
-                                            <Button variant={'destructive'}><Trash /> Supprimer</Button>
+                                            <Button onClick={() => setSelectedTest(test.id_test)} variant={'destructive'}><Trash /> Supprimer</Button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -128,7 +149,7 @@ const TeacherTest: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button variant={'destructive'}>Supprimer</Button>
+                                            <Button onClick={() => deleteConfirm()} variant={'destructive'}>Supprimer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -178,7 +199,7 @@ const TeacherTest: React.FC  = () => {
                                     (test.status === "En attente") &&
                                     <AlertDialog>
                                         <AlertDialogTrigger>
-                                            <Button ><History /> Lancer</Button>
+                                            <Button onClick={() => setSelectedTest(test.id_test)} ><History /> Lancer</Button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -189,7 +210,7 @@ const TeacherTest: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button>Confirmer</Button>
+                                            <Button onClick={() => launchConfirm()} >Confirmer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -203,7 +224,7 @@ const TeacherTest: React.FC  = () => {
                                     (test.status === "En attente") &&
                                     <AlertDialog>
                                         <AlertDialogTrigger>
-                                            <Button variant={'destructive'}><Trash /> Supprimer</Button>
+                                            <Button onClick={() => setSelectedTest(test.id_test)} variant={'destructive'}><Trash /> Supprimer</Button>
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -214,7 +235,7 @@ const TeacherTest: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button variant={'destructive'}>Supprimer</Button>
+                                            <Button onClick={() => deleteConfirm()} variant={'destructive'}>Supprimer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>

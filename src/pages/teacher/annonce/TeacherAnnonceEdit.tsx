@@ -3,29 +3,44 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HttpStatus } from "@/constants/Http_status";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
+import { usePatchAnnonce } from "@/hooks/annonce/usePatchAnnonce";
+import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
 import { AnnounceEditInterface } from "@/interfaces/announce.interface";
 import { EditAnnounceValidation } from "@/validation/announce.validation";
 import { NotificationOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherAnnounceEdit: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const { token } = useAuth();
+    const { data: annonce, refetch } = useGetAnnonceByUserId(Id ? Number(Id) : 0)
+    const { data: groupes } = useGetAllGroup();
+    const { mutateAsync: modifierAnnonce } = usePatchAnnonce({action() {
+        refetch();
+    },})    
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<AnnounceEditInterface>({
         resolver: yupResolver(EditAnnounceValidation)
-    })
+    });
+    const navigate = useNavigate();
 
     useEffect(() => {
-        setValue('date_creation', '')
-        setValue('id_annonce', '')
-        setValue('id_createur', '')
+        setValue('date_creation', String(new Date()))
+        setValue('id_annonce', Id ? String(Id) : "")
+        setValue('id_createur', token ? token.split("/")[0] : "")
     }, [])
 
     const handleSubmit = async (data: AnnounceEditInterface) => {
-        console.log(data);
+        const response = await modifierAnnonce(data);
+        if(response?.status === HttpStatus.OK) {
+            navigate("/teacher/announce")
+        }
     }
     
     return <div className="pl-64 pr-[4%] py-6 min-h-screen flex flex-col justify-center">

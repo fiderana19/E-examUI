@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HttpStatus } from "@/constants/Http_status";
+import { useGetTestById } from "@/hooks/test/useGetTestById";
+import { usePatchTest } from "@/hooks/test/usePatchTest";
 import { TestEditInterface } from "@/interfaces/test.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { TestEditValidation } from "@/validation/test.validation";
@@ -10,22 +13,30 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarClock } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherTestEdit: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const { data: test, refetch } = useGetTestById(Id ? Number(Id) : 0)
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<TestEditInterface>({
         resolver: yupResolver(TestEditValidation)
-    })
+    });
+    const { mutateAsync: modifierTest } = usePatchTest({action() {
+        refetch();
+    },});
+    const navigate = useNavigate();
 
     useEffect(() => {
-        setValue('id_utilisateur', 'd')
-        setValue('id_test', 'd')
+        setValue('id_utilisateur', test.id_utilisateur)
+        setValue('id_test', Id ? Id : "")
     }, [])
 
     const handleSubmit = async (data: TestEditInterface) => {
-        console.log(data);
+        const response = await modifierTest(data);
+        if(response?.status === HttpStatus.OK) {
+            navigate("/teacher/test")
+        }
     }
     
     return <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">

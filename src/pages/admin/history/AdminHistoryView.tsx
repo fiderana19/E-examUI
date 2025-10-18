@@ -1,7 +1,7 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
-import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
-import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { useGetReponseByTentativeId } from "@/hooks/reponse/useGetReponseByTentativeId";
+import { FilePdfOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";

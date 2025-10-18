@@ -3,23 +3,36 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { HttpStatus } from "@/constants/Http_status";
+import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
+import { useGetGroupById } from "@/hooks/group/useGetGroupById";
+import { usePatchGroup } from "@/hooks/group/usePatchGroup";
 import { EditGroupInterface } from "@/interfaces/groupe.interface";
 import { EditGroupValidation } from "@/validation/group.validation";
 import { BookOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AdminGroupeEdit: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const { data: groupe } = useGetGroupById(Id ? Number(Id) : 0)
     const { handleSubmit: submit, formState: { errors }, control } = useForm<EditGroupInterface>({
         resolver: yupResolver(EditGroupValidation)
-    })
+    });
+    const { refetch } = useGetAllGroup();
+    const { mutateAsync: modifierGroupe } = usePatchGroup({action() {
+        refetch();
+    },});
+    const navigate = useNavigate();
 
     const handleSubmit = async (data: EditGroupInterface) => {
-        console.log(data);
+        const response = await modifierGroupe(data);
+        if(response?.status === HttpStatus.OK) {
+            navigate("/admin/groupe")
+        }
     }
     
     return <div className="pl-64 pr-[4%] py-6 min-h-screen flex flex-col justify-center">

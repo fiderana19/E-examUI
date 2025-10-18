@@ -1,5 +1,6 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
+import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
 import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React from "react";
@@ -9,6 +10,7 @@ const TeacherResultView: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
     const navigate = useNavigate();
+    const { data: result } = useGetTentativeForResultByTestId(Id ? Number(Id) : 0);
 
     return <div className="pl-64 pr-6">
         <TeacherNavigation />

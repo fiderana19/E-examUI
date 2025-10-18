@@ -6,6 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_annonces } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
+import { usePostAnnonce } from "@/hooks/annonce/usePostAnnonce";
+import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { AnnounceAddInterface } from "@/interfaces/announce.interface";
 import { AddAnnounceValidation } from "@/validation/announce.validation";
 import { CloseOutlined, NotificationOutlined, NotificationTwoTone } from "@ant-design/icons";
@@ -17,18 +22,25 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherAnnounce: React.FC  = () => {
     const navigate = useNavigate();
+    const { token } = useAuth();
+    const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
+    const { data: annonces, refetch } = useGetAnnonceByUserId(user ? Number(user?.id_groupe) : 0)
+    const { data: groupes } = useGetAllGroup();
+    const { mutateAsync: creerAnnonce } = usePostAnnonce({action() {
+        refetch();
+    },})
     const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<AnnounceAddInterface>({
         resolver: yupResolver(AddAnnounceValidation)
     })
     const [searchRef, setSearchRef] = useState<string>('');
 
     useEffect(() => {
-        setValue('date_creation', '')
-        setValue('id_createur', '')
+        setValue('date_creation', String(new Date()))
+        setValue('id_createur', user.id_utilisateur)
     }, [])
 
     const handleSubmit = async (data: AnnounceAddInterface) => {
-        console.log(data);
+        await creerAnnonce(data);
     }
 
     return <div className="pl-64 pr-6">
@@ -54,6 +66,14 @@ const TeacherAnnounce: React.FC  = () => {
                             )}
                         />
                         { errors?.id_groupe && <div className="text-xs w-full text-red-500 text-left">{ errors?.id_groupe.message }</div> }
+                        <Label className="mb-1 mt-4">Titre :</Label>
+                        <Controller
+                            control={control}
+                            name="titre_annonce"
+                            render={({ field: { value, onChange } }) => (
+                                <Input value={value} onChange={onChange} className={`${errors?.texte_annonce && 'border border-red-500 text-red-500 rounded'}`} />
+                            )}
+                        />
                         <Label className="mb-1 mt-4">Description :</Label>
                         <Controller
                             control={control}

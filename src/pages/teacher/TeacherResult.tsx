@@ -1,12 +1,16 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Input } from "@/components/ui/input";
 import { mock_tests } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useGetAllCorrectedTestByTeacherId } from "@/hooks/test/useGetAllCorrectedTestByTeacherId";
 import { CloseOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherResult: React.FC  = () => {
+    const { token } = useAuth();
+    const { data: results } = useGetAllCorrectedTestByTeacherId(token ? Number(token.split("/")[0]) : 0)
     const navigate = useNavigate();
     const [searchRef, setSearchRef] = useState<string>('');
 
@@ -17,10 +21,12 @@ const TeacherResult: React.FC  = () => {
                 <div className="text-gray-800 text-xl font-bold flex items-center gap-2"><BookText /> Les tests corrigés</div>
                 <Input className="w-48" onChange={(e) => setSearchRef(e.target.value)}  placeholder="Titre du test..." />
             </div>
-            <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
-                <CloseOutlined className="text-7xl" />
-                <div className="mt-4 text-xl">Vous avez aucune resultat</div>
-            </div>
+            {
+                (mock_tests && mock_tests.length < 1) && <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
+                    <CloseOutlined className="text-7xl" />
+                    <div className="mt-4 text-xl">Vous avez aucune resultat</div>
+                </div>
+            }
             <div className="">
                 {
                     mock_tests.map((test: any, index: any) => {
