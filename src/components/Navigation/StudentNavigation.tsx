@@ -5,15 +5,15 @@ import { Button } from "../ui/button";
 import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import { useTest } from "@/context/TestContext";
-import { mock_utilisateurs } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 
 const StudentNavigation: React.FC = () => {
-    const { logout } = useAuth();
+    const { logout, token } = useAuth();
     const { isInTest } = useTest();
-    const user = mock_utilisateurs[0];
     const location = useLocation();
     const navigate = useNavigate();
+    const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
 
     return(
         <div className="z-40 fixed w-full px-4 top-0 left-0 flex justify-between items-center bg-second-custom text-center">

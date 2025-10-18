@@ -3,13 +3,13 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { BookText, CalendarClock, Edit, LogOut, User } from "lucide-react";
 import { HomeOutlined, NotificationOutlined } from "@ant-design/icons";
-import { mock_utilisateurs } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 
 const TeacherNavigation: React.FC = () => {
-    const { logout } = useAuth();
     const location = useLocation();
-    const user = mock_utilisateurs[0];
+    const { logout, token } = useAuth();
+    const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
 
     return(
         <div className="z-50 w-60 fixed top-0 left-0 p-4 flex flex-col justify-between h-screen bg-second-custom">
