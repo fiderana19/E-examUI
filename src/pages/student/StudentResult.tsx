@@ -1,19 +1,27 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Card } from "@/components/ui/card";
 import { mock_resultats } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
+import { useGetResultByGroupId } from "@/hooks/result/useGetResultByGroupId";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
 import React from "react";
 
 const StudentResult: React.FC  = () => {
+    const { token } = useAuth();
+    const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
+    const { data: results } = useGetResultByGroupId(user ? Number(user?.id_groupe) : 0)
 
     return <div className="pt-20 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />
         <div>
             <div className="text-gray-800 text-xl font-bold mb-10">Les resultats</div>
-            <div className="w-max mx-auto text-center text-gray-600">
-                <CloseOutlined className="text-7xl" />
-                <div className="mt-4 text-xl">Aucun resultat disponible.</div>
-            </div>
+            {
+                (mock_resultats && mock_resultats.length < 1) && <div className="w-max mx-auto text-center text-gray-600">
+                    <CloseOutlined className="text-7xl" />
+                    <div className="mt-4 text-xl">Aucun resultat disponible.</div>
+                </div>
+            }
             <div className="my-6">
                 {
                     mock_resultats.map((result: any, index: any) => {

@@ -3,19 +3,31 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
-import React from "react";
+import React, { useState } from "react";
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SignupInterface } from "@/interfaces/user.interface";
 import { SignupValidation } from "@/validation/user.validation";
 import { Link } from "react-router-dom";
+import { useSignup } from "@/hooks/user/useSignup";
+import { HttpStatus } from "@/constants/Http_status";
+import { CloseCircleFilled } from "@ant-design/icons";
 
 const SignupPage: React.FC  = () => {
-    const { handleSubmit: submit, formState: { errors }, control } = useForm<SignupInterface>({
+    const { handleSubmit: submit, formState: { errors }, control, reset, resetField } = useForm<SignupInterface>({
         resolver: yupResolver(SignupValidation)
-    })
+    });
+    const { mutateAsync: signup } = useSignup({action() {
+        
+    },});
+    const [reponseText, setReponseText] = useState<boolean>(false)
 
     const handleSubmit = async (data: SignupInterface) => {
-        console.log(data);
+        const response = await signup(data);
+        reset();
+        if(response.status === HttpStatus.CREATED || response?.status === HttpStatus.OK) {
+            reset();
+            setReponseText(true);
+        }
     }
 
     return <div className="flex min-h-screen flex-col justify-center">
@@ -23,6 +35,16 @@ const SignupPage: React.FC  = () => {
             <div className="text-3xl font-bold text-center my-4">E-Exam</div>
             <Card className="px-4 py-10">
                 <div className="font-extrabold text-xl text-center">Inscription</div>
+                {
+                    reponseText && <div className="border rounded bg-gray-100 p-2">
+                        <div  className=" text-right">
+                            <CloseCircleFilled onClick={() => setReponseText(false)} />
+                        </div>
+                        <div>
+                        Votre compte est maintenant en attente de la validation de l'administrateur !
+                        </div>
+                    </div>
+                }
                 <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
                     <Label className="mb-1">Nom :</Label>
                     <Controller

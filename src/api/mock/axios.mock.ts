@@ -16,16 +16,16 @@ const getCurrentDate = (offset = 0) => {
 
 // --- UTILISATEUR ---
 // Règle: est_valider = false (par défaut à la création), mais nous incluons des utilisateurs validés pour le test.
-const users = [
-    { id_utilisateur: 1, nom: 'Alice Martin', email: 'alice.m@univ.fr', matricule: 'S001', role: 'student', est_valider: true, creation_utilisateur: getCurrentDate(10) },
-    { id_utilisateur: 2, nom: 'Bob Dupont', email: 'bob.d@univ.fr', matricule: 'T001', role: 'teacher', est_valider: true, creation_utilisateur: getCurrentDate(15) },
+let users = [
+    { id_utilisateur: 1, id_groupe: 101, nom: 'Alice Martin', email: 'student@gmail.com', matricule: 'S001', role: 'student', est_valider: true, creation_utilisateur: getCurrentDate(10) },
+    { id_utilisateur: 2,id_groupe: 101, nom: 'Bob Dupont', email: 'teacher@gmail.com', matricule: 'T001', role: 'teacher', est_valider: true, creation_utilisateur: getCurrentDate(15) },
     { id_utilisateur: 3, nom: 'Charlie Legrand', email: 'charlie.l@univ.fr', matricule: 'S002', role: 'student', est_valider: false, creation_utilisateur: getCurrentDate(8) },
     { id_utilisateur: 4, nom: 'Diane Petit', email: 'diane.p@univ.fr', matricule: 'T002', role: 'teacher', est_valider: true, creation_utilisateur: getCurrentDate(20) },
-    { id_utilisateur: 5, nom: 'Eve Dubois', email: 'eve.d@univ.fr', matricule: 'S003', role: 'student', est_valider: true, creation_utilisateur: getCurrentDate(5) },
+    { id_utilisateur: 5, nom: 'Eve Dubois', email: 'admin@gmail.com', matricule: 'S003', role: 'admin', est_valider: true, creation_utilisateur: getCurrentDate(5) },
 ];
 
 // --- GROUPE ---
-const groupes = [
+let groupes = [
     { id_groupe: 101, nom_groupe: 'L3 Informatique 2024', description: 'Cours de programmation avancée.', id_utilisateur: 2 }, // Bob est le créateur
     { id_groupe: 102, nom_groupe: 'Master 1 CyberSec', description: 'Sécurité et Réseaux.', id_utilisateur: 4 }, // Diane est la créatrice
     { id_groupe: 103, nom_groupe: 'Projet Final', description: 'Groupe pour le projet de fin d\'année.', id_utilisateur: 2 },
@@ -33,7 +33,7 @@ const groupes = [
 
 // --- TEST ---
 // Règle: max_questions = 15, note_max = 20, status = 'En attente', date_declenchement = null (par défaut)
-const tests = [
+let tests = [
     // Test 1: En Cours
     { id_test: 1001, titre: 'Examen Final JS Avancé', status: 'En cours', id_groupe: 101, max_questions: 30, note_max: 50, date_declenchement: getCurrentDate(1) },
     // Test 2: Terminé (pour les statistiques)
@@ -46,7 +46,7 @@ const tests = [
 
 // --- QUESTION ---
 // Règle: points=1 (QCM/Courte), points=2 (Dev), reponse_correcte=null (QCM/Dev)
-const questions = [
+let questions = [
     // TEST 1001 (JS Avancé) - 10 QCM, 5 Courtes, 5 Dev
     
     // QCM (points=1)
@@ -81,7 +81,7 @@ const questions = [
 ];
 
 // --- OPTION ---
-const options = [
+let options = [
     // Options pour Q1
     { id_option: 1, id_question: 1, texte_option: 'forEach', est_correcte: false },
     { id_option: 2, id_question: 1, texte_option: 'filter', est_correcte: false },
@@ -95,7 +95,7 @@ const options = [
 
 // --- ANNONCE ---
 // Règle: creation_annonce = date à l'instant (mais mockée ici)
-const annonces = [
+let annonces = [
     // Annonces pour le Groupe 101
     { id_annonce: 1, id_utilisateur: 2, id_groupe: 101, titre_annonce: 'Rappel Examen', texte_annonce: 'L\'examen final aura lieu la semaine prochaine, révisez bien les Promises et Hoisting.', creation_annonce: getCurrentDate(2) },
     { id_annonce: 2, id_utilisateur: 2, id_groupe: 101, titre_annonce: 'Séance Questions-Réponses', texte_annonce: 'Je serai disponible en ligne demain à 14h pour vos questions.', creation_annonce: getCurrentDate(1) },
@@ -107,7 +107,7 @@ const annonces = [
 
 // --- TENTATIVE ---
 // Règle: heure_debut = date à l'instant, heure_soumission = null, est_noter = false, note_obtenue = 0 (par défaut)
-const tentatives = [
+let tentatives = [
     // Tentative 1 (Alice sur Test 1002 - Terminé, Noté)
     { id_tentative: 1, id_utilisateur: 1, id_test: 1002, heure_debut: getCurrentDate(6), heure_soumission: getCurrentDate(6), note_obtenue: 15, est_noter: true },
     // Tentative 2 (Charlie sur Test 1002 - Terminé, Noté)
@@ -136,7 +136,7 @@ const reponses = [
 
 // --- RESULTAT ---
 // Règle: date_publication = date à l'instant (mais mockée ici)
-const resultats = [
+let resultats = [
     { id_resultat: 1, id_utilisateur: 1, id_test: 1002, note_finale: 15, date_publication: getCurrentDate(5) },
     { id_resultat: 2, id_utilisateur: 3, id_test: 1002, note_finale: 5, date_publication: getCurrentDate(5) },
 ];
@@ -447,6 +447,479 @@ mock.onPut(/\/test\/\d+\/declenchement/).reply((config: any) => {
 });
 
 // ... Autres mocks non modifiés (Connexion, Récupération d'utilisateurs, Groupes, Annonces, etc.)
+
+// ----------------------------------------------------
+// FONCTIONS UTILITAIRES 
+// ----------------------------------------------------
+
+const findUser = (id: any) => users.find(u => u.id_utilisateur === id);
+const findGroup = (id: any) => groupes.find(g => g.id_groupe === id);
+const findTest = (id: any) => tests.find(t => t.id_test === id);
+const findAnnonce = (id: any) => annonces.find(a => a.id_annonce === id);
+const findTentative = (id: any) => tentatives.find(t => t.id_tentative === id);
+const findReponse = (id: any) => reponses.find(r => r.id_reponse === id);
+
+// ----------------------------------------------------
+// MOCK DES REQUÊTES (COMPLET)
+// ----------------------------------------------------
+
+// --- UTILISATEUR ---
+
+// Connexion (authentification)
+mock.onPost('/utilisateur/connexion').reply(config => {
+  const { email } = JSON.parse(config.data);
+  const user = users.find(u => u.email === email);
+  if (user) {
+    // Simuler un token JWT 
+    const token = `${user.id_utilisateur}/${user.role}`;
+    return [200, { token: token }];
+  }
+  return [401, { message: 'Email ou mot de passe incorrect.' }];
+});
+
+// Inscription (avec valeurs par défaut)
+mock.onPost('/utilisateur/inscription').reply(config => {
+  const newUser = JSON.parse(config.data);
+  const newId = users.length + 1;
+  const newUserData = {
+    ...newUser,
+    id_utilisateur: newId,
+    role: 'student',
+    est_valider: false,
+    creation_utilisateur: getCurrentDate()
+  };
+  users.push(newUserData);
+  return [201, newUserData];
+});
+
+// Récupération de tous les utilisateurs (student ou teacher), ordre décroissant par date
+mock.onGet('/utilisateur').reply(200, 
+  users
+    .filter(u => u.role === 'student' || u.role === 'teacher')
+    .sort((a, b) => new Date(b.creation_utilisateur).getTime() - new Date(a.creation_utilisateur).getTime())
+);
+
+// Récupération d'un utilisateur par son id
+mock.onGet(/\/utilisateur\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const user = findUser(id);
+    if (user) return [200, user];
+    return [404, { message: 'Utilisateur non trouvé.' }];
+});
+
+// Modification de la validation
+mock.onPut(/\/utilisateur\/\d+\/validation/).reply((config: any) => {
+    const id = parseInt(config.url.split('/')[2]);
+    const { est_valider } = JSON.parse(config.data);
+    const user = findUser(id);
+    if (user) {
+        user.est_valider = est_valider;
+        return [200, user];
+    }
+    return [404, { message: 'Utilisateur non trouvé.' }];
+});
+
+// ----------------------------------------------------
+// --- GROUPE --- (Mocks non modifiés)
+// ----------------------------------------------------
+
+// Créer une groupe
+mock.onPost('/groupe').reply(config => {
+    const newGroup = JSON.parse(config.data);
+    const newId = groupes.reduce((max, g) => Math.max(max, g.id_groupe), 100) + 1;
+    const newGroupData = { ...newGroup, id_groupe: newId };
+    groupes.push(newGroupData);
+    return [201, newGroupData];
+});
+
+// Récupérer tous les groupes
+mock.onGet('/groupe').reply(200, groupes);
+
+// Récupérer une groupe par son id
+mock.onGet(/\/groupe\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const group = findGroup(id);
+    if (group) return [200, group];
+    return [404, { message: 'Groupe non trouvé.' }];
+});
+
+// Modifier une groupe
+mock.onPut(/\/groupe\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const updates = JSON.parse(config.data);
+    const group = findGroup(id);
+    if (group) {
+        Object.assign(group, updates);
+        return [200, group];
+    }
+    return [404, { message: 'Groupe non trouvé.' }];
+});
+
+// Supprimer une groupe
+mock.onDelete(/\/groupe\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const initialLength = groupes.length;
+    groupes = groupes.filter(g => g.id_groupe !== id);
+    if (groupes.length < initialLength) return [204]; // Succès sans contenu
+    return [404, { message: 'Groupe non trouvé.' }];
+});
+
+// ----------------------------------------------------
+// --- OPTION --- (Mocks non modifiés)
+// ----------------------------------------------------
+
+// Créer une option (avec logique de question.reponse_correcte)
+mock.onPost('/option').reply((config: any) => {
+    const newOption = JSON.parse(config.data);
+    const newId = options.reduce((max, o) => Math.max(max, o.id_option), 0) + 1;
+    const newOptionData = { ...newOption, id_option: newId };
+    options.push(newOptionData);
+
+    if (newOption.est_correcte) {
+        const question = findQuestion(newOption.id_question);
+        if (question) question.reponse_correcte = newOption.texte_option;
+    }
+    return [201, newOptionData];
+});
+
+// Récupérer une option par l'id du question
+mock.onGet(/\/option\/question\/\d+/).reply((config: any) => {
+    const id_question = parseInt(config.url.split('/').pop());
+    const filteredOptions = options.filter(o => o.id_question === id_question);
+    return [200, filteredOptions];
+});
+
+// Supprimer une option
+mock.onDelete(/\/option\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const initialLength = options.length;
+    options = options.filter(o => o.id_option !== id);
+    if (options.length < initialLength) return [204];
+    return [404, { message: 'Option non trouvée.' }];
+});
+
+// ----------------------------------------------------
+// --- QUESTION ---
+// ----------------------------------------------------
+
+// Créer une question (avec valeurs par défaut)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Modifier une question
+mock.onPut(/\/question\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const updates = JSON.parse(config.data);
+    const question = findQuestion(id);
+    if (question) {
+        Object.assign(question, updates);
+        return [200, question];
+    }
+    return [404, { message: 'Question non trouvée.' }];
+});
+
+// Supprimer une question
+mock.onDelete(/\/question\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const initialLength = questions.length;
+    questions = questions.filter(q => q.id_question !== id);
+    if (questions.length < initialLength) return [204];
+    return [404, { message: 'Question non trouvée.' }];
+});
+
+// Récupérer les questions par l'id du test
+mock.onGet(/\/question\/test\/\d+/).reply((config: any) => {
+    const id_test = parseInt(config.url.split('/').pop());
+    const filteredQuestions = questions.filter(q => q.id_test === id_test);
+    return [200, filteredQuestions];
+});
+
+// Récupérer des questions aléatoires (Logique de 10 QCM, 5 Courtes, 5 Dev)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// ----------------------------------------------------
+// --- ANNONCE ---
+// ----------------------------------------------------
+
+// Créer une annonce (avec valeur par défaut)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Récupérer les annonces par l'id du groupe
+mock.onGet(/\/annonce\/groupe\/\d+$/).reply((config: any) => {
+    const id_groupe = parseInt(config.url.split('/').pop());
+    const groupAnnonces = annonces;
+    return [200, annonces];
+});
+
+// Récupérer une annonce par son id
+mock.onGet(/\/annonce\/\d+$/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const annonce = findAnnonce(id);
+    if (annonce) return [200, annonce];
+    return [404, { message: 'Annonce non trouvée.' }];
+});
+
+// Récupérer les 3 dernières annonces par l'id du groupe
+mock.onGet(/\/annonce\/groupe\/\d+\/dernieres/).reply((config: any) => {
+    const id_groupe = parseInt(config.url.split('/')[2]);
+    const groupAnnonces = annonces
+        .filter(a => a.id_groupe === id_groupe)
+        .sort((a, b) => new Date(b.creation_annonce).getTime() - new Date(a.creation_annonce).getTime())
+        .slice(0, 3);
+    return [200, groupAnnonces];
+});
+
+// Récupérer les 3 dernières annonces par l'id d'un utilisateur
+mock.onGet(/\/annonce\/utilisateur\/\d+\/dernieres/).reply((config: any) => {
+    const id_utilisateur = parseInt(config.url.split('/')[2]);
+    const userAnnonces = annonces
+        .filter(a => a.id_utilisateur === id_utilisateur)
+        .sort((a, b) => new Date(b.creation_annonce).getTime() - new Date(a.creation_annonce).getTime())
+        .slice(0, 3);
+    return [200, userAnnonces];
+});
+
+// Modifier une annonce
+mock.onPut(/\/annonce\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const updates = JSON.parse(config.data);
+    const annonce = findAnnonce(id);
+    if (annonce) {
+        Object.assign(annonce, updates);
+        return [200, annonce];
+    }
+    return [404, { message: 'Annonce non trouvée.' }];
+});
+
+// Supprimer une annonce
+mock.onDelete(/\/annonce\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const initialLength = annonces.length;
+    annonces = annonces.filter(a => a.id_annonce !== id);
+    if (annonces.length < initialLength) return [204];
+    return [404, { message: 'Annonce non trouvée.' }];
+});
+
+// ----------------------------------------------------
+// --- TENTATIVE ---
+// ----------------------------------------------------
+
+// Créer une tentative (avec valeurs par défaut)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Modifier une tentative (simple modification, l'opération Terminer est une route différente)
+mock.onPut(/\/tentative\/\d+$/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const updates = JSON.parse(config.data);
+    const tentative = findTentative(id);
+    if (tentative) {
+        Object.assign(tentative, updates);
+        return [200, tentative];
+    }
+    return [404, { message: 'Tentative non trouvée.' }];
+});
+
+// Récupérer toutes les tentatives par l'id du test (avec nom, matricule)
+mock.onGet(/\/tentative\/test\/\d+/).reply((config: any) => {
+    const id_test = parseInt(config.url.split('/').pop());
+    const testTentatives = tentatives
+        .filter(t => t.id_test === id_test)
+        .map(t => {
+            const user = findUser(t.id_utilisateur);
+            return {
+                ...t,
+                nom_utilisateur: user ? user.nom : 'Inconnu',
+                matricule_utilisateur: user ? user.matricule : 'N/A',
+            };
+        });
+    return [200, testTentatives];
+});
+
+// Terminer une tentative (Logique de mise à jour)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// ----------------------------------------------------
+// --- RESULTAT ---
+// ----------------------------------------------------
+
+// Créer un resultat (avec valeur par défaut)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Récupérer les resultats par l'id du groupe
+mock.onGet(/\/resultat\/groupe\/\d+/).reply((config: any) => {
+    const id_groupe = parseInt(config.url.split('/').pop());
+    const testsDuGroupe = tests.filter(t => t.id_groupe === id_groupe).map(t => t.id_test);
+    const filteredResults = resultats.filter(r => testsDuGroupe.includes(r.id_test));
+    return [200, filteredResults];
+});
+
+// Récupérer touts les resultats
+mock.onGet('/resultat').reply(200, resultats);
+
+// Supprimer un resultat
+mock.onDelete(/\/resultat\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const initialLength = resultats.length;
+    resultats = resultats.filter(r => r.id_resultat !== id);
+    if (resultats.length < initialLength) return [204];
+    return [404, { message: 'Resultat non trouvé.' }];
+});
+
+// ----------------------------------------------------
+// --- REPONSE ---
+// ----------------------------------------------------
+
+// Créer une reponse (avec valeurs par défaut et auto-scoring)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Modifier le reponse_texte d'une reponse (Logique de mise à jour)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Modifier le score_question et mettre en true le est_corriger d'une reponse (Logique de mise à jour)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Récupérer les reponses par l'id du test lié au tentative de la reponse avec le texte du question lié et le points du questions
+mock.onGet(/\/reponse\/test\/\d+\/tentative\/\d+/).reply((config: any) => {
+    const parts = config.url.split('/');
+    const id_test = parseInt(parts[2]);
+    const id_tentative = parseInt(parts[4]);
+
+    const tentativeReponses = reponses
+        .filter(r => r.id_tentative === id_tentative)
+        .map(r => {
+            const question = findQuestion(r.id_question);
+            return {
+                ...r,
+                texte_question: question ? question.texte_question : 'Question non trouvée',
+                points_question: question ? question.points : 0
+            };
+        });
+    
+    // Vérification supplémentaire pour le test ID (bien que redondant si les données sont cohérentes)
+    // Seules les questions liées au bon test devraient être dans la réponse.
+    return [200, tentativeReponses.filter(r => findQuestion(r.id_question)?.id_test === id_test)];
+});
+
+// Récupérer une reponse par son id
+mock.onGet(/\/reponse\/\d+$/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const reponse = findReponse(id);
+    if (reponse) return [200, reponse];
+    return [404, { message: 'Réponse non trouvée.' }];
+});
+
+// Récupérer tous les reponses avec est_corriger egal a false
+mock.onGet('/reponse/non-corriger').reply(200, 
+    reponses.filter(r => r.est_corriger === false)
+);
+
+// ----------------------------------------------------
+// --- TEST ---
+// ----------------------------------------------------
+
+// Récupérer les tests avec des status en cours par l'id du groupe
+mock.onGet(/\/test\/groupe\/\d+\/encours/).reply((config: any) => {
+    const id_groupe = parseInt(config.url.split('/')[3]);
+    const filteredTests = tests.filter(t => t.id_groupe === id_groupe && t.status === 'En cours');
+    return [200, filteredTests];
+});
+
+// Récupérer un test par son id
+mock.onGet(/\/test\/\d+$/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const test = findTest(id);
+    if (test) return [200, test];
+    return [404, { message: 'Test non trouvé.' }];
+});
+
+// Récupérer un test par l'id de l'utilisateur
+mock.onGet(/\/test\/utilisateur\/\d+/).reply((config: any) => {
+    const id_utilisateur = parseInt(config.url.split('/').pop());
+    // Logique: Récupère les tests liés aux groupes de cet utilisateur (simplifié pour le mock)
+    const userGroups = groupes.filter(g => g.id_utilisateur === id_utilisateur).map(g => g.id_groupe);
+    const userTests = tests.filter(t => userGroups.includes(t.id_groupe));
+    return [200, userTests];
+});
+
+// Récupérer tous les tests dont il existe encore des tentatives avec est_noter egal a false
+mock.onGet('/test/a-noter').reply(200, 
+    tests.filter(t => tentatives.some(tt => tt.id_test === t.id_test && tt.est_noter === false))
+);
+
+// Logique pour les statistiques des tests notés
+const calculateTestStats = (testId: any) => {
+    const testTentatives = tentatives.filter(t => t.id_test === testId && t.est_noter === true);
+    const totalTentatives = testTentatives.length;
+    if (totalTentatives === 0) return null;
+
+    const test = findTest(testId);
+    const moyenne = test.note_max / 2;
+    
+    const reussite = testTentatives.filter(t => t.note_obtenue >= moyenne).length;
+    const echec = totalTentatives - reussite;
+
+    return {
+        id_test: testId,
+        titre: test.titre,
+        total_tentatives: totalTentatives,
+        total_reussite: reussite,
+        total_echec: echec,
+        note_max: test.note_max
+    };
+};
+
+// Récupérer tous les tests dont touts les tentatives avec est_noter egal a true, renvoyer avec les statistiques du test
+mock.onGet('/test/statistiques').reply(200, 
+    tests
+        .filter(t => t.status === 'Terminé' && tentatives.every(tt => tt.id_test !== t.id_test || tt.est_noter === true))
+        .map(t => calculateTestStats(t.id_test))
+        .filter(stat => stat !== null)
+);
+
+// Récupérer tous les tests dont touts les tentatives avec est_noter egal a true par l'id de l'utilisateur
+mock.onGet(/\/test\/statistiques\/utilisateur\/\d+/).reply((config: any) => {
+    const id_utilisateur = parseInt(config.url.split('/').pop());
+    const testsDeLUtilisateur = tentatives
+        .filter(t => t.id_utilisateur === id_utilisateur && t.est_noter === true)
+        .map(t => t.id_test);
+
+    // Retourne les stats uniquement pour les tests que l'utilisateur a notés
+    return [200, 
+        Array.from(new Set(testsDeLUtilisateur))
+            .map(testId => calculateTestStats(testId))
+            .filter(stat => stat !== null)
+    ];
+});
+
+// Supprimer un test
+mock.onDelete(/\/test\/\d+/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const initialLength = tests.length;
+    tests = tests.filter(t => t.id_test !== id);
+    if (tests.length < initialLength) return [204];
+    return [404, { message: 'Test non trouvé.' }];
+});
+
+// Modification de l'heure de declenchement d'un test (Logique de mise à jour)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Creer un test (avec valeurs par défaut)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
+// Modifier un test
+mock.onPut(/\/test\/\d+$/).reply((config: any) => {
+    const id = parseInt(config.url.split('/').pop());
+    const updates = JSON.parse(config.data);
+    const test = findTest(id);
+    if (test) {
+        Object.assign(test, updates);
+        return [200, test];
+    }
+    return [404, { message: 'Test non trouvé.' }];
+});
+
+// Terminer le test par son id (Modification du status)
+// ... (Logique déjà définie dans le mock ajusté précédent)
+
 
 // Exportez l'instance axios mockée pour l'utiliser dans votre application
 export default mockedAxios;

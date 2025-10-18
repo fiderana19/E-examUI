@@ -1,16 +1,15 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { mock_utilisateurs } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import React from "react";
 
 const StudentProfile: React.FC  = () => {
-    const { logout } = useAuth();
-    const user = mock_utilisateurs[0];
-
+    const { logout, token } = useAuth();
+    const { data: user } = useGetUserById(token ? token.split('/')[0] : "");
 
     return <div className="pt-20 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />

@@ -16,9 +16,7 @@ export const TestProvider = ({ children }: { children: ReactNode }) => {
     const [secondsLeft, setSecondsLeft] = useState<number | null>(
         Number(localStorage.getItem("secondsLeft")),
     );
-    const [isInTest, setIsInTest] = useState<boolean>(
-        Boolean(localStorage.getItem("isInTest")),
-    );
+    const [isInTest, setIsInTest] = useState<boolean>(false);
     const [isFinished, setIsFinished] = useState<boolean>(
         Boolean(localStorage.getItem("isFinished")),
     );
