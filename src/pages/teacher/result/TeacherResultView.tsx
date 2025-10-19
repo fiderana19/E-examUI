@@ -1,7 +1,11 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
+import { styles, TableHeader, TableRow } from "@/components/ResultPDF";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { mockResultData } from "@/constants/mock";
 import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
 import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { Document, Page, PDFDownloadLink, PDFViewer, Text, View } from "@react-pdf/renderer";
 import { BookText } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,12 +16,65 @@ const TeacherResultView: React.FC  = () => {
     const navigate = useNavigate();
     const { data: result } = useGetTentativeForResultByTestId(Id ? Number(Id) : 0);
 
+    const ResultDocument = () => (
+      <Document>
+        <Page size="A4" style={styles.page}>      
+          <View style={styles.header}>
+            <View style={styles.flexBetween}>
+              <View style={styles.flexNormal}>
+                <Text style={styles.headerTitle}>Classe: </Text>
+                <Text style={styles.headerSubtitle}>M1IG</Text>
+              </View>
+              <View style={styles.flexNormal}>
+                <Text style={styles.headerTitle}>Test:</Text>
+                <Text style={styles.headerSubtitle}>Technologie web avancée</Text>
+              </View>
+              <View style={styles.flexNormal}>
+                <Text style={styles.headerTitle}>Session:</Text>
+                <Text style={styles.headerSubtitle}>02/04/2025 15:10</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.summary}>
+            <Text style={styles.summaryText}>Total participants: {mockResultData.participants}</Text>
+            <Text style={styles.summaryText}>Égal ou au-dessus de la moyenne: {mockResultData.auDessusDeMoyenne}</Text>
+            <Text style={styles.summaryText}>En dessous de la moyenne: {mockResultData.participants - mockResultData.auDessusDeMoyenne}</Text>
+          </View>
+
+          <View style={styles.table}>
+            <TableHeader />
+            {mockResultData.resultats.map((resultat, index) => (
+              <TableRow key={index} data={resultat} index={index} />
+            ))}
+          </View>
+
+        </Page>
+      </Document>
+    );
+    
     return <div className="pl-64 pr-6">
         <TeacherNavigation />
         <div className="my-6">
             <div className="flex justify-between items-center mb-4">
                 <div className="text-gray-800 text-xl font-bold flex items-center gap-2"><BookText /> Resultat du 2025-12-12</div>
-                <Button><FilePdfOutlined /> Generer</Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline"><FilePdfOutlined /> Generer</Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Resultat</SheetTitle>
+                  </SheetHeader>
+                  <div>
+                    {
+                      mockResultData && <PDFViewer className="h-screen w-full">
+                        <ResultDocument />
+                      </PDFViewer>
+                    }
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
             <div className="">
               <div className="border p-2">
