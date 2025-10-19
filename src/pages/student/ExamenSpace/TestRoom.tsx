@@ -4,27 +4,47 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { mock_optionsqcm, mock_questions } from "@/constants/mock";
+import { mocktestquestions } from "@/constants/mock";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { useTest } from "@/context/TestContext";
 import { showToast } from "@/utils/Toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { AlertTriangleIcon } from "lucide-react";
-import React, {  } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TestRoom: React.FC  = () => {
     const req = useParams();
     const Id = req.id;
+    const id_utilisateur = 1;
+    const id_tentative = 2;
     const { updateIsInTest, isFinished, updateIsFinished } = useTest();
     const navigate = useNavigate();
+    const [studentResponse, setStudentResponse] = useState<any[]>([]);
 
-    let q1 = "courte";
-    let q2 = "dev";
-    let q3 = "qcm";
+    const onInputResponseChange = (e: React.ChangeEvent<HTMLInputElement>, id_question: string) => {
+        setStudentResponse((prevReponses: any) => {
+        const existingIndex = prevReponses.findIndex((r: any) => r.id_question === id_question);
+        const newResponse = { 
+            id_utilisateur,
+            id_tentative,
+            id_question, 
+            reponse_texte: e.target.value,
+        };
+
+        if (existingIndex !== -1) {
+            return prevReponses.map((r: any, index: any) => 
+            index === existingIndex ? newResponse : r
+            );
+        } else {
+            return [...prevReponses, newResponse];
+        }
+        });
+    };
 
     const onTimeUp = () => {
         updateIsFinished(true)
+        finishTest();
         showToast({
             type: TOAST_TYPE.ERROR,
             message: "Soumission automatique des reponses suite au temps ecoulé !"
@@ -33,7 +53,7 @@ const TestRoom: React.FC  = () => {
 
     const finishTest = () => {
         updateIsInTest(false);
-        navigate("/student/home")
+        console.log(studentResponse)
     }
 
     return <div>
@@ -61,33 +81,40 @@ const TestRoom: React.FC  = () => {
             <div className="">
                 <div>
                     {
-                        mock_questions.map((question: any, index: any) => {
+                        mocktestquestions.slice(0,20).map((question: any, index: any) => {
                             return <Card className="mb-2 px-4">
                                 <div>
-                                    <div className="text-xs text-gray-600">Question {index + 1}</div>
+                                    <div className="text-xs text-gray-600 flex gap-2 items-center">Question {(index < 9) ? `0${index + 1}` : (index + 1)} | <div className="uppercase">{question.type_question}{question.type_question === "simple" && "   (Reponse courte)"}</div></div>
                                     <div className="my-1">
                                         { question.texte_question }
                                     </div>
                                     {
                                         (question.type_question === "dev") ?
-                                        <div className="w-64 mx-auto mt-2">
+                                        <div className="w-64 mt-2">
                                             <Label className="mb-1">Votre reponse :</Label>
-                                            <Input />
+                                            <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputResponseChange(e, `${question.id_question}`)} />
                                         </div> :
                                         ((question.type_question === "simple") ?
-                                            <div className="w-64 mx-auto mt-2">
+                                            <div className="w-64 mt-2">
                                                 <Label className="mb-1">Votre reponse :</Label>
-                                                <Input />
+                                                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputResponseChange(e, `${question.id_question}`)} />
                                             </div>
                                             : 
                                             <div className="w-auto mx-auto mt-2">
                                                 <Label className="mb-1">Votre reponse :</Label>
                                                 <div className="flex flex-col gap-4 my-4">
-                                                    {
-                                                        mock_optionsqcm.map((option: any, index: any) => {
-                                                            return <div className="flex gap-2"><input type="radio" id={`opt${index+1}`} name="opt" /><Label htmlFor={`opt${index+1}`}>Option { index + 1 } : {option.texte_option}</Label></div>
-                                                        })
-                                                    }
+                                                    {question.options.map((option: any, index: number) => (
+                                                        <Label key={option.id_option} className="font-normal">
+                                                        <input
+                                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onInputResponseChange(e, `${question.id_question}`)}
+                                                            type="radio"
+                                                            name={`q-${question.id_question}`}
+                                                            value={option.texte_option}
+                                                            required
+                                                        />
+                                                        Option {index+1} : {option.texte_option}
+                                                        </Label>
+                                                    ))}
                                                 </div>
                                             </div>
                                         )

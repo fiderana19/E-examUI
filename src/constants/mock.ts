@@ -283,6 +283,321 @@ export const mock_questions = [
     points: 2,
     reponse_correcte: "B", 
     date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
+  },
+  {
+    id_question: 1006,
+    id_test: 103, 
+    texte_question: "Le langage Python est-il compilé ou interprété ?",
+    type_question: "qcm",
+    points: 2,
+    reponse_correcte: "B", 
+    date_creation: "2025-10-15",
   }
 ];
 
@@ -433,3 +748,106 @@ export const mock_reponseetudiants_a_corriger = [
         { matricule: '9999 H-F', nomPrenom: 'LOREM Ipsum', note: 15, heureSoumission: '15:24' },
       ],
     };
+
+// src/data/questions.ts
+
+
+export const mocktestquestions = [
+  // --- Modélisation (Merise/UML) et Bases de Données (BDD) ---
+
+  // Q1 (QCM) : BDD
+  { id_question: 1, texte_question: "Quel est l'objectif principal de la 3ème Forme Normale (3NF) ?", type_question: "qcm", points: 4, options: [
+    { id_option: "A", texte_option: "Éliminer les dépendances fonctionnelles partielles." }, 
+    { id_option: "B", texte_option: "Éliminer les dépendances fonctionnelles transitives." },
+    { id_option: "C", texte_option: "Éliminer les attributs multivalués." }
+  ]},
+
+  // Q2 (SIMPLE) : Merise
+  { id_question: 2, texte_question: "Quel sigle représente le Modèle Logique de Données dans la méthode Merise ?", type_question: "simple", points: 2, options: null },
+
+  // Q3 (DEV) : UML
+  { id_question: 3, texte_question: "Expliquez brièvement la différence de sémantique entre l'agrégation et la composition dans les diagrammes de classes UML.", type_question: "dev", points: 8, options: null },
+
+  // Q4 (QCM) : BDD
+  { id_question: 4, texte_question: "Dans le modèle relationnel, à quoi sert une Clé Étrangère (Foreign Key) ?", type_question: "qcm", points: 3, options: [
+    { id_option: "A", texte_option: "À identifier uniquement chaque ligne d'une table." }, 
+    { id_option: "B", texte_option: "À faire respecter l'intégrité référentielle entre deux tables." },
+    { id_option: "C", texte_option: "À accélérer les requêtes de sélection (SELECT)." }
+  ]},
+
+  // Q5 (SIMPLE) : Merise
+  { id_question: 5, texte_question: "Qu'est-ce qu'une cardinalité minimale de 0 dans une relation Merise ?", type_question: "simple", points: 3, options: null },
+
+  // Q6 (QCM) : UML
+  { id_question: 6, texte_question: "Quel diagramme UML est principalement utilisé pour modéliser le flux de travail ou les étapes d'un processus ?", type_question: "qcm", points: 4, options: [
+    { id_option: "A", texte_option: "Diagramme de Classes." }, 
+    { id_option: "B", texte_option: "Diagramme de Séquence." },
+    { id_option: "C", texte_option: "Diagramme d'Activités." }
+  ]},
+
+  // Q7 (DEV) : BDD/SQL
+  { id_question: 7, texte_question: "Écrivez une requête SQL permettant de sélectionner les noms de tous les 'Utilisateurs' qui ont le rôle 'ETUDIANT'.", type_question: "dev", points: 5, options: null },
+
+  // Q8 (SIMPLE) : BDD
+  { id_question: 8, texte_question: "Quel est le SGBD open source le plus populaire ?", type_question: "simple", points: 2, options: null },
+
+  // Q9 (QCM) : Merise
+  { id_question: 9, texte_question: "Quel niveau d'abstraction Merise est le plus proche de l'implémentation physique (fichiers, index, stockage) ?", type_question: "qcm", points: 3, options: [
+    { id_option: "A", texte_option: "Conceptuel." }, 
+    { id_option: "B", texte_option: "Logique." },
+    { id_option: "C", texte_option: "Physique." }
+  ]},
+  
+  // Q10 (DEV) : UML
+  { id_question: 10, texte_question: "Modélisez l'héritage d'une 'Personne' vers une 'Client' et un 'Fournisseur' en notation de Diagramme de Classes UML (décrivez seulement les classes et la relation).", type_question: "dev", points: 7, options: null },
+
+  // --- Algorithmique et Logique ---
+
+  // Q11 (QCM) : Algorithmique
+  { id_question: 11, texte_question: "Quelle structure algorithmique permet de répéter un bloc d'instructions un nombre défini de fois ?", type_question: "qcm", points: 3, options: [
+    { id_option: "A", texte_option: "La boucle TANT QUE (While)." }, 
+    { id_option: "B", texte_option: "La boucle POUR (For)." },
+    { id_option: "C", texte_option: "La condition SI (If)." }
+  ]},
+
+  // Q12 (DEV) : Algorithmique
+  { id_question: 12, texte_question: "Écrivez le pseudo-code de l'algorithme qui calcule le factoriel d'un nombre entier N.", type_question: "dev", points: 10, options: null },
+
+  // Q13 (SIMPLE) : Logique
+  { id_question: 13, texte_question: "Quelle est la valeur de la variable 'res' après l'exécution : $res = 10$; $res = res / 2 + 1$; $res = res * 3$;", type_question: "simple", points: 4, options: null },
+
+  // Q14 (QCM) : Algorithmique
+  { id_question: 14, texte_question: "Quelle est la complexité algorithmique d'une recherche dichotomique sur un tableau trié de taille N ?", type_question: "qcm", points: 4, options: [
+    { id_option: "A", texte_option: "$O(N)$ (Linéaire)." }, 
+    { id_option: "B", texte_option: "$O(1)$ (Constante)." },
+    { id_option: "C", texte_option: "$O(\log N)$ (Logarithmique)." }
+  ]},
+
+  // Q15 (SIMPLE) : Logique
+  { id_question: 15, texte_question: "Dans une condition, si 'A' est VRAI et 'B' est FAUX, que vaut 'NON (A OU B)' ?", type_question: "simple", points: 3, options: null },
+  
+  // Q16 (DEV) : Algorithmique
+  { id_question: 16, texte_question: "Décrivez les étapes de tri par sélection (Selection Sort).", type_question: "dev", points: 6, options: null },
+
+  // --- Questions Mixtes/Synthèse ---
+  
+  // Q17 (QCM) : BDD/SQL
+  { id_question: 17, texte_question: "Quel mot-clé SQL est utilisé pour combiner les résultats de deux requêtes SELECT ?", type_question: "qcm", points: 3, options: [
+    { id_option: "A", texte_option: "JOIN." }, 
+    { id_option: "B", texte_option: "UNION." },
+    { id_option: "C", texte_option: "GROUP BY." }
+  ]},
+
+  // Q18 (SIMPLE) : Merise
+  { id_question: 18, texte_question: "À quel niveau d'abstraction (Merise) correspond le Modèle Entité-Relation (MER) ?", type_question: "simple", points: 2, options: null },
+
+  // Q19 (DEV) : Synthèse
+  { id_question: 19, texte_question: "Pourquoi est-il crucial de modéliser les données avant de commencer à coder l'application (justifiez en termes de coûts et d'erreurs) ?", type_question: "dev", points: 5, options: null },
+
+  // Q20 (QCM) : Algorithmique
+  { id_question: 20, texte_question: "Une variable locale dans une fonction existe :", type_question: "qcm", points: 3, options: [
+    { id_option: "A", texte_option: "Pendant toute l'exécution du programme." }, 
+    { id_option: "B", texte_option: "Uniquement pendant l'exécution de cette fonction." },
+    { id_option: "C", texte_option: "Uniquement dans le bloc conditionnel où elle est déclarée." }
+  ]}
+];
