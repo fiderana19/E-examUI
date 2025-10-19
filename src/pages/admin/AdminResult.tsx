@@ -15,7 +15,7 @@ import { PostCreateValidation } from "@/validation/post.validation";
 import { FilePdfOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Plus, Trash } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 const AdminResult: React.FC  = () => {
@@ -27,22 +27,36 @@ const AdminResult: React.FC  = () => {
     const { mutateAsync: supprimerResultat } = useDeleteResult({action() {
         refetch();
     },})
-    const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<PostCreateInterface>({
+    const { handleSubmit: submit, formState: { errors }, control, setValue, clearErrors } = useForm<PostCreateInterface>({
       resolver: yupResolver(PostCreateValidation)
     });
     const [selectedResult, setSelectedResult] = useState<number>(0)
 
     useEffect(() => {
         setValue('id_utilisateur', token ? token.split("/")[0] : "")
+        setValue('fichier_resultat', null)
     }, [])
 
     const handleSubmit = async (data: PostCreateInterface) => {
+        console.log(data)
       await publierResultat(data);
     }
 
     const deleteConfirm = async () => {
       await supprimerResultat(selectedResult)
     }
+
+    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (file) {        
+            try {
+                setValue('fichier_resultat', file);
+                clearErrors('fichier_resultat');
+            } catch (error) {
+            }
+        }
+    };
 
     return <div className="pl-64 pr-6">
         <AdminNavigation />
@@ -75,13 +89,7 @@ const AdminResult: React.FC  = () => {
                           />
                           { errors?.titre_resultat && <div className="text-xs w-full text-red-500 text-left">{ errors?.titre_resultat.message }</div> }
                           <Label className="mb-1 mt-4">Fichier :</Label>
-                          <Controller
-                              control={control}
-                              name="fichier_resultat"
-                              render={({ field: { value, onChange } }) => (
-                                  <Input value={value} onChange={onChange} className={`${errors?.fichier_resultat && 'border border-red-500 text-red-500 rounded'}`} />
-                              )}
-                          />
+                            <Input type="file" onChange={handleFileChange} className={`${errors?.fichier_resultat && 'border rounded text-red-500 border-red-500'}`}  />
                           { errors?.fichier_resultat && <div className="text-xs w-full text-red-500 text-left">{ errors?.fichier_resultat.message }</div> }
                           <div className="flex justify-center mt-4">
                               <Button type="submit">Publier</Button>
