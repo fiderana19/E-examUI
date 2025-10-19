@@ -31,6 +31,7 @@ import AdminHistoryView from "./pages/admin/history/AdminHistoryView";
 import AdminResponseView from "./pages/admin/history/AdminResponseView";
 import AdminResult from "./pages/admin/AdminResult";
 import RoleBasedRoute from "./routes/RoleBasedRoute";
+import TeacherTestLaunchedView from "./pages/teacher/test/TeacherTestLaunchedView";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
           <Route path="test/create" element={<TeacherTestAdd />} />
           <Route path="test/edit/:id" element={<TeacherTestEdit />} />
           <Route path="test/view/:id" element={<TeacherTestView />} />
+          <Route path="test/launched/view/:id" element={<TeacherTestLaunchedView />} />
           <Route path="qcm/:id" element={<TeacherQCMView />} />
           <Route path="question/edit/:id" element={<TeacherQuestionEdit />} />
           <Route path="correction" element={<TeacherCorrection />} />

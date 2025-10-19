@@ -26,7 +26,7 @@ const ClokcTest: React.FC<ClockTestProps> = ({ afterTimeOver }) => {
     }, [timeLeft]);
 
     return (
-        <div className={`${timeLeft < 11 ? "bg-red-500 animate-pulse" : "bg-gray-400"} border rounded-full py-1 px-3 bg-gray-400 text-white font-bold`}>
+        <div className={`${timeLeft < 11 ? "bg-red-500 animate-pulse" : "bg-gray-400"} border rounded-full py-1 px-3 bg-gray-400 text-white font-bold w-max`}>
             <ClockCircleOutlined /> {formatTestTotalSecondTime(timeLeft)}
         </div>
     )

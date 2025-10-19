@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { mock_tests } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
+import { useTest } from "@/context/TestContext";
 import { useDeleteTest } from "@/hooks/test/useDeleteTest";
 import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
 import { useLaunchTest } from "@/hooks/test/useLaunchTest";
@@ -14,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherTest: React.FC  = () => {
     const navigate = useNavigate();
+    const { updateIsFinished, updateIsInTest, updateSecondsLeft } = useTest();
     const { token } = useAuth();
     const { data: tests, refetch } = useGetAllTestByTeacherId(token ? Number(token.split("/")[0]) : 0);
     const { mutateAsync: launchTest } = useLaunchTest({action() {
@@ -34,8 +36,13 @@ const TeacherTest: React.FC  = () => {
         setFiltereds(acc);
     }
 
-    const launchConfirm = async () => {
-        await launchTest(selectedTest);
+    const launchConfirm = async (data: any) => {
+        // await launchTest(id);
+        updateIsFinished(false);
+        updateIsInTest(true);
+        updateSecondsLeft(data.duree_minutes);
+
+        navigate(`/teacher/test/launched/view/${data.id_test}`);
     }    
     
     const deleteConfirm = async () => {
@@ -124,7 +131,7 @@ const TeacherTest: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button onClick={() => launchConfirm()} >Confirmer</Button>
+                                            <Button onClick={() => launchConfirm(test.id_test)} >Confirmer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -210,7 +217,7 @@ const TeacherTest: React.FC  = () => {
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button onClick={() => launchConfirm()} >Confirmer</Button>
+                                            <Button onClick={() => launchConfirm(test.id_test)} >Confirmer</Button>
                                         </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
