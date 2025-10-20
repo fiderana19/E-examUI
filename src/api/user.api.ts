@@ -1,5 +1,5 @@
-import { LoginInterface, SignupInterface } from "@/interfaces/user.interface"
-import axiosAuthInstance, { axiosInstance } from "./Config"
+import { LoginInterface, SignupInterface } from "@/interfaces/user.interface";
+import axiosAuthInstance, { axiosInstance } from "./Config";
 import { showToast } from "@/utils/Toast";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { HttpStatus } from "@/constants/Http_status";
@@ -24,31 +24,33 @@ export const postLogin = async (data: LoginInterface) => {
   //   }
   // }
   initMockAdapter();
-  return await mockedAxios.post('/utilisateur/connexion', data);
-}
+  return await mockedAxios.post("/utilisateur/connexion", data);
+};
 
 export const postInscription = async (data: SignupInterface) => {
-    // return await axiosInstance.post(`${UserAPIUrl}/signup`, data)
-    initMockAdapter();
-    return await mockedAxios.post('/utilisateur/inscription', data);
-}
+  // return await axiosInstance.post(`${UserAPIUrl}/signup`, data)
+  initMockAdapter();
+  return await mockedAxios.post("/utilisateur/inscription", data);
+};
 
 export const getAllUser = async () => {
-    // return await axiosAuthInstance.get(`${UserAPIUrl}/all`)
-    initMockAdapter();
-    return await mockedAxios.get('/utilisateur');
-}
+  // return await axiosAuthInstance.get(`${UserAPIUrl}/all`)
+  initMockAdapter();
+  return await mockedAxios.get("/utilisateur");
+};
 
 export const getUserById = async (id: string) => {
-    // return await axiosAuthInstance.get(`${UserAPIUrl}/get/${id}`)
+  // return await axiosAuthInstance.get(`${UserAPIUrl}/get/${id}`)
 
-    initMockAdapter();
-    return await mockedAxios.get(`/utilisateur/${id}`);
-}
+  initMockAdapter();
+  return await mockedAxios.get(`/utilisateur/${id}`);
+};
 
 export const patchUserValidation = async (data: any) => {
-    // return await axiosAuthInstance.patch(`${UserAPIUrl}/validation`, data)
-  
-    initMockAdapter();
-    return await mockedAxios.put(`/utilisateur/${data.id}/validation`, { est_valider: true });
-}
+  // return await axiosAuthInstance.patch(`${UserAPIUrl}/validation`, data)
+
+  initMockAdapter();
+  return await mockedAxios.put(`/utilisateur/${data.id}/validation`, {
+    est_valider: true,
+  });
+};

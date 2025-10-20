@@ -35,51 +35,66 @@ import TeacherTestLaunchedView from "./pages/teacher/test/TeacherTestLaunchedVie
 
 function App() {
   return (
-      <Routes>
-        {/* Public routes */}
-        <Route index path="/" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        {/* Student route */}
-        <Route path="/student" element={<RoleBasedRoute allowedRoles={['student']} />} >
-          <Route path="home" element={<StudentHome />} />
-          <Route path="announce" element={<StudentAnnonce />} />
-          <Route path="test" element={<StudentTest />} />
-          <Route path="profile" element={<StudentProfile />} />
-          <Route path="result" element={<StudentResult />} />
-          <Route path="test/room/:id" element={<TestRoom />} />
-        </Route>
-        {/* Admin route */}
-        <Route path="/admin" element={<RoleBasedRoute allowedRoles={['admin']} />} >
-          <Route path="home" element={<AdminHome />} />
-          <Route path="groupe" element={<AdminGroupe />} />
-          <Route path="history" element={<AdminHistory />} />
-          <Route path="history/view/:id" element={<AdminHistoryView />} />
-          <Route path="result" element={<AdminResult />} />
-          <Route path="response/view/:id" element={<AdminResponseView />} />
-          <Route path="groupe/edit/:id" element={<AdminGroupeEdit />} />
-          <Route path="account" element={<AdminAccount />} />
-        </Route>
-        {/* Teacher route */}
-        <Route path="/teacher" element={<RoleBasedRoute allowedRoles={['teacher']} />} >
-          <Route path="home" element={<TeacherHome />} />
-          <Route path="announce" element={<TeacherAnnounce />} />
-          <Route path="announce/edit/:id" element={<TeacherAnnounceEdit />} />
-          <Route path="test" element={ <TeacherTest />} />
-          <Route path="test/create" element={<TeacherTestAdd />} />
-          <Route path="test/edit/:id" element={<TeacherTestEdit />} />
-          <Route path="test/view/:id" element={<TeacherTestView />} />
-          <Route path="test/launched/view/:id" element={<TeacherTestLaunchedView />} />
-          <Route path="qcm/:id" element={<TeacherQCMView />} />
-          <Route path="question/edit/:id" element={<TeacherQuestionEdit />} />
-          <Route path="correction" element={<TeacherCorrection />} />
-          <Route path="correction/view/:id" element={<TeacherCorrectionView />} />
-          <Route path="correction/action/:id" element={<TeacherCorrectionAction />} />
-          <Route path="result" element={<TeacherResult />} />
-          <Route path="result/view/:id" element={<TeacherResultView />} />
-          <Route path="profile" element={<TeacherProfile />} />
-        </Route>
-      </Routes>
-  )
+    <Routes>
+      {/* Public routes */}
+      <Route index path="/" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      {/* Student route */}
+      <Route
+        path="/student"
+        element={<RoleBasedRoute allowedRoles={["student"]} />}
+      >
+        <Route path="home" element={<StudentHome />} />
+        <Route path="announce" element={<StudentAnnonce />} />
+        <Route path="test" element={<StudentTest />} />
+        <Route path="profile" element={<StudentProfile />} />
+        <Route path="result" element={<StudentResult />} />
+        <Route path="test/room/:id" element={<TestRoom />} />
+      </Route>
+      {/* Admin route */}
+      <Route
+        path="/admin"
+        element={<RoleBasedRoute allowedRoles={["admin"]} />}
+      >
+        <Route path="home" element={<AdminHome />} />
+        <Route path="groupe" element={<AdminGroupe />} />
+        <Route path="history" element={<AdminHistory />} />
+        <Route path="history/view/:id" element={<AdminHistoryView />} />
+        <Route path="result" element={<AdminResult />} />
+        <Route path="response/view/:id" element={<AdminResponseView />} />
+        <Route path="groupe/edit/:id" element={<AdminGroupeEdit />} />
+        <Route path="account" element={<AdminAccount />} />
+      </Route>
+      {/* Teacher route */}
+      <Route
+        path="/teacher"
+        element={<RoleBasedRoute allowedRoles={["teacher"]} />}
+      >
+        <Route path="home" element={<TeacherHome />} />
+        <Route path="announce" element={<TeacherAnnounce />} />
+        <Route path="announce/edit/:id" element={<TeacherAnnounceEdit />} />
+        <Route path="test" element={<TeacherTest />} />
+        <Route path="test/create" element={<TeacherTestAdd />} />
+        <Route path="test/edit/:id" element={<TeacherTestEdit />} />
+        <Route path="test/view/:id" element={<TeacherTestView />} />
+        <Route
+          path="test/launched/view/:id"
+          element={<TeacherTestLaunchedView />}
+        />
+        <Route path="qcm/:id" element={<TeacherQCMView />} />
+        <Route path="question/edit/:id" element={<TeacherQuestionEdit />} />
+        <Route path="correction" element={<TeacherCorrection />} />
+        <Route path="correction/view/:id" element={<TeacherCorrectionView />} />
+        <Route
+          path="correction/action/:id"
+          element={<TeacherCorrectionAction />}
+        />
+        <Route path="result" element={<TeacherResult />} />
+        <Route path="result/view/:id" element={<TeacherResultView />} />
+        <Route path="profile" element={<TeacherProfile />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;

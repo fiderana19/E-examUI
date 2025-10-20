@@ -1,9 +1,5 @@
-import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-} from '@react-pdf/renderer';
+import React from "react";
+import { Text, View, StyleSheet } from "@react-pdf/renderer";
 
 export const styles = StyleSheet.create({
   page: {
@@ -11,18 +7,18 @@ export const styles = StyleSheet.create({
     fontSize: 10,
   },
   flexNormal: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     gap: 2,
   },
   flexBetween: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 2,
   },
   header: {
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderWidth: 2,
     borderLeft: 0,
     borderRight: 0,
@@ -32,13 +28,13 @@ export const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 12,
-    color: '#000',
+    color: "#000",
     fontWeight: 500,
   },
   headerSubtitle: {
     fontSize: 12,
-    color: '#000',
-    fontWeight: 'bold',
+    color: "#000",
+    fontWeight: "bold",
   },
   summary: {
     marginBottom: 10,
@@ -48,37 +44,37 @@ export const styles = StyleSheet.create({
     marginVertical: 2,
   },
   table: {
-    display: 'flex',
-    width: 'auto',
-    borderStyle: 'solid',
+    display: "flex",
+    width: "auto",
+    borderStyle: "solid",
     borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
   },
   tableRow: {
-    margin: 'auto',
-    flexDirection: 'row',
+    margin: "auto",
+    flexDirection: "row",
   },
   // Style de l'en-tête du tableau
   tableHeader: {
-    backgroundColor: '#f0f0f0', // Couleur grise claire
-    color: 'black',
-    fontWeight: 'bold',
+    backgroundColor: "#f0f0f0", // Couleur grise claire
+    color: "black",
+    fontWeight: "bold",
   },
   tableCell: {
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
     padding: 5,
-    textAlign: 'center',
+    textAlign: "center",
     flexShrink: 0, // Empêche le rétrécissement par défaut
   },
   // Largeurs de colonnes spécifiques (doit correspondre à la somme totale)
-  colMatricule: { width: '15%' },
-  colNom: { width: '52%', textAlign: 'left', paddingLeft: 8 },
-  colNote: { width: '10%' },
-  colHeure: { width: '23%' },
+  colMatricule: { width: "15%" },
+  colNom: { width: "52%", textAlign: "left", paddingLeft: 8 },
+  colNote: { width: "10%" },
+  colHeure: { width: "23%" },
 });
 
 export const TableHeader = () => (
@@ -98,8 +94,10 @@ export const TableHeader = () => (
   </View>
 );
 
-export const TableRow: React.FC<{ data: any; index: number }> = ({ data, index }) => {
-  
+export const TableRow: React.FC<{ data: any; index: number }> = ({
+  data,
+  index,
+}) => {
   return (
     <View style={[styles.tableRow]}>
       <View style={[styles.tableCell, styles.colMatricule]}>

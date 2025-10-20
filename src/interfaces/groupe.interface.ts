@@ -1,10 +1,10 @@
 export interface AddGroupInterface {
-    nom: string;
-    description: string;
+  nom: string;
+  description: string;
 }
 
 export interface EditGroupInterface {
-    id_groupe: string;
-    nom: string;
-    description: string;
+  id_groupe: string;
+  nom: string;
+  description: string;
 }

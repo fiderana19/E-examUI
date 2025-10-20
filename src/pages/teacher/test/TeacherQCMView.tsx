@@ -1,10 +1,23 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { mock_optionsqcm, mock_questions } from "@/constants/mock";
 import { useDeleteOption } from "@/hooks/option/useDeleteOption";
 import { useGetAllOptionByQuestionId } from "@/hooks/option/useGetAllOptionByQuestionId";
@@ -18,122 +31,184 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
-const TeacherQCMView: React.FC  = () => {
-    const req = useParams();
-    const Id = req.id;
-    const { data: options, refetch } = useGetAllOptionByQuestionId(Id ? Number(Id) : 0);
-    const { mutateAsync: deleteOption } = useDeleteOption({action() {
-        refetch();
-    },})
-    const { mutateAsync: createOption } = usePostOption({action() {
-        refetch();
-    },})
-    const navigate = useNavigate();
-    const question = mock_questions[0];
-    const { handleSubmit: submit, formState: { errors }, control, setValue, reset } = useForm<OptionCreateInterface>({
-        resolver: yupResolver(OptionAddValidation)
-    });
-    const [selectedOption, setSelectedOption] = useState<number>(0);
+const TeacherQCMView: React.FC = () => {
+  const req = useParams();
+  const Id = req.id;
+  const { data: options, refetch } = useGetAllOptionByQuestionId(
+    Id ? Number(Id) : 0,
+  );
+  const { mutateAsync: deleteOption } = useDeleteOption({
+    action() {
+      refetch();
+    },
+  });
+  const { mutateAsync: createOption } = usePostOption({
+    action() {
+      refetch();
+    },
+  });
+  const navigate = useNavigate();
+  const question = mock_questions[0];
+  const {
+    handleSubmit: submit,
+    formState: { errors },
+    control,
+    setValue,
+    reset,
+  } = useForm<OptionCreateInterface>({
+    resolver: yupResolver(OptionAddValidation),
+  });
+  const [selectedOption, setSelectedOption] = useState<number>(0);
 
-    useEffect(() => {
-        setValue('id_question', Id ? Id : "")
-        setValue('est_correcte', false)
-    }, [])
+  useEffect(() => {
+    setValue("id_question", Id ? Id : "");
+    setValue("est_correcte", false);
+  }, []);
 
-    const handleSubmit = async (data: OptionCreateInterface) => {
-        await createOption(data);
-    }
+  const handleSubmit = async (data: OptionCreateInterface) => {
+    await createOption(data);
+  };
 
-    const deleteConfirm = async () => {
-        await deleteOption(selectedOption);
-    }
+  const deleteConfirm = async () => {
+    await deleteOption(selectedOption);
+  };
 
-    return <div className="pl-64 pr-6">
-        <TeacherNavigation />
-        <div className="my-6">
-            <div className="">
-                <div className="px-10">
-                    <div className="flex justify-between items-center">
-                        <div className="uppercase font-bold">Les options de la question QCM</div>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button><Plus /> Nouvelle option</Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto mr-16">
-                                <div className="mb-2 text-gray-700 font-medium">Nouvelle option</div>
-                                <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                                    <Label className="mb-1">Option :</Label>
-                                    <Controller
-                                        control={control}
-                                        name="texte_option"
-                                        render={({ field: { value, onChange } }) => (
-                                            <Input value={value} onChange={onChange} className={`${errors?.texte_option && 'border border-red-500 text-red-500 rounded'}`} />
-                                        )}
-                                    />
-                                    { errors?.texte_option && <div className="text-xs w-full text-red-500 text-left">{ errors?.texte_option.message }</div> }
-                                    <div className="flex items-center gap-2 my-2">
-                                        <input type="checkbox" id="est_correcte" onChange={(e: any) => console.log(e.target)} />
-                                        <Label htmlFor="est_correcte" >Reponse correcte</Label>
-                                    </div>
-                                    <div className="flex justify-center mt-4">
-                                        <Button type="submit">Ajouter</Button>
-                                    </div>
-                                </form>
-                            </PopoverContent>
-                        </Popover>  
+  return (
+    <div className="pl-64 pr-6">
+      <TeacherNavigation />
+      <div className="my-6">
+        <div className="">
+          <div className="px-10">
+            <div className="flex justify-between items-center">
+              <div className="uppercase font-bold">
+                Les options de la question QCM
+              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button>
+                    <Plus /> Nouvelle option
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto mr-16">
+                  <div className="mb-2 text-gray-700 font-medium">
+                    Nouvelle option
+                  </div>
+                  <form
+                    onSubmit={submit(handleSubmit)}
+                    className="w-64 mx-auto"
+                  >
+                    <Label className="mb-1">Option :</Label>
+                    <Controller
+                      control={control}
+                      name="texte_option"
+                      render={({ field: { value, onChange } }) => (
+                        <Input
+                          value={value}
+                          onChange={onChange}
+                          className={`${errors?.texte_option && "border border-red-500 text-red-500 rounded"}`}
+                        />
+                      )}
+                    />
+                    {errors?.texte_option && (
+                      <div className="text-xs w-full text-red-500 text-left">
+                        {errors?.texte_option.message}
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 my-2">
+                      <input
+                        type="checkbox"
+                        id="est_correcte"
+                        onChange={(e: any) => console.log(e.target)}
+                      />
+                      <Label htmlFor="est_correcte">Reponse correcte</Label>
                     </div>
-                    <div className="my-2">
-                        {
-                            question &&
-                            <Card className="mb-2 px-4">
-                                <div>
-                                    <div className="flex justify-between">
-                                        <div className="text-gray-600">Type: { question.type_question }</div>
-                                        <div className="my-1 font-semibold">Note pour la question : { question.points } point(s)</div>
-                                    </div>
-                                    <div className="font-semibold">Question : { question.texte_question } </div>
-                                    <div className="text-gray-700">Reponse correcte : { question.reponse_correcte }</div>
-                                </div>
-                            </Card>
-                        }
+                    <div className="flex justify-center mt-4">
+                      <Button type="submit">Ajouter</Button>
                     </div>
-                    <div className="px-10 my-4">
-                        {
-                            mock_optionsqcm.map((option: any, index: any) => {
-                                return <div key={index} className="flex justify-between items-center my-2 gap-4">
-                                    <div className="flex gap-2">
-                                        <div className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}>
-                                            {
-                                                option.est_correcte ? <CheckCircleOutlined /> : <CloseCircleOutlined /> 
-                                            }
-                                        </div>
-                                        <div> { option.texte_option } </div>
-                                    </div>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger>
-                                            <Button onClick={() => setSelectedOption(option.id_option)} size={'icon'} variant={'destructive'}><Trash /></Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Suppression d'une option</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                            Voulez-vous vraiment supprimer cette option ?
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                            <Button onClick={() => deleteConfirm()} variant={'destructive'}>Supprimer</Button>
-                                        </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </div>
-                            })
-                        }                        
-                    </div>
-                </div>
+                  </form>
+                </PopoverContent>
+              </Popover>
             </div>
+            <div className="my-2">
+              {question && (
+                <Card className="mb-2 px-4">
+                  <div>
+                    <div className="flex justify-between">
+                      <div className="text-gray-600">
+                        Type: {question.type_question}
+                      </div>
+                      <div className="my-1 font-semibold">
+                        Note pour la question : {question.points} point(s)
+                      </div>
+                    </div>
+                    <div className="font-semibold">
+                      Question : {question.texte_question}{" "}
+                    </div>
+                    <div className="text-gray-700">
+                      Reponse correcte : {question.reponse_correcte}
+                    </div>
+                  </div>
+                </Card>
+              )}
+            </div>
+            <div className="px-10 my-4">
+              {mock_optionsqcm.map((option: any, index: any) => {
+                return (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center my-2 gap-4"
+                  >
+                    <div className="flex gap-2">
+                      <div
+                        className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}
+                      >
+                        {option.est_correcte ? (
+                          <CheckCircleOutlined />
+                        ) : (
+                          <CloseCircleOutlined />
+                        )}
+                      </div>
+                      <div> {option.texte_option} </div>
+                    </div>
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <Button
+                          onClick={() => setSelectedOption(option.id_option)}
+                          size={"icon"}
+                          variant={"destructive"}
+                        >
+                          <Trash />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Suppression d'une option
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Voulez-vous vraiment supprimer cette option ?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Annuler</AlertDialogCancel>
+                          <Button
+                            onClick={() => deleteConfirm()}
+                            variant={"destructive"}
+                          >
+                            Supprimer
+                          </Button>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-}
+  );
+};
 
 export default TeacherQCMView;

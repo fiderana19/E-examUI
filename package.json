@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.ts\" \"**/*.ts\" \"**/*.tsx\""
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -32,6 +33,7 @@
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "lucide-react": "^0.494.0",
+    "prettier": "^3.6.2",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^19.1.0",

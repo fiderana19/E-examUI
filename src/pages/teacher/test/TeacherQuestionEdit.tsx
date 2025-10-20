@@ -17,86 +17,130 @@ import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
-const TeacherQuestionEdit: React.FC  = () => {
-    const req = useParams();
-    const Id = req.id;
-    const navigate = useNavigate();
-    const { token } = useAuth();
-    const { data: question } = useGetQuestionById(Id ? Number(Id) : 0)
-    const { refetch } = useGetAllQuestionByTestId(question.id_test)
-    const { handleSubmit: submit, formState: { errors }, control, setValue } = useForm<QuestionEditInterface>({
-        resolver: yupResolver(QuestionEditValidation)
-    });
-    const { mutateAsync: modifierQuestion } = usePatchQuestion({action() {
-        refetch()
-    },})
+const TeacherQuestionEdit: React.FC = () => {
+  const req = useParams();
+  const Id = req.id;
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  const { data: question } = useGetQuestionById(Id ? Number(Id) : 0);
+  const { refetch } = useGetAllQuestionByTestId(question.id_test);
+  const {
+    handleSubmit: submit,
+    formState: { errors },
+    control,
+    setValue,
+  } = useForm<QuestionEditInterface>({
+    resolver: yupResolver(QuestionEditValidation),
+  });
+  const { mutateAsync: modifierQuestion } = usePatchQuestion({
+    action() {
+      refetch();
+    },
+  });
 
-    useEffect(() => {
-        setValue('id_question', Id ? Id : "")
-        setValue('id_test', question.id_test)
-        setValue('id_utilisateur', question.id_utilisateur)
-    }, [])
+  useEffect(() => {
+    setValue("id_question", Id ? Id : "");
+    setValue("id_test", question.id_test);
+    setValue("id_utilisateur", question.id_utilisateur);
+  }, []);
 
-    const handleSubmit = async (data: QuestionEditInterface) => {
-        const response = await modifierQuestion(data);
-        if(response?.status === HttpStatus.OK) {
-            navigate("/teacher/test")
-        } 
+  const handleSubmit = async (data: QuestionEditInterface) => {
+    const response = await modifierQuestion(data);
+    if (response?.status === HttpStatus.OK) {
+      navigate("/teacher/test");
     }
-    
-    return <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">
-        <TeacherNavigation />
-        <div>
+  };
+
+  return (
+    <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">
+      <TeacherNavigation />
+      <div>
         <div className="w-1/3 mx-auto">
-            <Card className="px-4 py-10">
-                <div>
-                    <div className="text-xl uppercase font-bold text-center mb-4 flex items-center gap-2"><QuestionCircleOutlined /> Modifier une question</div>
-                                <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                                    <Label className="mb-1">Question :</Label>
-                                    <Controller
-                                        control={control}
-                                        name="texte_question"
-                                        render={({ field: { value, onChange } }) => (
-                                            <Input value={value} onChange={onChange} className={`${errors?.texte_question && 'border border-red-500 text-red-500 rounded'}`} />
-                                        )}
-                                    />
-                                    { errors?.texte_question && <div className="text-xs w-full text-red-500 text-left">{ errors?.texte_question.message }</div> }
-                                    <Label className="mb-1 mt-4">Type :</Label>
-                                    <Controller
-                                        control={control}
-                                        name="type_question"
-                                        render={({ field: { value, onChange } }) => (
-                                            <Input value={value} onChange={onChange} className={`${errors?.type_question && 'border border-red-500 text-red-500 rounded'}`} />
-                                        )}
-                                    />
-                                    { errors?.type_question && <div className="text-xs w-full text-red-500 text-left">{ errors?.type_question.message }</div> }
-                                    <Label className="mb-1 mt-4">Reponse correcte :</Label>
-                                    <Controller
-                                        control={control}
-                                        name="response_correcte"
-                                        render={({ field: { value, onChange } }) => (
-                                            <Input value={value} onChange={onChange} className={`${errors?.response_correcte && 'border border-red-500 text-red-500 rounded'}`} />
-                                        )}
-                                    />
-                                    { errors?.response_correcte && <div className="text-xs w-full text-red-500 text-left">{ errors?.response_correcte.message }</div> }
-                                    <Label className="mb-1 mt-4">Points attribués :</Label>
-                                    <Controller
-                                        control={control}
-                                        name="points"
-                                        render={({ field: { value, onChange } }) => (
-                                            <Input value={value ? Number(value) : 0} onChange={onChange} onKeyPress={handleNumberKeyPress} className={`${errors?.points && 'border border-red-500 text-red-500 rounded'}`} />
-                                        )}
-                                    />
-                                    { errors?.points && <div className="text-xs w-full text-red-500 text-left">{ errors?.points.message }</div> }
-                                    <div className="flex justify-center mt-4">
-                                        <Button type="submit">Modifier</Button>
-                                    </div>
-                                </form>
+          <Card className="px-4 py-10">
+            <div>
+              <div className="text-xl uppercase font-bold text-center mb-4 flex items-center gap-2">
+                <QuestionCircleOutlined /> Modifier une question
+              </div>
+              <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
+                <Label className="mb-1">Question :</Label>
+                <Controller
+                  control={control}
+                  name="texte_question"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      onChange={onChange}
+                      className={`${errors?.texte_question && "border border-red-500 text-red-500 rounded"}`}
+                    />
+                  )}
+                />
+                {errors?.texte_question && (
+                  <div className="text-xs w-full text-red-500 text-left">
+                    {errors?.texte_question.message}
+                  </div>
+                )}
+                <Label className="mb-1 mt-4">Type :</Label>
+                <Controller
+                  control={control}
+                  name="type_question"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      onChange={onChange}
+                      className={`${errors?.type_question && "border border-red-500 text-red-500 rounded"}`}
+                    />
+                  )}
+                />
+                {errors?.type_question && (
+                  <div className="text-xs w-full text-red-500 text-left">
+                    {errors?.type_question.message}
+                  </div>
+                )}
+                <Label className="mb-1 mt-4">Reponse correcte :</Label>
+                <Controller
+                  control={control}
+                  name="response_correcte"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      onChange={onChange}
+                      className={`${errors?.response_correcte && "border border-red-500 text-red-500 rounded"}`}
+                    />
+                  )}
+                />
+                {errors?.response_correcte && (
+                  <div className="text-xs w-full text-red-500 text-left">
+                    {errors?.response_correcte.message}
+                  </div>
+                )}
+                <Label className="mb-1 mt-4">Points attribués :</Label>
+                <Controller
+                  control={control}
+                  name="points"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value ? Number(value) : 0}
+                      onChange={onChange}
+                      onKeyPress={handleNumberKeyPress}
+                      className={`${errors?.points && "border border-red-500 text-red-500 rounded"}`}
+                    />
+                  )}
+                />
+                {errors?.points && (
+                  <div className="text-xs w-full text-red-500 text-left">
+                    {errors?.points.message}
+                  </div>
+                )}
+                <div className="flex justify-center mt-4">
+                  <Button type="submit">Modifier</Button>
                 </div>
-            </Card>
+              </form>
+            </div>
+          </Card>
         </div>
-        </div>
+      </div>
     </div>
-}
+  );
+};
 
 export default TeacherQuestionEdit;

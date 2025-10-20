@@ -7,7 +7,7 @@ export const formatDateForPdf = (date: Date) => {
   let min = date.getMinutes();
   let ss = date.getSeconds();
 
-  return dd + '-' + mm + '-' + yyyy;
+  return dd + "-" + mm + "-" + yyyy;
 };
 
 export const formatDateForPlaceholder = (datee: any) => {
@@ -20,5 +20,5 @@ export const formatDateForPlaceholder = (datee: any) => {
   let min = date.getMinutes();
   let ss = date.getSeconds();
 
-  return dd + '-' + mm + '-' + yyyy;
+  return dd + "-" + mm + "-" + yyyy;
 };
