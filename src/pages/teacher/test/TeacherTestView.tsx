@@ -33,7 +33,7 @@ import {
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Plus, Trash } from "lucide-react";
+import { ChevronLeft, Plus, Trash } from "lucide-react";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -78,8 +78,9 @@ const TeacherTestView: React.FC = () => {
       {test && (
         <div className="shadow p-4 bg-white fixed top-0 right-0 w-[1110px]">
           <div className="">
-            <div className="flex justify-between">
-              <div className="flex gap-4">
+            <div className="flex justify-between items-center">
+              <div className="flex gap-4 items-center">
+                <Button onClick={() => navigate("/teacher/test")} variant={'secondary'}><ChevronLeft /></Button> 
                 <div className="font-bold text-lg"> {test.titre} </div>
                 <div className="border rounded-full px-2 bg-gray-400 text-white">
                   <ClockCircleOutlined /> {test.duree_minutes}:00

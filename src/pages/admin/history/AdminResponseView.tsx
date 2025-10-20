@@ -1,7 +1,7 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
-import { BookText } from "lucide-react";
+import { BookText, ChevronLeft } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const AdminResponseView: React.FC = () => {
       <div className="my-6">
         <div className="flex justify-between items-center">
           <div className="text-gray-800 text-xl font-bold mb-4 flex items-center gap-2">
-            {" "}
+          <Button onClick={() => navigate(-1)} variant={'secondary'}><ChevronLeft /></Button> 
             Reponse d'un étudiant
           </div>
         </div>

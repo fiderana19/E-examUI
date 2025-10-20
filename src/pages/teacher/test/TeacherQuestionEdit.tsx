@@ -39,9 +39,9 @@ const TeacherQuestionEdit: React.FC = () => {
   });
 
   useEffect(() => {
-    setValue("id_question", Id ? Id : "");
-    setValue("id_test", question.id_test);
-    setValue("id_utilisateur", question.id_utilisateur);
+    // setValue("id_question", Id ? Id : "");
+    // setValue("id_test", question.id_test);
+    // setValue("id_utilisateur", question.id_utilisateur);
   }, []);
 
   const handleSubmit = async (data: QuestionEditInterface) => {

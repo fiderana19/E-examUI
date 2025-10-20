@@ -12,7 +12,7 @@ import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { GivePointsValidation } from "@/validation/response.validation";
 import { HourglassOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Edit } from "lucide-react";
+import { ChevronLeft, Edit } from "lucide-react";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -54,7 +54,8 @@ const TeacherCorrectionAction: React.FC = () => {
       <div className="my-6">
         <div className="flex justify-between items-center mb-4">
           <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <Edit /> Correction d'un test
+            <Button onClick={() => navigate(-1)} variant={'secondary'}><ChevronLeft /></Button> 
+            Correction d'un test
           </div>
         </div>
         <div className="">

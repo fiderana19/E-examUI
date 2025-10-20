@@ -86,8 +86,9 @@ const AdminGroupeEdit: React.FC = () => {
                     {errors?.description.message}
                   </div>
                 )}
-                <div className="flex justify-center mt-4">
-                  <Button type="submit">Modifier</Button>
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button onClick={() => navigate("/admin/groupe")} variant={'secondary'} className="w-max ">Annuler</Button>
+                  <Button type="submit" className="w-max ">Modifier</Button>
                 </div>
               </form>
             </div>

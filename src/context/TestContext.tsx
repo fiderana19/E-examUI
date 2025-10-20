@@ -17,9 +17,7 @@ export const TestProvider = ({ children }: { children: ReactNode }) => {
     Number(localStorage.getItem("secondsLeft")),
   );
   const [isInTest, setIsInTest] = useState<boolean>(false);
-  const [isFinished, setIsFinished] = useState<boolean>(
-    Boolean(localStorage.getItem("isFinished")),
-  );
+  const [isFinished, setIsFinished] = useState<boolean>(false);
 
   const updateSecondsLeft = async (sec: number) => {
     setSecondsLeft(sec);

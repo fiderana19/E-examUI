@@ -26,7 +26,7 @@ import { OptionCreateInterface } from "@/interfaces/option.interface";
 import { OptionAddValidation } from "@/validation/option.validation";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Plus, Trash } from "lucide-react";
+import { ChevronLeft, Plus, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -80,6 +80,7 @@ const TeacherQCMView: React.FC = () => {
         <div className="">
           <div className="px-10">
             <div className="flex justify-between items-center">
+            <Button onClick={() => navigate(-1)} variant={'secondary'}><ChevronLeft /></Button> 
               <div className="uppercase font-bold">
                 Les options de la question QCM
               </div>

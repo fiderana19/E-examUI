@@ -35,8 +35,8 @@ const TeacherTestEdit: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue("id_utilisateur", test.id_utilisateur);
-    setValue("id_test", Id ? Id : "");
+    // setValue("id_utilisateur", test.id_utilisateur);
+    // setValue("id_test", Id ? Id : "");
   }, []);
 
   const handleSubmit = async (data: TestEditInterface) => {
@@ -164,7 +164,8 @@ const TeacherTestEdit: React.FC = () => {
                     {errors?.max_questions.message}
                   </div>
                 )}
-                <div className="flex justify-center mt-4">
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button onClick={() => navigate("/teacher/test")} variant={'secondary'} className="w-max ">Annuler</Button>
                   <Button type="submit">Modifier</Button>
                 </div>
               </form>

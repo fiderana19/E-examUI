@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignupInterface } from "@/interfaces/user.interface";
 import { SignupValidation } from "@/validation/user.validation";
@@ -11,8 +11,10 @@ import { Link } from "react-router-dom";
 import { useSignup } from "@/hooks/user/useSignup";
 import { HttpStatus } from "@/constants/Http_status";
 import { CloseCircleFilled } from "@ant-design/icons";
+import { useAuth } from "@/context/AuthContext";
 
 const SignupPage: React.FC = () => {
+  const { logout } = useAuth();
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -25,6 +27,10 @@ const SignupPage: React.FC = () => {
   const { mutateAsync: signup } = useSignup({ action() {} });
   const [reponseText, setReponseText] = useState<boolean>(false);
 
+  useEffect(() => {
+    logout();
+  }, [])
+  
   const handleSubmit = async (data: SignupInterface) => {
     const response = await signup(data);
     reset();

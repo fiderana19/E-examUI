@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoginInterface } from "@/interfaces/user.interface";
 import { LoginValidation } from "@/validation/user.validation";
@@ -12,7 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const {
     handleSubmit: submit,
@@ -21,6 +21,10 @@ const LoginPage: React.FC = () => {
   } = useForm<LoginInterface>({
     resolver: yupResolver(LoginValidation),
   });
+
+  useEffect(() => {
+    logout();
+  }, [])
 
   const handleSubmit = async (data: LoginInterface) => {
     await login(data);

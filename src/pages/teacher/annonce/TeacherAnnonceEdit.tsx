@@ -95,7 +95,8 @@ const TeacherAnnounceEdit: React.FC = () => {
                     {errors?.texte_annonce.message}
                   </div>
                 )}
-                <div className="flex justify-center mt-4">
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button onClick={() => navigate("/teacher/announce")} variant={'secondary'} className="w-max ">Annuler</Button>
                   <Button type="submit">Modifier</Button>
                 </div>
               </form>

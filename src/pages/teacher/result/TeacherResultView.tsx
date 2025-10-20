@@ -19,7 +19,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import { BookText } from "lucide-react";
+import { BookText, ChevronLeft } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -80,7 +80,8 @@ const TeacherResultView: React.FC = () => {
       <div className="my-6">
         <div className="flex justify-between items-center mb-4">
           <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <BookText /> Resultat du 2025-12-12
+            <Button onClick={() => navigate("/teacher/result")} variant={'secondary'}><ChevronLeft /></Button> 
+            Resultat
           </div>
           <Sheet>
             <SheetTrigger asChild>

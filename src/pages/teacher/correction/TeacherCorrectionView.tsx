@@ -1,9 +1,10 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
+import { Button } from "@/components/ui/button";
 import { mock_reponseetudiants_a_corriger, mock_tests } from "@/constants/mock";
 import { useGetReponseByTentativeId } from "@/hooks/reponse/useGetReponseByTentativeId";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { HourglassOutlined } from "@ant-design/icons";
-import { Edit } from "lucide-react";
+import { ChevronLeft, Edit } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -21,7 +22,8 @@ const TeacherCorrectionView: React.FC = () => {
       <div className="my-6">
         <div className="flex justify-between items-center mb-4">
           <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <Edit /> Correction d'un test
+            <Button onClick={() => navigate("/teacher/correction")} variant={'secondary'}><ChevronLeft /></Button> 
+            Correction d'un test
           </div>
         </div>
         <div className="">

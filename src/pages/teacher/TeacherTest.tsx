@@ -74,7 +74,7 @@ const TeacherTest: React.FC = () => {
     // await launchTest(id);
     updateIsFinished(false);
     updateIsInTest(true);
-    updateSecondsLeft(data.duree_minutes);
+    updateSecondsLeft(Number(data.duree_minutes) * 60);
 
     navigate(`/teacher/test/launched/view/${data.id_test}`);
   };
@@ -214,7 +214,7 @@ const TeacherTest: React.FC = () => {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
                               <Button
-                                onClick={() => launchConfirm(test.id_test)}
+                                onClick={() => launchConfirm(test)}
                               >
                                 Confirmer
                               </Button>
@@ -341,7 +341,7 @@ const TeacherTest: React.FC = () => {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
                               <Button
-                                onClick={() => launchConfirm(test.id_test)}
+                                onClick={() => launchConfirm(test)}
                               >
                                 Confirmer
                               </Button>
