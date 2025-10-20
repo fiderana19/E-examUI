@@ -32,6 +32,8 @@ import AdminResponseView from "./pages/admin/history/AdminResponseView";
 import AdminResult from "./pages/admin/AdminResult";
 import RoleBasedRoute from "./routes/RoleBasedRoute";
 import TeacherTestLaunchedView from "./pages/teacher/test/TeacherTestLaunchedView";
+import NotFound from "./pages/NotFound";
+import Unauthorized from "./pages/Unauthorized";
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
       {/* Public routes */}
       <Route index path="/" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="*" element={<NotFound />} />
       {/* Student route */}
       <Route
         path="/student"
