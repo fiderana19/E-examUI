@@ -10,7 +10,7 @@ import { useTest } from "@/context/TestContext";
 import { showToast } from "@/utils/Toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { AlertTriangleIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TestRoom: React.FC = () => {
@@ -18,9 +18,60 @@ const TestRoom: React.FC = () => {
   const Id = req.id;
   const id_utilisateur = 1;
   const id_tentative = 2;
-  const { updateIsInTest, isFinished, updateIsFinished } = useTest();
+  const { isFinished, updateIsFinished } = useTest();
   const navigate = useNavigate();
   const [studentResponse, setStudentResponse] = useState<any[]>([]);
+  const [isSendindResponse, setIsSendingResponse] = useState<boolean>(false);
+
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (!isFinished || isSendindResponse) {
+                const message = "Attention ! Quitter cette page mettra fin à votre tentative de test. Êtes-vous sûr ?";
+                event.returnValue = message; 
+                return event.returnValue;
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [isFinished]); 
+
+  useEffect(() => {
+    updateIsFinished(false);
+    let focusViolations = 0;
+
+    const handleVisibilityChange = () => {
+        if (document.hidden) {
+            focusViolations++;
+            console.warn(`Violation de focus détectée ! Nombre : ${focusViolations}`);
+
+            if (focusViolations >= 2) {
+              updateIsFinished(true);
+              finishTest();
+            } else {
+              alert(`ATTENTION ! Vous avez quitté l'onglet. Votre test sera soumis automatiquement si vous essayer encore de quitter l'onglet !`);
+            }
+        }
+    };
+          const handleRightClick = (e: MouseEvent) => {
+          e.preventDefault();
+          showToast({
+            type: TOAST_TYPE.ERROR,
+            message: "Le clic droit est désactivé pendant le test !", 
+          })
+      };
+
+      document.addEventListener('contextmenu', handleRightClick);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      return () => {
+          document.removeEventListener('contextmenu', handleRightClick);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
+  }, []);
 
   const onInputResponseChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -57,13 +108,17 @@ const TestRoom: React.FC = () => {
   };
 
   const finishTest = () => {
-    updateIsInTest(false);
+    setIsSendingResponse(true);
+    updateIsFinished(true);
     console.log(studentResponse);
+    // setIsSendingResponse(false);
+    // navigate("/student/test")
   };
 
   return (
     <div>
-      {isFinished && (
+      <div className="z-50 fixed w-full opacity-5 h-16 px-4 top-0 left-0 flex justify-between items-center bg-red-500 text-center"></div>
+      {(isFinished && isSendindResponse) && (
         <div className="bg-gray-50 opacity-95 h-screen w-screen fixed z-50">
           <div className="h-full w-full flex flex-col justify-center">
             <div className="w-max mx-auto text-center">

@@ -7,13 +7,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentTest: React.FC = () => {
-  const { updateIsInTest, updateSecondsLeft, updateIsFinished } = useTest();
+  const { updateSecondsLeft, updateIsFinished } = useTest();
   const initial = 60 * 60;
   const navigate = useNavigate();
 
   const debutTest = () => {
     updateIsFinished(false);
-    updateIsInTest(true);
     updateSecondsLeft(initial);
     navigate("/student/test/room/225");
   };

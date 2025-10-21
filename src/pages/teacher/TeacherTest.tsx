@@ -41,7 +41,7 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherTest: React.FC = () => {
   const navigate = useNavigate();
-  const { updateIsFinished, updateIsInTest, updateSecondsLeft } = useTest();
+  const { updateIsFinished, updateSecondsLeft } = useTest();
   const { token } = useAuth();
   const { data: tests, refetch } = useGetAllTestByTeacherId(
     token ? Number(token.split("/")[0]) : 0,
@@ -73,7 +73,6 @@ const TeacherTest: React.FC = () => {
   const launchConfirm = async (data: any) => {
     // await launchTest(id);
     updateIsFinished(false);
-    updateIsInTest(true);
     updateSecondsLeft(Number(data.duree_minutes) * 60);
 
     navigate(`/teacher/test/launched/view/${data.id_test}`);
