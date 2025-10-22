@@ -131,7 +131,7 @@ const AdminGroupe: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {mock_groupes.map((group: any, index: any) => {
+            {groupes && groupes.map((group: any, index: any) => {
               return (
                 <tr key={index}>
                   <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
@@ -146,7 +146,7 @@ const AdminGroupe: React.FC = () => {
                     <div className="flex justify-end gap-1">
                       <Button
                         onClick={() =>
-                          navigate(`/admin/groupe/edit/${group.id_groupe}`)
+                          navigate(`/admin/groupe/edit/${group.id}`)
                         }
                         variant={"outline"}
                         size={"icon"}

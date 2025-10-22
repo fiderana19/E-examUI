@@ -4,6 +4,7 @@ import { HttpStatus } from "../constants/Http_status";
 import { ToastContainer } from "react-toastify";
 import { LoginInterface } from "@/interfaces/user.interface";
 import { postLogin } from "@/api/user.api";
+import { USER_ROLE } from "@/enum/user.enum";
 
 type AuthContextProps = {
   token?: string | null;
@@ -28,15 +29,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       response?.status === HttpStatus.OK ||
       response?.status === HttpStatus.CREATED
     ) {
-      const data = response?.data.token;
+      const data = response?.data.access_token;
 
       setToken(data);
       localStorage.setItem("token", data);
 
-      const decodedToken = data.split("/")[1];
-      if (decodedToken === "admin") {
+      const decodedToken = JSON.parse(atob(data.split('.')[1]));
+      
+      if (decodedToken.role === USER_ROLE.ADMIN) {
         navigate("/admin/home");
-      } else if (decodedToken === "teacher") {
+      } else if (decodedToken.role === USER_ROLE.ENSEIGNANT) {
         navigate("/teacher/home");
       } else {
         navigate("/student/home");

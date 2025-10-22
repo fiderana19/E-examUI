@@ -56,6 +56,7 @@ const AdminGroupeEdit: React.FC = () => {
                 <Controller
                   control={control}
                   name="nom"
+                  defaultValue=""
                   render={({ field: { value, onChange } }) => (
                     <Input
                       value={value}

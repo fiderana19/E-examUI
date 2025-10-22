@@ -1,12 +1,12 @@
 export interface LoginInterface {
   email: string;
-  motdepasse: string;
+  password: string;
 }
 
 export interface SignupInterface {
   nom: string;
   matricule: string;
   email: string;
-  motdepasse: string;
-  groupe: string;
+  password: string;
+  id_groupe: string;
 }

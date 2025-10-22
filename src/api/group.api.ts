@@ -5,20 +5,14 @@ import {
 import axiosAuthInstance from "./Config";
 import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
-const GroupAPIUrl = `${import.meta.env.VITE_BASE_URL}/groupe`;
+const GroupAPIUrl = `${import.meta.env.VITE_BASE_URL}/groupes`;
 
 export const getAllGroup = async () => {
-  // return await axiosAuthInstance.get(`${GroupAPIUrl}/all`)
-
-  initMockAdapter();
-  return await mockedAxios.get("/groupe");
+  return await axiosAuthInstance.get(`${GroupAPIUrl}`)
 };
 
 export const getGroupById = async (id: number) => {
-  // return await axiosAuthInstance.get(`${GroupAPIUrl}/get/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/groupe/${id}`);
+  return await axiosAuthInstance.get(`${GroupAPIUrl}/${id}`)
 };
 
 export const postGroup = async (data: AddGroupInterface) => {

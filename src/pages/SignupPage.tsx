@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SignupInterface } from "@/interfaces/user.interface";
 import { SignupValidation } from "@/validation/user.validation";
@@ -11,10 +11,8 @@ import { Link } from "react-router-dom";
 import { useSignup } from "@/hooks/user/useSignup";
 import { HttpStatus } from "@/constants/Http_status";
 import { CloseCircleFilled } from "@ant-design/icons";
-import { useAuth } from "@/context/AuthContext";
 
 const SignupPage: React.FC = () => {
-  const { logout } = useAuth();
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -26,10 +24,6 @@ const SignupPage: React.FC = () => {
   });
   const { mutateAsync: signup } = useSignup({ action() {} });
   const [reponseText, setReponseText] = useState<boolean>(false);
-
-  useEffect(() => {
-    logout();
-  }, [])
   
   const handleSubmit = async (data: SignupInterface) => {
     const response = await signup(data);
@@ -98,18 +92,18 @@ const SignupPage: React.FC = () => {
             <Label className="mb-1 mt-4">Groupe :</Label>
             <Controller
               control={control}
-              name="groupe"
+              name="id_groupe"
               render={({ field: { value, onChange } }) => (
                 <Input
                   value={value}
                   onChange={onChange}
-                  className={`${errors?.groupe && "border border-red-500 text-red-500 rounded"}`}
+                  className={`${errors?.id_groupe && "border border-red-500 text-red-500 rounded"}`}
                 />
               )}
             />
-            {errors?.groupe && (
+            {errors?.id_groupe && (
               <div className="text-xs w-full text-red-500 text-left">
-                {errors?.groupe.message}
+                {errors?.id_groupe.message}
               </div>
             )}
             <Label className="mb-1 mt-4">Adresse mail :</Label>
@@ -132,18 +126,18 @@ const SignupPage: React.FC = () => {
             <Label className="mb-1 mt-4">Mot de passe :</Label>
             <Controller
               control={control}
-              name="motdepasse"
+              name="password"
               render={({ field: { value, onChange } }) => (
                 <Input
                   value={value}
                   onChange={onChange}
-                  className={`${errors?.motdepasse && "border border-red-500 text-red-500 rounded"}`}
+                  className={`${errors?.password && "border border-red-500 text-red-500 rounded"}`}
                 />
               )}
             />
-            {errors?.motdepasse && (
+            {errors?.password && (
               <div className="text-xs w-full text-red-500 text-left">
-                {errors?.motdepasse.message}
+                {errors?.password.message}
               </div>
             )}
             <div className="flex justify-center mt-4">

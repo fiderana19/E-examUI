@@ -12,9 +12,10 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({ allowedRoles }) => {
     return <Navigate to="/" />;
   }
 
-  const decodedToken = token ? token.split("/")[1] : "";
+  const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+  const userRole = decodedToken ? decodedToken.role : null;
 
-  if (allowedRoles.includes(decodedToken)) {
+  if (allowedRoles.includes(userRole)) {
     return <Outlet />;
   } else {
     return <Navigate to="/unauthorized" />;

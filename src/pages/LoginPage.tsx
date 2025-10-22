@@ -64,14 +64,14 @@ const LoginPage: React.FC = () => {
             <div className="relative">
               <Controller
                 control={control}
-                name="motdepasse"
+                name="password"
                 render={({ field: { value, onChange, onBlur } }) => (
                   <Input
                     value={value}
                     onChange={onChange}
                     onBlur={onBlur}
                     type={!!isPasswordVisible ? "text" : "password"}
-                    className={`${errors?.motdepasse && "border border-red-500 text-red-500 rounded"}`}
+                    className={`${errors?.password && "border border-red-500 text-red-500 rounded"}`}
                   />
                 )}
               />
@@ -87,9 +87,9 @@ const LoginPage: React.FC = () => {
                 />
               )}
             </div>
-            {errors?.motdepasse && (
+            {errors?.password && (
               <div className="text-xs w-full text-red-500 text-left">
-                {errors?.motdepasse.message}
+                {errors?.password.message}
               </div>
             )}
             <div className="flex justify-center mt-4">

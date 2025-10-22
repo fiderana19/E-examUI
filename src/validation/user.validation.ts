@@ -5,7 +5,7 @@ export const LoginValidation = yup.object({
     .string()
     .email("Adresse mail invalide !")
     .required("Adresse mail requis !"),
-  motdepasse: yup.string().required("Mot de passe requis !"),
+  password: yup.string().required("Mot de passe requis !"),
 });
 
 export const SignupValidation = yup.object({
@@ -13,11 +13,11 @@ export const SignupValidation = yup.object({
     .string()
     .email("Adresse mail invalide !")
     .required("Adresse mail requis !"),
-  motdepasse: yup
+  password: yup
     .string()
     .min(6, "Le mot de passe doit contenir au moins 6 caractères !")
     .required("Mot de passe requis !"),
   nom: yup.string().required("Le champ nom requis !"),
   matricule: yup.string().required("Matricule requis !"),
-  groupe: yup.string().required("Veuillez selectionner un groupe !"),
+  id_groupe: yup.string().required("Veuillez selectionner un groupe !"),
 });

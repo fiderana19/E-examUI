@@ -34,6 +34,7 @@ import RoleBasedRoute from "./routes/RoleBasedRoute";
 import TeacherTestLaunchedView from "./pages/teacher/test/TeacherTestLaunchedView";
 import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
+import { USER_ROLE } from "./enum/user.enum";
 
 function App() {
   return (
@@ -46,7 +47,7 @@ function App() {
       {/* Student route */}
       <Route
         path="/student"
-        element={<RoleBasedRoute allowedRoles={["student"]} />}
+        element={<RoleBasedRoute allowedRoles={[`${USER_ROLE.ETUDIANT}`]} />}
       >
         <Route path="home" element={<StudentHome />} />
         <Route path="announce" element={<StudentAnnonce />} />
@@ -58,7 +59,7 @@ function App() {
       {/* Admin route */}
       <Route
         path="/admin"
-        element={<RoleBasedRoute allowedRoles={["admin"]} />}
+        element={<RoleBasedRoute allowedRoles={[`${USER_ROLE.ADMIN}`]} />}
       >
         <Route path="home" element={<AdminHome />} />
         <Route path="groupe" element={<AdminGroupe />} />
@@ -72,7 +73,7 @@ function App() {
       {/* Teacher route */}
       <Route
         path="/teacher"
-        element={<RoleBasedRoute allowedRoles={["teacher"]} />}
+        element={<RoleBasedRoute allowedRoles={[`${USER_ROLE.ENSEIGNANT}`]} />}
       >
         <Route path="home" element={<TeacherHome />} />
         <Route path="announce" element={<TeacherAnnounce />} />

@@ -5,32 +5,28 @@ import { TOAST_TYPE } from "@/constants/ToastType";
 import { HttpStatus } from "@/constants/Http_status";
 import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
-const UserAPIUrl = `${import.meta.env.VITE_BASE_URL}/user`;
+const UserAPIUrl = `${import.meta.env.VITE_BASE_URL}/auth`;
 
 export const postLogin = async (data: LoginInterface) => {
-  // try {
-  //   return await axiosInstance.post(`${UserAPIUrl}/login`, data);
-  // } catch (error: any) {
-  //   if(error?.status == HttpStatus.BAD_REQUEST || error?.status == HttpStatus.UNAUTHORIZED) {
-  //     showToast({
-  //       type: TOAST_TYPE.ERROR,
-  //       message: error?.response.data.message
-  //     })
-  //   } else if (error.code == "ERR_NETWORK") {
-  //     showToast({
-  //       type: TOAST_TYPE.ERROR,
-  //       message: "Erreur lors de la connexion au serveur !"
-  //     })
-  //   }
-  // }
-  initMockAdapter();
-  return await mockedAxios.post("/utilisateur/connexion", data);
+  try {
+    return await axiosInstance.post(`${UserAPIUrl}/login`, data);
+  } catch (error: any) {
+    if(error?.status == HttpStatus.BAD_REQUEST || error?.status == HttpStatus.UNAUTHORIZED) {
+      showToast({
+        type: TOAST_TYPE.ERROR,
+        message: error?.response.data.message
+      })
+    } else if (error.code == "ERR_NETWORK") {
+      showToast({
+        type: TOAST_TYPE.ERROR,
+        message: "Erreur lors de la connexion au serveur !"
+      })
+    }
+  }
 };
 
 export const postInscription = async (data: SignupInterface) => {
-  // return await axiosInstance.post(`${UserAPIUrl}/signup`, data)
-  initMockAdapter();
-  return await mockedAxios.post("/utilisateur/inscription", data);
+  return await axiosInstance.post(`${UserAPIUrl}/register`, data)
 };
 
 export const getAllUser = async () => {
@@ -40,10 +36,7 @@ export const getAllUser = async () => {
 };
 
 export const getUserById = async (id: string) => {
-  // return await axiosAuthInstance.get(`${UserAPIUrl}/get/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/utilisateur/${id}`);
+  return await axiosAuthInstance.get(`${UserAPIUrl}/${id}`)
 };
 
 export const patchUserValidation = async (data: any) => {
