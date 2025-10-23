@@ -5,20 +5,14 @@ import {
 import axiosAuthInstance from "./Config";
 import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
-const TestAPIUrl = `${import.meta.env.VITE_BASE_URL}/test`;
+const TestAPIUrl = `${import.meta.env.VITE_BASE_URL}/tests`;
 
 export const getTestById = async (id: number) => {
-  // return await axiosAuthInstance.get(`${TestAPIUrl}/get/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/test/${id}`);
+  return await axiosAuthInstance.get(`${TestAPIUrl}/${id}`)
 };
 
 export const getTestByTeacherId = async (id: number) => {
-  // return await axiosAuthInstance.get(`${TestAPIUrl}/teacher/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/test/utilisateur/${id}`);
+  return await axiosAuthInstance.get(`${TestAPIUrl}/user/${id}`)
 };
 
 export const getTestForCorrectionByTeacherId = async (id: number) => {
@@ -37,10 +31,7 @@ export const getFinishedTestByTeacherId = async (id: number) => {
 };
 
 export const deleteTest = async (id: number) => {
-  // return await axiosAuthInstance.delete(`${TestAPIUrl}/delete/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.delete(`/test/${id}`);
+  return await axiosAuthInstance.delete(`${TestAPIUrl}/${id}`)
 };
 
 export const launchTest = async (id: number) => {
@@ -51,15 +42,9 @@ export const launchTest = async (id: number) => {
 };
 
 export const postTest = async (data: TestCreateInterface) => {
-  // return await axiosAuthInstance.post(`${TestAPIUrl}/create`, data)
-
-  initMockAdapter();
-  return await mockedAxios.post(`/test/`, data);
+  return await axiosAuthInstance.post(`${TestAPIUrl}`, data)
 };
 
 export const patchTest = async (data: TestEditInterface) => {
-  // return await axiosAuthInstance.patch(`${TestAPIUrl}/edit/${data.id_test}`, data)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/test/${data?.id_test}`, data);
+  return await axiosAuthInstance.put(`${TestAPIUrl}/${data.id_test}`, data)
 };

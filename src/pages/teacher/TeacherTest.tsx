@@ -44,7 +44,7 @@ const TeacherTest: React.FC = () => {
   const { updateIsFinished, updateSecondsLeft } = useTest();
   const { token } = useAuth();
   const { data: tests, refetch } = useGetAllTestByTeacherId(
-    token ? Number(token.split("/")[0]) : 0,
+    token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
   const { mutateAsync: launchTest } = useLaunchTest({
     action() {
@@ -141,12 +141,14 @@ const TeacherTest: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
-          <CloseOutlined className="text-7xl" />
-          <div className="mt-4 text-xl">Vous avez créé aucun test</div>
-        </div>
+        {
+          tests && tests.length < 1 && <div className="w-max mx-auto text-center text-gray-600 my-10">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">Vous avez créé aucun test</div>
+          </div>
+        }
         <div className="">
-          {filterRef && mock_tests
+          {filterRef && tests
             ? filtereds.map((test: any, index: any) => {
                 return (
                   <div key={index} className="shadow p-4 bg-white my-2">
@@ -274,7 +276,7 @@ const TeacherTest: React.FC = () => {
                   </div>
                 );
               })
-            : mock_tests.map((test: any, index: any) => {
+            : tests && tests.map((test: any, index: any) => {
                 return (
                   <div key={index} className="shadow p-4 bg-white my-2">
                     <div className="mb-4">

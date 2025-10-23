@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const useGetAllTestByTeacherId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.TESTS, id],
+    queryKey: [QueryCacheKey.TESTS, QueryCacheKey.USERS, id],
     queryFn: () => getTestByTeacherId(id),
     staleTime: Infinity,
     enabled: id !== 0,

@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
+import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
 import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
 import { usePostTest } from "@/hooks/test/usePostTest";
 import { TestCreateInterface } from "@/interfaces/test.interface";
@@ -18,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const TeacherTestAdd: React.FC = () => {
   const { token } = useAuth();
+  const { data: groupes } = useGetAllGroup();
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -27,7 +30,7 @@ const TeacherTestAdd: React.FC = () => {
     resolver: yupResolver(TestCreateValidation),
   });
   const { refetch } = useGetAllTestByTeacherId(
-    token ? Number(token.split("/")[0]) : 0,
+    token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
   const { mutateAsync: createTest } = usePostTest({
     action() {
@@ -37,7 +40,7 @@ const TeacherTestAdd: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue("id_utilisateur", token ? String(token.split("/")[0]) : "");
+    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
   }, []);
 
   const handleSubmit = async (data: TestCreateInterface) => {
@@ -58,21 +61,28 @@ const TeacherTestAdd: React.FC = () => {
                 <CalendarClock /> Ajouter un nouveau test
               </div>
               <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                <Label className="mb-1">Date de declenchement :</Label>
+                <Label className="mb-1 mt-4">Groupe :</Label>
                 <Controller
                   control={control}
-                  name="date_declenchement"
+                  name="id_groupe"
                   render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value}
-                      onChange={onChange}
-                      className={`${errors?.date_declenchement && "border border-red-500 text-red-500 rounded"}`}
-                    />
+                    <Select value={value} onValueChange={onChange} >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={value} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {
+                          groupes && groupes.map((groupe: any, index: number) => (
+                            <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
+                          ))
+                        }
+                      </SelectContent>
+                    </Select>
                   )}
                 />
-                {errors?.date_declenchement && (
+                {errors?.id_groupe && (
                   <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.date_declenchement.message}
+                    {errors?.id_groupe.message}
                   </div>
                 )}
                 <Label className="mb-1 mt-4">Titre :</Label>
@@ -95,74 +105,36 @@ const TeacherTestAdd: React.FC = () => {
                 <Label className="mb-1 mt-4">Description :</Label>
                 <Controller
                   control={control}
-                  name="description_test"
+                  name="description"
                   render={({ field: { value, onChange } }) => (
                     <Input
                       value={value}
                       onChange={onChange}
-                      className={`${errors?.description_test && "border border-red-500 text-red-500 rounded"}`}
+                      className={`${errors?.description && "border border-red-500 text-red-500 rounded"}`}
                     />
                   )}
                 />
-                {errors?.description_test && (
+                {errors?.description && (
                   <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.description_test.message}
+                    {errors?.description.message}
                   </div>
                 )}
                 <Label className="mb-1 mt-4">Durée (minutes) :</Label>
                 <Controller
                   control={control}
-                  name="dureee_minutes"
+                  name="duree_minutes"
                   render={({ field: { value, onChange } }) => (
                     <Input
                       value={value ? Number(value) : 0}
                       onKeyPress={handleNumberKeyPress}
                       onChange={onChange}
-                      className={`${errors?.dureee_minutes && "border border-red-500 text-red-500 rounded"}`}
+                      className={`${errors?.duree_minutes && "border border-red-500 text-red-500 rounded"}`}
                     />
                   )}
                 />
-                {errors?.dureee_minutes && (
+                {errors?.duree_minutes && (
                   <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.dureee_minutes.message}
-                  </div>
-                )}
-                <Label className="mb-1 mt-4">Note maximum :</Label>
-                <Controller
-                  control={control}
-                  name="note_max"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value ? Number(value) : 0}
-                      onKeyPress={handleNumberKeyPress}
-                      onChange={onChange}
-                      className={`${errors?.note_max && "border border-red-500 text-red-500 rounded"}`}
-                    />
-                  )}
-                />
-                {errors?.note_max && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.note_max.message}
-                  </div>
-                )}
-                <Label className="mb-1 mt-4">
-                  Nombre maximum de question :
-                </Label>
-                <Controller
-                  control={control}
-                  name="max_questions"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value ? Number(value) : 0}
-                      onKeyPress={handleNumberKeyPress}
-                      onChange={onChange}
-                      className={`${errors?.max_questions && "border border-red-500 text-red-500 rounded"}`}
-                    />
-                  )}
-                />
-                {errors?.max_questions && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.max_questions.message}
+                    {errors?.duree_minutes.message}
                   </div>
                 )}
                 <div className="flex justify-center mt-4">

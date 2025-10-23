@@ -10,8 +10,8 @@ import React from "react";
 const TeacherHome: React.FC = () => {
   const { token } = useAuth();
   const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
-  const { data: annonces } = useGetAnnonceByUserId(
-    user ? Number(user?.id_groupe) : 0,
+  const { data: annonces, refetch } = useGetAnnonceByUserId(
+    token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
 
   return (
@@ -38,7 +38,7 @@ const TeacherHome: React.FC = () => {
                 <div className="mt-4">Vous avez fait aucune annonce !</div>
               </div>
               <div className="">
-                {mock_annonces.slice(0, 3).map((announce: any, index: any) => {
+                {annonces && annonces.slice(0, 3).map((announce: any, index: any) => {
                   return (
                     <div key={index} className="my-2">
                       <div className="text-xs text-gray-600 mb-1">
