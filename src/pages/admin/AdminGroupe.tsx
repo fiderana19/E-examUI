@@ -80,18 +80,18 @@ const AdminGroupe: React.FC = () => {
                 <Label className="mb-1">Nom :</Label>
                 <Controller
                   control={control}
-                  name="nom"
+                  name="nom_groupe"
                   render={({ field: { value, onChange } }) => (
                     <Input
                       value={value}
                       onChange={onChange}
-                      className={`${errors?.nom && "border border-red-500 text-red-500 rounded"}`}
+                      className={`${errors?.nom_groupe && "border border-red-500 text-red-500 rounded"}`}
                     />
                   )}
                 />
-                {errors?.nom && (
+                {errors?.nom_groupe && (
                   <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.nom.message}
+                    {errors?.nom_groupe.message}
                   </div>
                 )}
                 <Label className="mb-1 mt-4">Description :</Label>
@@ -146,7 +146,7 @@ const AdminGroupe: React.FC = () => {
                     <div className="flex justify-end gap-1">
                       <Button
                         onClick={() =>
-                          navigate(`/admin/groupe/edit/${group.id}`)
+                          navigate(`/admin/groupe/edit/${group.id_groupe}`)
                         }
                         variant={"outline"}
                         size={"icon"}

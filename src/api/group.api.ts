@@ -16,22 +16,13 @@ export const getGroupById = async (id: number) => {
 };
 
 export const postGroup = async (data: AddGroupInterface) => {
-  // return await axiosAuthInstance.post(`${GroupAPIUrl}/create`, data)
-
-  initMockAdapter();
-  return await mockedAxios.post("/groupe", data);
+  return await axiosAuthInstance.post(`${GroupAPIUrl}`, data)
 };
 
 export const patchGroup = async (data: EditGroupInterface) => {
-  // return await axiosAuthInstance.patch(`${GroupAPIUrl}/edit/${data.id_groupe}`, data)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/groupe/${data.id_groupe}`, data);
+  return await axiosAuthInstance.put(`${GroupAPIUrl}/${data.id_groupe}`, data)
 };
 
 export const deleteGroup = async (id: number) => {
-  // return await axiosAuthInstance.delete(`${GroupAPIUrl}/delete/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.delete(`/groupe/${id}`);
+  return await axiosAuthInstance.delete(`${GroupAPIUrl}/${id}`)
 };
