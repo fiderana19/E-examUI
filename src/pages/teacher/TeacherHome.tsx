@@ -1,16 +1,13 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Card } from "@/components/ui/card";
-import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
-import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { CloseOutlined, NotificationTwoTone } from "@ant-design/icons";
 import React from "react";
 
 const TeacherHome: React.FC = () => {
   const { token } = useAuth();
-  const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
-  const { data: annonces, refetch } = useGetAnnonceByUserId(
+  const { data: annonces } = useGetAnnonceByUserId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
 

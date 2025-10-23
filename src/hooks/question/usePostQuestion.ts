@@ -18,6 +18,7 @@ export const usePostQuestion = ({ action }: { action: () => void }) => {
       });
     },
     onError: (error: AxiosError) => {
+      console.log(error)
       showToast({
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la création de la question !",

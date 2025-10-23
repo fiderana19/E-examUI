@@ -3,7 +3,6 @@ export interface QuestionCreateInterface {
   id_test: string;
   texte_question: string;
   type_question: string;
-  points: number;
   response_correcte: string;
 }
 
@@ -13,6 +12,5 @@ export interface QuestionEditInterface {
   id_test: string;
   texte_question: string;
   type_question: string;
-  points: number;
   response_correcte: string;
 }

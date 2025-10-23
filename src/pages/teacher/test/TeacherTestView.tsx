@@ -18,13 +18,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { mock_questions, mock_tests } from "@/constants/mock";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/context/AuthContext";
+import { useDeleteQuestion } from "@/hooks/question/useDeleteQuestion";
 import { useGetAllQuestionByTestId } from "@/hooks/question/useGetAllQuestionByTestId";
 import { usePostQuestion } from "@/hooks/question/usePostQuestion";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { QuestionCreateInterface } from "@/interfaces/question.interface";
-import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { QuestionCreateValidation } from "@/validation/question.validation";
 import {
   ClockCircleOutlined,
@@ -34,7 +34,7 @@ import {
 } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ChevronLeft, Plus, Trash } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -42,7 +42,7 @@ const TeacherTestView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const { token } = useAuth();
-  const { data: tes } = useGetTestById(Id ? Number(Id) : 0);
+  const { data: test } = useGetTestById(Id ? Number(Id) : 0);
   const { data: questions, refetch } = useGetAllQuestionByTestId(
     Id ? Number(Id) : 0,
   );
@@ -51,26 +51,42 @@ const TeacherTestView: React.FC = () => {
       refetch();
     },
   });
+  const { mutateAsync: deleteQuestion } = useDeleteQuestion({
+    action() {
+      refetch();
+    },
+  });
+  const [selectedQuestion, setSelectedQuestion] = useState<number>(0);
   const navigate = useNavigate();
-  const test = mock_tests[0];
   const {
     handleSubmit: submit,
     formState: { errors },
     control,
     setValue,
-    reset,
   } = useForm<QuestionCreateInterface>({
     resolver: yupResolver(QuestionCreateValidation),
+    defaultValues: {
+      id_utilisateur: token ? JSON.parse(atob(token.split(".")[1])).id : "",
+      id_test: Id ? Id : "",
+      type_question: "",
+      texte_question: "",
+      response_correcte: ""
+    }
   });
 
   useEffect(() => {
-    setValue("id_utilisateur", token ? token.split("/")[0] : "");
+    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
+    setValue("id_test", Id ? Id : "");
   }, []);
 
   const handleSubmit = async (data: QuestionCreateInterface) => {
+    console.log(data)
     await createQuestion(data);
-    reset();
   };
+
+  const deleteConfirm = async () => {
+    await deleteQuestion(selectedQuestion);
+  }
 
   return (
     <div className="pl-64 pt-24 pr-6">
@@ -156,11 +172,16 @@ const TeacherTestView: React.FC = () => {
                       control={control}
                       name="type_question"
                       render={({ field: { value, onChange } }) => (
-                        <Input
-                          value={value}
-                          onChange={onChange}
-                          className={`${errors?.type_question && "border border-red-500 text-red-500 rounded"}`}
-                        />
+                        <Select value={value} onValueChange={onChange} >
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                                <SelectItem value='qcm'> QCM </SelectItem>
+                                <SelectItem value='reponse courte'> Reponse courte </SelectItem>
+                                <SelectItem value='developpement'> A developper </SelectItem>
+                          </SelectContent>
+                        </Select>
                       )}
                     />
                     {errors?.type_question && (
@@ -185,24 +206,6 @@ const TeacherTestView: React.FC = () => {
                         {errors?.response_correcte.message}
                       </div>
                     )}
-                    <Label className="mb-1 mt-4">Points attribués :</Label>
-                    <Controller
-                      control={control}
-                      name="points"
-                      render={({ field: { value, onChange } }) => (
-                        <Input
-                          value={value ? Number(value) : 0}
-                          onChange={onChange}
-                          onKeyPress={handleNumberKeyPress}
-                          className={`${errors?.points && "border border-red-500 text-red-500 rounded"}`}
-                        />
-                      )}
-                    />
-                    {errors?.points && (
-                      <div className="text-xs w-full text-red-500 text-left">
-                        {errors?.points.message}
-                      </div>
-                    )}
                     <div className="flex justify-center mt-4">
                       <Button type="submit">Ajouter</Button>
                     </div>
@@ -211,7 +214,7 @@ const TeacherTestView: React.FC = () => {
               </Popover>
             </div>
             <div className="my-2">
-              {mock_questions.map((question: any, index: any) => {
+              {questions && questions.map((question: any, index: any) => {
                 return (
                   <Card key={index} className="mb-2 px-4">
                     <div>
@@ -252,7 +255,7 @@ const TeacherTestView: React.FC = () => {
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger>
-                            <Button variant={"destructive"}>
+                            <Button onClick={() => setSelectedQuestion(question.id_question)} variant={"destructive"}>
                               <Trash /> Supprimer
                             </Button>
                           </AlertDialogTrigger>
@@ -267,7 +270,7 @@ const TeacherTestView: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button variant={"destructive"}>Supprimer</Button>
+                              <Button onClick={() => deleteConfirm()} variant={"destructive"}>Supprimer</Button>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
