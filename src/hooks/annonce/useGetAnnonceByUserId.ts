@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const useGetAnnonceByUserId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.ANNONCES, id],
+    queryKey: [QueryCacheKey.ANNONCES, QueryCacheKey.USERS, id],
     queryFn: () => getAnnonceByUserId(id),
     staleTime: Infinity,
     enabled: id !== 0,

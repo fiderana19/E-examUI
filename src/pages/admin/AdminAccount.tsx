@@ -16,12 +16,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { mock_utilisateurs } from "@/constants/mock";
 import { useGetAllUser } from "@/hooks/user/useGettAllUser";
 import { useValidateUser } from "@/hooks/user/useValidateUser";
 import { CloseOutlined } from "@ant-design/icons";
 import { Check, Filter, User } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const AdminAccount: React.FC = () => {
   const { data: users, refetch } = useGetAllUser();
@@ -36,14 +35,17 @@ const AdminAccount: React.FC = () => {
   const [filterText, setFilterText] = useState<string>("Tout");
   const [filterRef, setFilterRef] = useState<boolean>(false);
 
+  useEffect(() => {
+    refetch();
+  }, [])
   const validateConfirm = async () => {
     await validerUser(selectedAccount);
   };
 
-  async function filterData(text: string, value: boolean) {
+  async function filterData(text: string, value: number) {
     setFilterRef(true);
     setFilterText(text);
-    const acc = mock_utilisateurs.filter(
+    const acc = users.filter(
       (accounts: any) => accounts.est_valider === value,
     );
     setFiltereds(acc);
@@ -85,14 +87,14 @@ const AdminAccount: React.FC = () => {
                   <Button
                     className="w-full"
                     variant={"ghost"}
-                    onClick={() => filterData("Validé", true)}
+                    onClick={() => filterData("Validé", 1)}
                   >
                     <Check /> Compte validé
                   </Button>
                   <Button
                     className="w-full"
                     variant={"ghost"}
-                    onClick={() => filterData("Non valide", false)}
+                    onClick={() => filterData("Non valide", 0)}
                   >
                     <CloseOutlined /> Compte non valide
                   </Button>
@@ -123,7 +125,7 @@ const AdminAccount: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filterRef && mock_utilisateurs
+            {filterRef && users
               ? filtereds.map((et: any, index: any) => {
                   if (searchRef && !et.matricule.includes(searchRef)) {
                     return null;
@@ -148,11 +150,11 @@ const AdminAccount: React.FC = () => {
                       </td>
                       <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
                         {" "}
-                        {et.creation_utilisateur}{" "}
+                        {et.created_at}{" "}
                       </td>
                       <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                         <div className="flex justify-end gap-1">
-                          {!et.est_valider && (
+                          {(et.est_valider === 0) && (
                             <AlertDialog>
                               <AlertDialogTrigger>
                                 <Button
@@ -191,7 +193,7 @@ const AdminAccount: React.FC = () => {
                     </tr>
                   );
                 })
-              : mock_utilisateurs.map((et: any, index: any) => {
+              : (users && users.map((et: any, index: any) => {
                   if (searchRef && !et.matricule.includes(searchRef)) {
                     return null;
                   }
@@ -215,11 +217,11 @@ const AdminAccount: React.FC = () => {
                       </td>
                       <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
                         {" "}
-                        {et.creation_utilisateur}{" "}
+                        {et.created_at}{" "}
                       </td>
                       <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                         <div className="flex justify-end gap-1">
-                          {!et.est_valider && (
+                          {(et.est_valider === 0) && (
                             <AlertDialog>
                               <AlertDialogTrigger>
                                 <Button
@@ -257,7 +259,7 @@ const AdminAccount: React.FC = () => {
                       </td>
                     </tr>
                   );
-                })}
+                }))}
           </tbody>
         </table>
       </div>

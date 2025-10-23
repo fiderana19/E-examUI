@@ -18,8 +18,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
+import { useDeleteAnnonce } from "@/hooks/annonce/useDeleteAnnonce";
 import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
 import { usePostAnnonce } from "@/hooks/annonce/usePostAnnonce";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
@@ -40,12 +42,17 @@ import { useNavigate } from "react-router-dom";
 const TeacherAnnounce: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
+  const [selectedAnnonce, setSelectedAnnonce] = useState<number>(0)
   const { data: annonces, refetch } = useGetAnnonceByUserId(
-    user ? Number(user?.id_groupe) : 0,
+    token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
   const { data: groupes } = useGetAllGroup();
   const { mutateAsync: creerAnnonce } = usePostAnnonce({
+    action() {
+      refetch();
+    },
+  });
+  const { mutateAsync: deleteAnnonce } = useDeleteAnnonce({
     action() {
       refetch();
     },
@@ -61,12 +68,15 @@ const TeacherAnnounce: React.FC = () => {
   const [searchRef, setSearchRef] = useState<string>("");
 
   useEffect(() => {
-    setValue("date_creation", String(new Date()));
-    setValue("id_createur", user.id_utilisateur);
+    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
   }, []);
 
   const handleSubmit = async (data: AnnounceAddInterface) => {
     await creerAnnonce(data);
+  };  
+  
+  const deleteConfirm = async () => {
+    await deleteAnnonce(selectedAnnonce);
   };
 
   return (
@@ -99,11 +109,18 @@ const TeacherAnnounce: React.FC = () => {
                     control={control}
                     name="id_groupe"
                     render={({ field: { value, onChange } }) => (
-                      <Input
-                        value={value}
-                        onChange={onChange}
-                        className={`${errors?.id_groupe && "border border-red-500 text-red-500 rounded"}`}
-                      />
+                      <Select value={value} onValueChange={onChange} >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder={value} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {
+                            groupes && groupes.map((groupe: any, index: number) => (
+                              <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
+                            ))
+                          }
+                        </SelectContent>
+                      </Select>
                     )}
                   />
                   {errors?.id_groupe && (
@@ -119,10 +136,15 @@ const TeacherAnnounce: React.FC = () => {
                       <Input
                         value={value}
                         onChange={onChange}
-                        className={`${errors?.texte_annonce && "border border-red-500 text-red-500 rounded"}`}
+                        className={`${errors?.titre_annonce && "border border-red-500 text-red-500 rounded"}`}
                       />
                     )}
                   />
+                  {errors?.titre_annonce && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.titre_annonce.message}
+                    </div>
+                  )}
                   <Label className="mb-1 mt-4">Description :</Label>
                   <Controller
                     control={control}
@@ -150,12 +172,14 @@ const TeacherAnnounce: React.FC = () => {
             </Popover>
           </div>
         </div>
-        <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
-          <CloseOutlined className="text-7xl" />
-          <div className="mt-4 text-xl">Vous avez fait aucune annonce </div>
-        </div>
+        {
+          annonces && annonces.length < 1 && <div className="w-max mx-auto text-center text-gray-600 my-10">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">Vous avez fait aucune annonce </div>
+          </div>
+        }
         <div className="">
-          {mock_annonces.map((announce: any, index: any) => {
+          {annonces && annonces.map((announce: any, index: any) => {
             if (searchRef && !announce.texte_annonce.includes(searchRef)) {
               return null;
             }
@@ -167,6 +191,7 @@ const TeacherAnnounce: React.FC = () => {
                       {" "}
                       {announce.creation_annonce}{" "}
                     </div>
+                    <div> { announce.id_groupe } </div>
                   </div>
                   <blockquote className="border-l-2 pl-6 italic">
                     <NotificationTwoTone /> {announce.titre_annonce} <br />
@@ -184,7 +209,7 @@ const TeacherAnnounce: React.FC = () => {
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger>
-                        <Button variant={"destructive"}>
+                        <Button onClick={() => setSelectedAnnonce(announce.id_annonce)}  variant={"destructive"}>
                           <Trash /> Supprimer
                         </Button>
                       </AlertDialogTrigger>
@@ -199,7 +224,7 @@ const TeacherAnnounce: React.FC = () => {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Annuler</AlertDialogCancel>
-                          <Button variant={"destructive"}>Supprimer</Button>
+                          <Button onClick={() => deleteConfirm()} variant={"destructive"}>Supprimer</Button>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>

@@ -2,10 +2,8 @@ import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import Typewriter from "@/components/TypeWritter";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByGroupId } from "@/hooks/annonce/useGetAnnonceByGroupId";
-import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { NotificationTwoTone } from "@ant-design/icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +11,8 @@ import { useNavigate } from "react-router-dom";
 const StudentHome: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
   const { data: annonces } = useGetAnnonceByGroupId(
-    user ? Number(user?.id_groupe) : 0,
+    token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
 
   return (
@@ -40,8 +37,8 @@ const StudentHome: React.FC = () => {
               Les dernieres annonces
             </div>
             <div className="">
-              {mock_annonces &&
-                mock_annonces.slice(0, 3).map((announce: any, index: any) => {
+              {annonces &&
+                annonces.slice(0, 3).map((announce: any, index: any) => {
                   return (
                     <div key={index} className="mb-1">
                       <div className="text-xs text-gray-600 mb-1">

@@ -11,8 +11,14 @@ import { Link } from "react-router-dom";
 import { useSignup } from "@/hooks/user/useSignup";
 import { HttpStatus } from "@/constants/Http_status";
 import { CloseCircleFilled } from "@ant-design/icons";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { SelectValue } from "@radix-ui/react-select";
+import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
+import SelectDemo from "@/components/demo/SelectDemo";
+import { useGetAllUser } from "@/hooks/user/useGettAllUser";
 
 const SignupPage: React.FC = () => {
+  const { data: groupes } = useGetAllGroup();
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -26,6 +32,7 @@ const SignupPage: React.FC = () => {
   const [reponseText, setReponseText] = useState<boolean>(false);
   
   const handleSubmit = async (data: SignupInterface) => {
+    console.log(data)
     const response = await signup(data);
     reset();
     if (
@@ -94,11 +101,18 @@ const SignupPage: React.FC = () => {
               control={control}
               name="id_groupe"
               render={({ field: { value, onChange } }) => (
-                <Input
-                  value={value}
-                  onChange={onChange}
-                  className={`${errors?.id_groupe && "border border-red-500 text-red-500 rounded"}`}
-                />
+                <Select value={value} onValueChange={onChange} >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={value} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {
+                      groupes && groupes.map((groupe: any, index: number) => (
+                        <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
               )}
             />
             {errors?.id_groupe && (

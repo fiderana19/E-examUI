@@ -1,14 +1,14 @@
-import { getAnnonceByGroupId } from "@/api/annonce.api";
+import { getAnnonceById, getAnnonceByUserId } from "@/api/annonce.api";
 import { QueryCacheKey } from "@/api/QueryCacheKey";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { showToast } from "@/utils/Toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useGetAnnonceByGroupId = (id: number) => {
+export const useGetAnnonceById = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.ANNONCES, QueryCacheKey.GROUPS , id],
-    queryFn: () => getAnnonceByGroupId(id),
+    queryKey: [QueryCacheKey.ANNONCES, id],
+    queryFn: () => getAnnonceById(id),
     staleTime: Infinity,
     enabled: id !== 0,
   });

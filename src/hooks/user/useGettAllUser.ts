@@ -22,7 +22,7 @@ export const useGetAllUser = () => {
   }, [error]);
 
   return {
-    data: data?.data,
+    data: data?.data.data,
     isLoading,
     refetch,
   };

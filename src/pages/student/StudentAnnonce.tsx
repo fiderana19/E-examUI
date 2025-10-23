@@ -3,16 +3,14 @@ import { Input } from "@/components/ui/input";
 import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByGroupId } from "@/hooks/annonce/useGetAnnonceByGroupId";
-import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { CloseOutlined, NotificationTwoTone } from "@ant-design/icons";
 import React, { useState } from "react";
 
 const StudentAnnonce: React.FC = () => {
   const [searchRef, setSearchRef] = useState<string>("");
   const { token } = useAuth();
-  const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
   const { data: annonces } = useGetAnnonceByGroupId(
-    user ? Number(user?.id_groupe) : 0,
+    token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
 
   return (
@@ -29,14 +27,14 @@ const StudentAnnonce: React.FC = () => {
             placeholder="Mot clés de l'annonce..."
           />
         </div>
-        {mock_annonces && mock_annonces.length < 1 && (
+        {annonces && annonces.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Aucune annonce pour l'instant.</div>
           </div>
         )}
         <div className="">
-          {mock_annonces.map((announce: any, index: any) => {
+          {annonces && annonces.map((announce: any, index: any) => {
             if (searchRef && !announce.texte_annonce.includes(searchRef)) {
               return null;
             }

@@ -9,7 +9,7 @@ import React from "react";
 
 const StudentProfile: React.FC = () => {
   const { logout, token } = useAuth();
-  const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
+  const { data: user } = useGetUserById(token ? JSON.parse(atob(token.split(".")[1])).id : "");
 
   return (
     <div className="pt-20 pb-10 px-[12%] min-h-screen">

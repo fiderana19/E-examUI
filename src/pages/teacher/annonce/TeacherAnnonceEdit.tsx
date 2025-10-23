@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
-import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
+import { useGetAnnonceById } from "@/hooks/annonce/useGetAnnonceById";
 import { usePatchAnnonce } from "@/hooks/annonce/usePatchAnnonce";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
 import { AnnounceEditInterface } from "@/interfaces/announce.interface";
@@ -20,7 +21,7 @@ const TeacherAnnounceEdit: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const { token } = useAuth();
-  const { data: annonce, refetch } = useGetAnnonceByUserId(Id ? Number(Id) : 0);
+  const { data: annonce, refetch } = useGetAnnonceById(Id ? Number(Id) : 0);
   const { data: groupes } = useGetAllGroup();
   const { mutateAsync: modifierAnnonce } = usePatchAnnonce({
     action() {
@@ -38,9 +39,8 @@ const TeacherAnnounceEdit: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue("date_creation", String(new Date()));
     setValue("id_annonce", Id ? String(Id) : "");
-    setValue("id_createur", token ? token.split("/")[0] : "");
+    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
   }, []);
 
   const handleSubmit = async (data: AnnounceEditInterface) => {
@@ -60,46 +60,76 @@ const TeacherAnnounceEdit: React.FC = () => {
               <div className="text-xl uppercase font-bold text-center mb-4">
                 <NotificationOutlined /> Modifier une annonce
               </div>
-              <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                <Label className="mb-1">Groupe :</Label>
-                <Controller
-                  control={control}
-                  name="id_groupe"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value}
-                      onChange={onChange}
-                      className={`${errors?.id_groupe && "border border-red-500 text-red-500 rounded"}`}
-                    />
+              {
+                annonce && <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
+                  <Label className="mb-1">Groupe :</Label>
+                  <Controller
+                    control={control}
+                    name="id_groupe"
+                    defaultValue={annonce.id_groupe}
+                    render={({ field: { value, onChange } }) => (
+                      <Select disabled value={value} onValueChange={onChange} >
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {
+                            groupes && groupes.map((groupe: any, index: number) => (
+                              <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
+                            ))
+                          }
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors?.id_groupe && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.id_groupe.message}
+                    </div>
                   )}
-                />
-                {errors?.id_groupe && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.id_groupe.message}
-                  </div>
-                )}
-                <Label className="mb-1 mt-4">Description :</Label>
-                <Controller
-                  control={control}
-                  name="texte_annonce"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value}
-                      onChange={onChange}
-                      className={`${errors?.texte_annonce && "border border-red-500 text-red-500 rounded"}`}
-                    />
+                  <Label className="mb-1 mt-4">Titre :</Label>
+                  <Controller
+                    control={control}
+                    name="titre_annonce"
+                    defaultValue={annonce.titre_annonce}
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        value={value}
+                        onChange={onChange}
+                        className={`${errors?.titre_annonce && "border border-red-500 text-red-500 rounded"}`}
+                      />
+                    )}
+                  />
+                  {errors?.titre_annonce && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.titre_annonce.message}
+                    </div>
                   )}
-                />
-                {errors?.texte_annonce && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.texte_annonce.message}
+                  <Label className="mb-1 mt-4">Description :</Label>
+                  <Controller
+                    control={control}
+                    name="texte_annonce"
+                    defaultValue={annonce.texte_annonce}
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        value={value}
+                        onChange={onChange}
+                        className={`${errors?.texte_annonce && "border border-red-500 text-red-500 rounded"}`}
+                      />
+                    )}
+                  />
+                  {errors?.texte_annonce && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.texte_annonce.message}
+                    </div>
+                  )}
+                  <div className="mt-4 flex justify-end gap-2">
+                    <Button onClick={() => navigate("/teacher/announce")} variant={'secondary'} className="w-max ">Annuler</Button>
+                    <Button type="submit">Modifier</Button>
                   </div>
-                )}
-                <div className="mt-4 flex justify-end gap-2">
-                  <Button onClick={() => navigate("/teacher/announce")} variant={'secondary'} className="w-max ">Annuler</Button>
-                  <Button type="submit">Modifier</Button>
-                </div>
-              </form>
+                </form>
+              }
+              
             </div>
           </Card>
         </div>

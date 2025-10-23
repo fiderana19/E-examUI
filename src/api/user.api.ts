@@ -3,9 +3,9 @@ import axiosAuthInstance, { axiosInstance } from "./Config";
 import { showToast } from "@/utils/Toast";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { HttpStatus } from "@/constants/Http_status";
-import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const UserAPIUrl = `${import.meta.env.VITE_BASE_URL}/auth`;
+const AdminUserAPIUrl = `${import.meta.env.VITE_BASE_URL}/admin`;
 
 export const postLogin = async (data: LoginInterface) => {
   try {
@@ -30,9 +30,7 @@ export const postInscription = async (data: SignupInterface) => {
 };
 
 export const getAllUser = async () => {
-  // return await axiosAuthInstance.get(`${UserAPIUrl}/all`)
-  initMockAdapter();
-  return await mockedAxios.get("/utilisateur");
+  return await axiosAuthInstance.get(`${AdminUserAPIUrl}/users`)
 };
 
 export const getUserById = async (id: string) => {
@@ -40,10 +38,5 @@ export const getUserById = async (id: string) => {
 };
 
 export const patchUserValidation = async (data: any) => {
-  // return await axiosAuthInstance.patch(`${UserAPIUrl}/validation`, data)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/utilisateur/${data.id}/validation`, {
-    est_valider: true,
-  });
+  return await axiosAuthInstance.post(`${AdminUserAPIUrl}/users/approve/${data}`)
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { BookText, CalendarClock, Edit, LogOut, User } from "lucide-react";
@@ -9,7 +9,11 @@ import { useGetUserById } from "@/hooks/user/useGetUserById";
 const TeacherNavigation: React.FC = () => {
   const location = useLocation();
   const { logout, token } = useAuth();
-  const { data: user } = useGetUserById(token ? token.split("/")[0] : "");
+  const { data: user, refetch } = useGetUserById(token ? JSON.parse(atob(token.split(".")[1])).id : "");
+
+  useEffect(() => {
+    refetch();
+  }, [])
 
   return (
     <div className="z-50 w-60 fixed top-0 left-0 p-4 flex flex-col justify-between h-screen bg-second-custom">
@@ -79,7 +83,7 @@ const TeacherNavigation: React.FC = () => {
                 location.pathname === "/teacher/profile" ? "secondary" : "ghost"
               }
             >
-              <User /> {user.email}{" "}
+              <User /> { user && user.email}{" "}
             </Button>
           )}
         </Link>
