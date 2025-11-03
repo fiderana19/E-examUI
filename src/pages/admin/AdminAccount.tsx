@@ -21,6 +21,7 @@ import { useValidateUser } from "@/hooks/user/useValidateUser";
 import { CloseOutlined } from "@ant-design/icons";
 import { Check, Filter, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { formatDate } from '../../utils/dateFixation';
 
 const AdminAccount: React.FC = () => {
   const { data: users, refetch } = useGetAllUser();
@@ -150,7 +151,7 @@ const AdminAccount: React.FC = () => {
                       </td>
                       <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
                         {" "}
-                        {et.created_at}{" "}
+                        {formatDate(et.created_at)}{" "}
                       </td>
                       <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                         <div className="flex justify-end gap-1">
@@ -217,7 +218,7 @@ const AdminAccount: React.FC = () => {
                       </td>
                       <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
                         {" "}
-                        {et.created_at}{" "}
+                        {formatDate(et.created_at)}{" "}
                       </td>
                       <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                         <div className="flex justify-end gap-1">

@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { mocktestquestions } from "@/constants/mock";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { useTest } from "@/context/TestContext";
+import { QUESTION_TYPE } from "@/enum/question.enum";
+import { useGetRandomQuestionByTestId } from "@/hooks/question/useGetRandomQuestionByTestId";
 import { showToast } from "@/utils/Toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { AlertTriangleIcon } from "lucide-react";
@@ -16,6 +18,9 @@ import { useNavigate, useParams } from "react-router-dom";
 const TestRoom: React.FC = () => {
   const req = useParams();
   const Id = req.id;
+  const { data: questions } = useGetRandomQuestionByTestId(
+    Id ? Number(Id) : 0,
+  );  
   const id_utilisateur = 1;
   const id_tentative = 2;
   const { isFinished, updateIsFinished } = useTest();
@@ -71,6 +76,7 @@ const TestRoom: React.FC = () => {
           document.removeEventListener('contextmenu', handleRightClick);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
+
   }, []);
 
   const onInputResponseChange = (
@@ -134,7 +140,7 @@ const TestRoom: React.FC = () => {
           </div>
         </div>
       )}
-      <div className="fixed pt-14 w-full px-[12%]">
+      <div className="fixed pt-14 w-full px-[12%]" onClick={() => console.log(questions)}>
         <div className="shadow p-4 bg-white flex justify-between items-center">
           <div className="font-bold text-lg">Test de HTML</div>
           <ClokcTest afterTimeOver={onTimeUp} />
@@ -145,7 +151,7 @@ const TestRoom: React.FC = () => {
         <StudentNavigation />
         <div className="">
           <div>
-            {mocktestquestions.slice(0, 20).map((question: any, index: any) => {
+            {questions && questions.map((question: any, index: any) => {
               return (
                 <Card className="mb-2 px-4">
                   <div>
@@ -158,7 +164,7 @@ const TestRoom: React.FC = () => {
                       </div>
                     </div>
                     <div className="my-1">{question.texte_question}</div>
-                    {question.type_question === "dev" ? (
+                    {question.type_question === QUESTION_TYPE.DEVELOPPEMENT ? (
                       <div className="w-64 mt-2">
                         <Label className="mb-1">Votre reponse :</Label>
                         <Input
@@ -167,7 +173,7 @@ const TestRoom: React.FC = () => {
                           }
                         />
                       </div>
-                    ) : question.type_question === "simple" ? (
+                    ) : question.type_question === QUESTION_TYPE.REPONSE_COURTE ? (
                       <div className="w-64 mt-2">
                         <Label className="mb-1">Votre reponse :</Label>
                         <Input

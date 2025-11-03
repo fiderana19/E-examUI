@@ -71,7 +71,7 @@ const TeacherTest: React.FC = () => {
   }
 
   const launchConfirm = async (data: any) => {
-    // await launchTest(id);
+    await launchTest(data.id_test);
     updateIsFinished(false);
     updateSecondsLeft(Number(data.duree_minutes) * 60);
 

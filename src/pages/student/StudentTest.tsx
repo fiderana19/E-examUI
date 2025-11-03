@@ -1,20 +1,26 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Button } from "@/components/ui/button";
 import { mock_tests } from "@/constants/mock";
+import { useAuth } from "@/context/AuthContext";
 import { useTest } from "@/context/TestContext";
+import { useGetActiveTestBYGroupId } from "@/hooks/test/useGetActiveTestBYGroupId";
 import { ClockCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentTest: React.FC = () => {
   const { updateSecondsLeft, updateIsFinished } = useTest();
-  const initial = 60 * 60;
+  const { token } = useAuth();
+  const { data: tests } = useGetActiveTestBYGroupId(
+    token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
+  );  
   const navigate = useNavigate();
 
-  const debutTest = () => {
+  const debutTest = (test: any) => {
     updateIsFinished(false);
-    updateSecondsLeft(initial);
-    navigate("/student/test/room/225");
+    const min = Number(test.duree_minutes) * 60;
+    updateSecondsLeft(min);
+    navigate(`/student/test/room/${test.id_test}`);
   };
 
   return (
@@ -22,12 +28,14 @@ const StudentTest: React.FC = () => {
       <StudentNavigation />
       <div>
         <div className="text-gray-800 text-xl font-bold mb-10">Les tests</div>
-        <div className="w-max mx-auto text-center text-gray-600">
-          <CloseOutlined className="text-7xl" />
-          <div className="mt-4 text-xl">Aucun test disponible.</div>
-        </div>
+        {
+          tests && tests.length < 1 && <div className="w-max mx-auto text-center text-gray-600">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">Aucun test disponible.</div>
+          </div>
+        }
         <div className="">
-          {mock_tests.slice(0, 1).map((test: any, index: any) => {
+          {tests && tests.slice(0, 1).map((test: any, index: any) => {
             return (
               <div key={index} className="shadow p-4 bg-white">
                 <div className="mb-4">
@@ -46,7 +54,7 @@ const StudentTest: React.FC = () => {
                   <div className="text-gray-700"> {test.description} </div>
                 </div>
                 <div className="flex justify-end">
-                  <Button onClick={() => debutTest()}>Faire le test</Button>
+                  <Button onClick={() => debutTest(test)}>Faire le test</Button>
                 </div>
               </div>
             );

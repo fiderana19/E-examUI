@@ -22,6 +22,7 @@ import { mock_optionsqcm, mock_questions } from "@/constants/mock";
 import { useDeleteOption } from "@/hooks/option/useDeleteOption";
 import { useGetAllOptionByQuestionId } from "@/hooks/option/useGetAllOptionByQuestionId";
 import { usePostOption } from "@/hooks/option/usePostOption";
+import { useGetQuestionById } from "@/hooks/question/useGetQuestionById";
 import { OptionCreateInterface } from "@/interfaces/option.interface";
 import { OptionAddValidation } from "@/validation/option.validation";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
@@ -37,6 +38,9 @@ const TeacherQCMView: React.FC = () => {
   const { data: options, refetch } = useGetAllOptionByQuestionId(
     Id ? Number(Id) : 0,
   );
+  const { data: question } = useGetQuestionById(
+    Id ? Number(Id) : 0,
+  );
   const { mutateAsync: deleteOption } = useDeleteOption({
     action() {
       refetch();
@@ -48,7 +52,6 @@ const TeacherQCMView: React.FC = () => {
     },
   });
   const navigate = useNavigate();
-  const question = mock_questions[0];
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -57,6 +60,11 @@ const TeacherQCMView: React.FC = () => {
     reset,
   } = useForm<OptionCreateInterface>({
     resolver: yupResolver(OptionAddValidation),
+    defaultValues: {
+      id_question: Id ? Id : "",
+      est_correcte: false,
+      texte_option: ""
+    }
   });
   const [selectedOption, setSelectedOption] = useState<number>(0);
 
@@ -67,10 +75,17 @@ const TeacherQCMView: React.FC = () => {
 
   const handleSubmit = async (data: OptionCreateInterface) => {
     await createOption(data);
+    reset();
   };
 
   const deleteConfirm = async () => {
     await deleteOption(selectedOption);
+  };
+
+  const handleCheckboxChange = async (e: any) => {
+    const value = e.target.checked;
+
+    setValue('est_correcte', value);
   };
 
   return (
@@ -86,7 +101,7 @@ const TeacherQCMView: React.FC = () => {
               </div>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button>
+                  <Button disabled={options && options.length > 3}>
                     <Plus /> Nouvelle option
                   </Button>
                 </PopoverTrigger>
@@ -119,7 +134,7 @@ const TeacherQCMView: React.FC = () => {
                       <input
                         type="checkbox"
                         id="est_correcte"
-                        onChange={(e: any) => console.log(e.target)}
+                        onChange={handleCheckboxChange}
                       />
                       <Label htmlFor="est_correcte">Reponse correcte</Label>
                     </div>
@@ -153,7 +168,7 @@ const TeacherQCMView: React.FC = () => {
               )}
             </div>
             <div className="px-10 my-4">
-              {mock_optionsqcm.map((option: any, index: any) => {
+              {options && options.map((option: any, index: any) => {
                 return (
                   <div
                     key={index}

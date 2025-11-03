@@ -1,7 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import ClokcTest from "@/components/Test/ClockTest";
 import { Card } from "@/components/ui/card";
-import { mock_tests } from "@/constants/mock";
+import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { ClockCircleOutlined, HourglassOutlined } from "@ant-design/icons";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,8 +9,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const TeacherTestLaunchedView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
+  const { data: test, refetch } = useGetTestById(Id ? Number(Id) : 0);
   const navigate = useNavigate();
-  const test = mock_tests[0];
 
   const finishTest = () => {};
 
