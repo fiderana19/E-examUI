@@ -5,11 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
+import { QUESTION_TYPE } from "@/enum/question.enum";
 import { useGetAllQuestionByTestId } from "@/hooks/question/useGetAllQuestionByTestId";
 import { useGetQuestionById } from "@/hooks/question/useGetQuestionById";
 import { usePatchQuestion } from "@/hooks/question/usePatchQuestion";
 import { QuestionEditInterface } from "@/interfaces/question.interface";
-import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { QuestionEditValidation } from "@/validation/question.validation";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,7 +23,9 @@ const TeacherQuestionEdit: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
   const { data: question } = useGetQuestionById(Id ? Number(Id) : 0);
-  const { refetch } = useGetAllQuestionByTestId(question.id_test);
+  const { refetch } = useGetAllQuestionByTestId(
+    question ? question.id_test : 0,
+  );
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -34,20 +36,19 @@ const TeacherQuestionEdit: React.FC = () => {
   });
   const { mutateAsync: modifierQuestion } = usePatchQuestion({
     action() {
-      refetch();
+      refetch()
     },
   });
 
   useEffect(() => {
-    // setValue("id_question", Id ? Id : "");
-    // setValue("id_test", question.id_test);
-    // setValue("id_utilisateur", question.id_utilisateur);
+    setValue("id_question", Id ? Id : "");
+    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
   }, []);
 
   const handleSubmit = async (data: QuestionEditInterface) => {
     const response = await modifierQuestion(data);
     if (response?.status === HttpStatus.OK) {
-      navigate("/teacher/test");
+      navigate(-1);
     }
   };
 
@@ -56,7 +57,8 @@ const TeacherQuestionEdit: React.FC = () => {
       <TeacherNavigation />
       <div>
         <div className="w-1/3 mx-auto">
-          <Card className="px-4 py-10">
+        {
+          question && <Card className="px-4 py-10">
             <div>
               <div className="text-xl uppercase font-bold text-center mb-4 flex items-center gap-2">
                 <QuestionCircleOutlined /> Modifier une question
@@ -66,6 +68,7 @@ const TeacherQuestionEdit: React.FC = () => {
                 <Controller
                   control={control}
                   name="texte_question"
+                  defaultValue={question.texte_question}
                   render={({ field: { value, onChange } }) => (
                     <Input
                       value={value}
@@ -83,8 +86,10 @@ const TeacherQuestionEdit: React.FC = () => {
                 <Controller
                   control={control}
                   name="type_question"
+                  defaultValue={question.type_question}
                   render={({ field: { value, onChange } }) => (
                     <Input
+                      disabled
                       value={value}
                       onChange={onChange}
                       className={`${errors?.type_question && "border border-red-500 text-red-500 rounded"}`}
@@ -99,36 +104,20 @@ const TeacherQuestionEdit: React.FC = () => {
                 <Label className="mb-1 mt-4">Reponse correcte :</Label>
                 <Controller
                   control={control}
-                  name="response_correcte"
+                  name="reponse_correcte"
+                  defaultValue={question.reponse_correcte}
                   render={({ field: { value, onChange } }) => (
                     <Input
+                      disabled={question.type_question === QUESTION_TYPE.REPONSE_COURTE ? false : true}
                       value={value}
                       onChange={onChange}
-                      className={`${errors?.response_correcte && "border border-red-500 text-red-500 rounded"}`}
+                      className={`${errors?.reponse_correcte && "border border-red-500 text-red-500 rounded"}`}
                     />
                   )}
                 />
-                {errors?.response_correcte && (
+                {errors?.reponse_correcte && (
                   <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.response_correcte.message}
-                  </div>
-                )}
-                <Label className="mb-1 mt-4">Points attribués :</Label>
-                <Controller
-                  control={control}
-                  name="points"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value ? Number(value) : 0}
-                      onChange={onChange}
-                      onKeyPress={handleNumberKeyPress}
-                      className={`${errors?.points && "border border-red-500 text-red-500 rounded"}`}
-                    />
-                  )}
-                />
-                {errors?.points && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.points.message}
+                    {errors?.reponse_correcte.message}
                   </div>
                 )}
                 <div className="flex justify-center mt-4">
@@ -137,6 +126,7 @@ const TeacherQuestionEdit: React.FC = () => {
               </form>
             </div>
           </Card>
+        }
         </div>
       </div>
     </div>

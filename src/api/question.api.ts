@@ -27,10 +27,7 @@ export const postQuestion = async (data: QuestionCreateInterface) => {
 };
 
 export const patchQuestion = async (data: QuestionEditInterface) => {
-  // return await axiosAuthInstance.patch(`${QuestionAPIUrl}/edit/${data.id_question}`, data)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/question/${data.id_question}`, data);
+  return await axiosAuthInstance.put(`${QuestionAPIUrl}/${data.id_question}`, data)
 };
 
 export const deleteQuestion = async (id: number) => {

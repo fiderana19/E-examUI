@@ -70,7 +70,7 @@ const TeacherTestView: React.FC = () => {
       id_test: Id ? Id : "",
       type_question: "",
       texte_question: "",
-      response_correcte: ""
+      reponse_correcte: ""
     }
   });
 
@@ -102,7 +102,7 @@ const TeacherTestView: React.FC = () => {
                   <ClockCircleOutlined /> {test.duree_minutes}:00
                 </div>
               </div>
-              <div className="font-bold text-gray-800"> {test.id_groupe} </div>
+              <div className="font-bold text-gray-800"> {test.nom_groupe} </div>
               {test.status === "Terminé" ? (
                 <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
                   <HourglassOutlined /> <div>Terminé</div>
@@ -192,18 +192,18 @@ const TeacherTestView: React.FC = () => {
                     <Label className="mb-1 mt-4">Reponse correcte :</Label>
                     <Controller
                       control={control}
-                      name="response_correcte"
+                      name="reponse_correcte"
                       render={({ field: { value, onChange } }) => (
                         <Input
                           value={value}
                           onChange={onChange}
-                          className={`${errors?.response_correcte && "border border-red-500 text-red-500 rounded"}`}
+                          className={`${errors?.reponse_correcte && "border border-red-500 text-red-500 rounded"}`}
                         />
                       )}
                     />
-                    {errors?.response_correcte && (
+                    {errors?.reponse_correcte && (
                       <div className="text-xs w-full text-red-500 text-left">
-                        {errors?.response_correcte.message}
+                        {errors?.reponse_correcte.message}
                       </div>
                     )}
                     <div className="flex justify-center mt-4">

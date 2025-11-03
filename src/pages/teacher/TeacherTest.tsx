@@ -165,7 +165,7 @@ const TeacherTest: React.FC = () => {
                         </div>
                         <div className="font-bold text-gray-800">
                           {" "}
-                          {test.id_groupe}{" "}
+                          {test.nom_groupe}{" "}
                         </div>
                         {test.status === "Terminé" ? (
                           <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
@@ -292,7 +292,7 @@ const TeacherTest: React.FC = () => {
                         </div>
                         <div className="font-bold text-gray-800">
                           {" "}
-                          {test.id_groupe}{" "}
+                          {test.nom_groupe}{" "}
                         </div>
                         {test.status === "Terminé" ? (
                           <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
