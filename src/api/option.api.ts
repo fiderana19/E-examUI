@@ -13,8 +13,5 @@ export const getOptionByQuestionId = async (id: number) => {
 };
 
 export const deleteOption = async (id: number) => {
-  // return await axiosAuthInstance.delete(`${OptionAPIUrl}/delete/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.delete(`/option/${id}`);
+  return await axiosAuthInstance.delete(`${OptionAPIUrl}/${id}`)
 };

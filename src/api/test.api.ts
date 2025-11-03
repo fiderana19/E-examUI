@@ -11,6 +11,10 @@ export const getTestById = async (id: number) => {
   return await axiosAuthInstance.get(`${TestAPIUrl}/${id}`)
 };
 
+export const getActiveTestByGroupId = async (id: number) => {
+  return await axiosAuthInstance.get(`${TestAPIUrl}/groupe/${id}`)
+};
+
 export const getTestByTeacherId = async (id: number) => {
   return await axiosAuthInstance.get(`${TestAPIUrl}/user/${id}`)
 };
@@ -35,10 +39,7 @@ export const deleteTest = async (id: number) => {
 };
 
 export const launchTest = async (id: number) => {
-  // return await axiosAuthInstance.patch(`${TestAPIUrl}/launch/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/test/${id}/declenchement`);
+  return await axiosAuthInstance.put(`${TestAPIUrl}/launch/${id}`)
 };
 
 export const postTest = async (data: TestCreateInterface) => {

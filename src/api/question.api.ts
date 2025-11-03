@@ -15,11 +15,8 @@ export const getQuestionByTestId = async (id: number) => {
   return await axiosAuthInstance.get(`${QuestionAPIUrl}/test/${id}`)
 };
 
-export const getRandomQuestionByTestId = async (data: any) => {
-  // return await axiosAuthInstance.get(`${QuestionAPIUrl}/random/${data?.test}/${data?.max}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/question/${data}/aleatoire`);
+export const getRandomQuestionByTestId = async (id: number) => {
+  return await axiosAuthInstance.get(`${QuestionAPIUrl}/test/random/${id}`)
 };
 
 export const postQuestion = async (data: QuestionCreateInterface) => {
