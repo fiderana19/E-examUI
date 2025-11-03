@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const useGetAllOptionByQuestionId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.OPTIONS, id],
+    queryKey: [QueryCacheKey.OPTIONS, QueryCacheKey.QUESTIONS, id],
     queryFn: () => getOptionByQuestionId(id),
     staleTime: Infinity,
     enabled: id !== 0,
@@ -19,6 +19,7 @@ export const useGetAllOptionByQuestionId = (id: number) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des options !",
       });
+      console.log("ito", error)
     }
   }, [error]);
 

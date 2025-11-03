@@ -22,6 +22,7 @@ export const usePostOption = ({ action }: { action: () => void }) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la création de l'option !",
       });
+      console.log("teto", error)
     },
   });
 

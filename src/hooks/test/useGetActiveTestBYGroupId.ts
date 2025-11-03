@@ -1,24 +1,25 @@
 import { QueryCacheKey } from "@/api/QueryCacheKey";
-import { getRandomQuestionByTestId } from "@/api/question.api";
+import { getActiveTestByGroupId } from "@/api/test.api";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { showToast } from "@/utils/Toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useGetRandomQuestionByTestId = (dt: number) => {
+export const useGetActiveTestBYGroupId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.QUESTIONS, dt],
-    queryFn: () => getRandomQuestionByTestId(dt),
+    queryKey: [QueryCacheKey.TESTS, QueryCacheKey.GROUPS, id],
+    queryFn: () => getActiveTestByGroupId(id),
     staleTime: Infinity,
-    enabled: dt !== 0,
+    enabled: id !== 0,
   });
 
   useEffect(() => {
     if (isError) {
       showToast({
         type: TOAST_TYPE.ERROR,
-        message: "Erreur lors de la recuperations des questions !",
+        message: "Erreur lors de la recuperations du test !",
       });
+      console.log("ito", error)
     }
   }, [error]);
 
