@@ -101,16 +101,16 @@ export const TableRow: React.FC<{ data: any; index: number }> = ({
   return (
     <View style={[styles.tableRow]}>
       <View style={[styles.tableCell, styles.colMatricule]}>
-        <Text>{data.matricule}</Text>
+        <Text>{data.utilisateur.matricule}</Text>
       </View>
       <View style={[styles.tableCell, styles.colNom]}>
-        <Text>{data.nomPrenom}</Text>
+        <Text>{data.utilisateur.nom}</Text>
       </View>
       <View style={[styles.tableCell, styles.colNote]}>
-        <Text>{data.note}</Text>
+        <Text>{data.note_obtenue < 10 && "0"}{data.note_obtenue}</Text>
       </View>
       <View style={[styles.tableCell, styles.colHeure]}>
-        <Text>{data.heureSoumission}</Text>
+        <Text>{data.heure_soumission}</Text>
       </View>
     </View>
   );
