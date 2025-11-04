@@ -3,33 +3,32 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { mock_reponseetudiants_a_corriger, mock_tests } from "@/constants/mock";
 import { useGetReponseById } from "@/hooks/reponse/useGetReponseById";
 import { usePatchReponseForCorrection } from "@/hooks/reponse/usePatchReponseForCorrection";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { GivePointsInterface } from "@/interfaces/response.interface";
-import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { GivePointsValidation } from "@/validation/response.validation";
 import { HourglassOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ChevronLeft, Edit } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import { handleFloatKeyPress } from "../../../utils/handleKeyPress";
+import { HttpStatus } from "@/constants/Http_status";
 
 const TeacherCorrectionAction: React.FC = () => {
   const req = useParams();
-  const Id = req.id;
+  const testId = req.testId;
+  const reponseId = req.reponseId;
   const navigate = useNavigate();
-  const { data } = useGetTestById(Id ? Number(Id) : 0);
-  const { data: rep, refetch } = useGetReponseById(Id ? Number(Id) : 0);
-  const test = mock_tests[0];
+  const { data: test } = useGetTestById(testId ? Number(testId) : 0);
+  const { data: reponse, refetch } = useGetReponseById(reponseId ? Number(reponseId) : 0);
   const { mutateAsync: corrigerReponse } = usePatchReponseForCorrection({
     action() {
       refetch();
     },
   });
-  const reponse = mock_reponseetudiants_a_corriger[0];
   const {
     handleSubmit: submit,
     formState: { errors },
@@ -40,12 +39,14 @@ const TeacherCorrectionAction: React.FC = () => {
   });
 
   useEffect(() => {
-    setValue("id_reponse", Id ? String(Id) : "");
+    setValue("id_reponse", reponseId ? String(reponseId) : "");
   }, []);
 
   const handleSubmit = async (data: GivePointsInterface) => {
-    await corrigerReponse(data);
-    navigate("/teacher/correction/view");
+    const res = await corrigerReponse(data);
+    if(res.status === HttpStatus.OK || res.status === HttpStatus.CREATED) {
+      navigate(-1);
+    }
   };
 
   return (
@@ -65,7 +66,7 @@ const TeacherCorrectionAction: React.FC = () => {
                 <div className="flex gap-4 text-lg">
                   <div className=""> {test.titre} du</div>
                   <div className="text-gray-800 font-bold">
-                    {test.date_declenchement}
+                    {test.date_declechement}
                   </div>
                   <div className="flex">
                     {test.status === "Terminé" ? (
@@ -85,7 +86,7 @@ const TeacherCorrectionAction: React.FC = () => {
                 </div>
                 <div className="font-bold text-gray-800">
                   {" "}
-                  {test.id_groupe}{" "}
+                  {test.nom_groupe}{" "}
                 </div>
               </div>
             </div>
@@ -97,11 +98,11 @@ const TeacherCorrectionAction: React.FC = () => {
               <div>
                 <div className="flex justify-end">
                   <div className="my-1 font-semibold">
-                    Note maximum : {reponse.id_tentative} point(s)
+                    Note maximum : {reponse.question.points}
                   </div>
                 </div>
                 <div className="font-semibold">
-                  Question : {reponse.id_question}{" "}
+                  Question : {reponse.question.texte_question}{" "}
                 </div>
                 <div className="text-gray-700">
                   Reponse de l'étudiant : {reponse.reponse_texte}{" "}
@@ -117,9 +118,9 @@ const TeacherCorrectionAction: React.FC = () => {
                 name="score_question"
                 render={({ field: { value, onChange } }) => (
                   <Input
-                    value={value ? Number(value) : 0}
+                    value={value ? value : 0}
                     onChange={onChange}
-                    onKeyPress={handleNumberKeyPress}
+                    onKeyPress={handleFloatKeyPress}
                     className={`${errors?.score_question && "border border-red-500 text-red-500 rounded"}`}
                   />
                 )}

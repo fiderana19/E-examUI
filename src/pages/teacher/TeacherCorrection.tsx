@@ -1,21 +1,25 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { mock_tests } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAllTestForCorrectionByTeacherId } from "@/hooks/test/useGetAllTestForCorrectionByTeacherId";
 import { CloseOutlined, HourglassOutlined } from "@ant-design/icons";
 import { Edit } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from '../../utils/dateFixation';
 
 const TeacherCorrection: React.FC = () => {
   const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState<string>("");
   const { token } = useAuth();
-  const { data: tests } = useGetAllTestForCorrectionByTeacherId(
-    token ? Number(token.split("/")[0]) : 0,
+  const { data: tests, refetch } = useGetAllTestForCorrectionByTeacherId(
+    token ? Number(JSON.parse(atob(token.split(".")[1])).id) : 0,
   );
+
+  useEffect(() => {
+    refetch();
+  }, [])
 
   return (
     <div className="pl-64 pr-6">
@@ -31,14 +35,16 @@ const TeacherCorrection: React.FC = () => {
             placeholder="Titre du test..."
           />
         </div>
-        <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
-          <CloseOutlined className="text-7xl" />
-          <div className="mt-4 text-xl">
-            Vous avez aucune correction à faire
+        {
+          tests && tests.length < 1 && <div className="w-max mx-auto text-center text-gray-600 my-10">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">
+              Vous avez aucune correction à faire
+            </div>
           </div>
-        </div>
+        }
         <div className="">
-          {mock_tests.map((test: any, index: any) => {
+          {tests && tests.map((test: any, index: any) => {
             if (searchRef && !test.titre.includes(searchRef)) {
               return null;
             }
@@ -48,7 +54,7 @@ const TeacherCorrection: React.FC = () => {
                   <div className="flex gap-4 text-lg">
                     <div className=""> {test.titre} du </div>
                     <div className="text-gray-800 font-bold">
-                      {test.date_declenchement}
+                      {formatDate(test.date_declechement)}
                     </div>
                     <div className="flex">
                       {test.status === "Terminé" ? (
@@ -68,13 +74,10 @@ const TeacherCorrection: React.FC = () => {
                   </div>
                   <div className="font-bold text-gray-800">
                     {" "}
-                    {test.id_groupe}{" "}
+                    {test.nom_groupe}{" "}
                   </div>
                 </div>
-                <div className="flex justify-between my-1">
-                  <div className="font-bold text-gray-800">
-                    Feuille(s) à corriger : {test.note_max}{" "}
-                  </div>
+                <div className="flex justify-end my-1">
                   <Button
                     onClick={() =>
                       navigate(`/teacher/correction/view/${test.id_test}`)

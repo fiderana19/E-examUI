@@ -1,7 +1,6 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
-import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
-import { BookText, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 

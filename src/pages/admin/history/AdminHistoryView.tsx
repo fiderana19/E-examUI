@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { mockResultData } from "@/constants/mock";
+import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
 import { FilePdfOutlined } from "@ant-design/icons";
 import {
   Document,
@@ -25,6 +26,9 @@ const AdminHistoryView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
+  const { data: results } = useGetTentativeForResultByTestId(
+    Id ? Number(Id) : 0,
+  );
 
   const ResultDocument = () => (
     <Document>
@@ -33,35 +37,34 @@ const AdminHistoryView: React.FC = () => {
           <View style={styles.flexBetween}>
             <View style={styles.flexNormal}>
               <Text style={styles.headerTitle}>Classe: </Text>
-              <Text style={styles.headerSubtitle}>M1IG</Text>
+              <Text style={styles.headerSubtitle}>{results[0].test?.group.nom_groupe }</Text>
             </View>
             <View style={styles.flexNormal}>
               <Text style={styles.headerTitle}>Test:</Text>
-              <Text style={styles.headerSubtitle}>Technologie web avancée</Text>
+              <Text style={styles.headerSubtitle}>{results[0].test?.titre }</Text>
             </View>
             <View style={styles.flexNormal}>
               <Text style={styles.headerTitle}>Session:</Text>
-              <Text style={styles.headerSubtitle}>02/04/2025 15:10</Text>
+              <Text style={styles.headerSubtitle}>{results[0].test?.date_declechement }</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.summary}>
           <Text style={styles.summaryText}>
-            Total participants: {mockResultData.participants}
+            Total participants: {results[0].total}
           </Text>
           <Text style={styles.summaryText}>
-            Égal ou au-dessus de la moyenne: {mockResultData.auDessusDeMoyenne}
+            Égal ou au-dessus de la moyenne: {results[0].sup}
           </Text>
           <Text style={styles.summaryText}>
-            En dessous de la moyenne:{" "}
-            {mockResultData.participants - mockResultData.auDessusDeMoyenne}
+            En dessous de la moyenne:{results[0].sous}
           </Text>
         </View>
 
         <View style={styles.table}>
           <TableHeader />
-          {mockResultData.resultats.map((resultat, index) => (
+          {results && results[0]?.test?.tentatives?.map((resultat: any, index: number) => (
             <TableRow key={index} data={resultat} index={index} />
           ))}
         </View>
@@ -99,14 +102,14 @@ const AdminHistoryView: React.FC = () => {
         </div>
         <div className="">
           <div className="border p-2">
-            <div>Groupe: M1IG</div>
-            <div>Examen HTML</div>
-            <div>Session du 2025-10-10 15:00</div>
+            <div>Groupe: { results[0].test?.group.nom_groupe }</div>
+            <div>Examen { results[0].test?.titre }</div>
+            <div>Session du { results[0].test?.date_declechement }</div>
           </div>
           <div className="p-2">
-            <div>Total participants: 300</div>
-            <div>Egal ou au dessus de la moyenne: 250</div>
-            <div>En dessous de la moyenne: 50</div>
+            <div>Total participants: {results[0].total}</div>
+            <div>Egal ou au dessus de la moyenne: {results[0].sup}</div>
+            <div>En dessous de la moyenne: {results[0].sous}</div>
           </div>
           <table className=" min-w-full divide-y divide-gray-200 my-4">
             <thead>
@@ -126,27 +129,22 @@ const AdminHistoryView: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              <tr
-                onClick={() => navigate("/admin/response/view/5")}
-                className="cursor-pointer"
-              >
+              { results[0].test?.tentatives.map((res: any, index: any) => {
+                return <tr className="cursor-pointer" onClick={() => navigate(``)} key={index}>
                 <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                  {" "}
-                  d{" "}
+                  {res.utilisateur.matricule}
                 </td>
                 <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                  {" "}
-                  f{" "}
+                  {res.utilisateur.nom}
                 </td>
                 <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                  {" "}
-                  f{" "}
+                  {res.note_obtenue < 10 && "0"}{res.note_obtenue}
                 </td>
                 <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                  {" "}
-                  f{" "}
+                  {res.heure_soumission}
                 </td>
               </tr>
+              }) }
             </tbody>
           </table>
         </div>

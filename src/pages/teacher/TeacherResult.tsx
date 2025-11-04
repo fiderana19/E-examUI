@@ -1,7 +1,5 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Input } from "@/components/ui/input";
-import { mock_tests } from "@/constants/mock";
-import { useAuth } from "@/context/AuthContext";
 import { useGetAllCorrectedTestByTeacherId } from "@/hooks/test/useGetAllCorrectedTestByTeacherId";
 import { CloseOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
@@ -9,10 +7,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherResult: React.FC = () => {
-  const { token } = useAuth();
-  const { data: results } = useGetAllCorrectedTestByTeacherId(
-    token ? Number(token.split("/")[0]) : 0,
-  );
+  const { data: results } = useGetAllCorrectedTestByTeacherId();
   const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState<string>("");
 
@@ -30,14 +25,14 @@ const TeacherResult: React.FC = () => {
             placeholder="Titre du test..."
           />
         </div>
-        {mock_tests && mock_tests.length < 1 && (
+        {results && results.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Vous avez aucune resultat</div>
           </div>
         )}
         <div className="">
-          {mock_tests.map((test: any, index: any) => {
+          {results && results.map((test: any, index: any) => {
             if (searchRef && !test.titre.includes(searchRef)) {
               return null;
             }
@@ -51,12 +46,12 @@ const TeacherResult: React.FC = () => {
                   <div className="flex gap-4 text-lg">
                     <div className=""> {test.titre} du</div>
                     <div className="text-gray-800 font-bold">
-                      {test.date_declenchement}
+                      {test.date_declechement}
                     </div>
                   </div>
                   <div className="font-bold text-gray-800">
                     {" "}
-                    {test.id_groupe}{" "}
+                    {test.group.nom_groupe}{" "}
                   </div>
                 </div>
               </div>

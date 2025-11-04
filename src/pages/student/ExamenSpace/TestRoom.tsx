@@ -4,11 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { mocktestquestions } from "@/constants/mock";
+import { HttpStatus } from "@/constants/Http_status";
 import { TOAST_TYPE } from "@/constants/ToastType";
+import { useAuth } from "@/context/AuthContext";
 import { useTest } from "@/context/TestContext";
 import { QUESTION_TYPE } from "@/enum/question.enum";
 import { useGetRandomQuestionByTestId } from "@/hooks/question/useGetRandomQuestionByTestId";
+import { usePostReponse } from "@/hooks/reponse/usePostReponse";
+import { CreateResponseInterface, ResponseInterface } from "@/interfaces/response.interface";
 import { showToast } from "@/utils/Toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { AlertTriangleIcon } from "lucide-react";
@@ -17,15 +20,17 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const TestRoom: React.FC = () => {
   const req = useParams();
-  const Id = req.id;
+  const TestId = req.testId;
+  const TentativeId = req.tentativeId;
   const { data: questions } = useGetRandomQuestionByTestId(
-    Id ? Number(Id) : 0,
+    TestId ? Number(TestId) : 0,
   );  
-  const id_utilisateur = 1;
-  const id_tentative = 2;
+  const { mutateAsync: creerResponse } = usePostReponse({action() {
+    
+  },})
   const { isFinished, updateIsFinished } = useTest();
   const navigate = useNavigate();
-  const [studentResponse, setStudentResponse] = useState<any[]>([]);
+  const [studentResponse, setStudentResponse] = useState<ResponseInterface[]>([]);
   const [isSendindResponse, setIsSendingResponse] = useState<boolean>(false);
 
     useEffect(() => {
@@ -88,8 +93,7 @@ const TestRoom: React.FC = () => {
         (r: any) => r.id_question === id_question,
       );
       const newResponse = {
-        id_utilisateur,
-        id_tentative,
+        id_tentative: String(TentativeId),
         id_question,
         reponse_texte: e.target.value,
       };
@@ -104,21 +108,30 @@ const TestRoom: React.FC = () => {
     });
   };
 
-  const onTimeUp = () => {
+  const onTimeUp = async () => {
     updateIsFinished(true);
-    finishTest();
+    await finishTest();
     showToast({
       type: TOAST_TYPE.ERROR,
       message: "Soumission automatique des reponses suite au temps ecoulé !",
     });
+
   };
 
-  const finishTest = () => {
+  const finishTest = async () => {
     setIsSendingResponse(true);
     updateIsFinished(true);
-    console.log(studentResponse);
-    // setIsSendingResponse(false);
-    // navigate("/student/test")
+    const details: CreateResponseInterface = {
+      id_test: TestId ? TestId : "",
+      id_tentative: TentativeId ? TentativeId : "",
+      reponses: studentResponse
+    }
+
+    const res = await creerResponse(details);
+    if(res.status === HttpStatus.OK || res.status === HttpStatus.CREATED) {
+      setIsSendingResponse(false);
+      navigate("/student/home")
+    }
   };
 
   return (

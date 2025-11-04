@@ -1,21 +1,33 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
-import { mock_reponseetudiants_a_corriger, mock_tests } from "@/constants/mock";
-import { useGetReponseByTentativeId } from "@/hooks/reponse/useGetReponseByTentativeId";
+import { useGetReponseByTestId } from "@/hooks/reponse/useGetReponseByTestId";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { HourglassOutlined } from "@ant-design/icons";
 import { ChevronLeft, Edit } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherCorrectionView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
-  const test = mock_tests[0];
-  const { data } = useGetTestById(Id ? Number(Id) : 0);
-  const { data: rep } = useGetReponseByTentativeId(Id ? Number(Id) : 0);
+  const { data: test } = useGetTestById(Id ? Number(Id) : 0);
+  const { data: reponses, refetch } = useGetReponseByTestId(Id ? Number(Id) : 0);
 
+  useEffect(() => {
+    refetch();
+    if(reponses && reponses.length < 1) {
+      navigate("/teacher/correction");
+    }
+  }, [reponses])
+
+  useEffect(() => {
+    refetch();
+    if(reponses && reponses.length < 1) {
+      navigate("/teacher/correction");
+    }
+  }, [])
+  
   return (
     <div className="pl-64 pr-6">
       <TeacherNavigation />
@@ -33,7 +45,7 @@ const TeacherCorrectionView: React.FC = () => {
                 <div className="flex gap-4 text-lg">
                   <div className=""> {test.titre} du</div>
                   <div className="text-gray-800 font-bold">
-                    {test.date_declenchement}
+                    {test.date_declechement}
                   </div>
                   <div className="flex">
                     {test.status === "Terminé" ? (
@@ -53,20 +65,20 @@ const TeacherCorrectionView: React.FC = () => {
                 </div>
                 <div className="font-bold text-gray-800">
                   {" "}
-                  {test.id_groupe}{" "}
+                  {test.nom_groupe}{" "}
                 </div>
               </div>
             </div>
           )}
         </div>
         <div>
-          {mock_reponseetudiants_a_corriger.map((reponse: any, index: any) => {
+          {reponses && reponses.map((reponse: any, index: any) => {
             return (
               <div
                 key={index}
                 onClick={() =>
                   navigate(
-                    `/teacher/correction/action/${reponse.id_reponseetudiants}`,
+                    `/teacher/correction/action/${reponse.tentative.id_test}/${reponse.id_reponse}`,
                   )
                 }
                 className="mb-2 px-4 py-2 cursor-pointer border rounded"
@@ -74,11 +86,11 @@ const TeacherCorrectionView: React.FC = () => {
                 <div>
                   <div className="flex justify-end">
                     <div className="my-1 font-semibold">
-                      Note maximum : {reponse.id_tentative} point(s)
+                      Note maximum : {reponse.question.points} 
                     </div>
                   </div>
                   <div className="font-semibold">
-                    Question : {reponse.id_question}{" "}
+                    Question : {reponse.question.texte_question}{" "}
                   </div>
                   <div className="text-gray-700">
                     Reponse de l'étudiant : {reponse.reponse_texte}{" "}

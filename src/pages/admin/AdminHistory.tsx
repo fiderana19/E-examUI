@@ -1,13 +1,14 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import { Input } from "@/components/ui/input";
 import { mock_tests } from "@/constants/mock";
+import { useGetAllCorrectedTestForAdmin } from "@/hooks/test/useGetAllCorrectedTestForAdmin";
 import { CloseOutlined } from "@ant-design/icons";
-import { BookText } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AdminHistory: React.FC = () => {
   const navigate = useNavigate();
+  const { data: results } = useGetAllCorrectedTestForAdmin();
   const [searchRef, setSearchRef] = useState<string>("");
 
   return (
@@ -25,38 +26,40 @@ const AdminHistory: React.FC = () => {
             onChange={(e) => setSearchRef(e.target.value)}
           />
         </div>
-        <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
-          <CloseOutlined className="text-7xl" />
-          <div className="mt-4 text-xl">Vous avez aucune resultat</div>
-        </div>
+        {results && results.length < 1 && (
+          <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">Vous avez aucune resultat</div>
+          </div>
+        )}
         <div className="">
-          {mock_tests.map((res: any, index: any) => {
-            if (searchRef && !res.titre.includes(searchRef)) {
+          {results && results.map((test: any, index: any) => {
+            if (searchRef && !test.titre.includes(searchRef)) {
               return null;
             }
             return (
               <div
                 key={index}
-                onClick={() => navigate(`/admin/history/view/${res.id_test}`)}
+                onClick={() => navigate(`/admin/history/view/${test.id_test}`)}
                 className="shadow p-4 bg-white my-2 cursor-pointer"
               >
                 <div className="flex justify-between">
                   <div className="flex gap-4 text-lg">
-                    <div className=""> {res.titre} du</div>
+                    <div className=""> {test.titre} du</div>
                     <div className="text-gray-800 font-bold">
-                      {res.date_declenchement}
+                      {test.date_declechement}
                     </div>
                   </div>
                   <div className="font-bold text-gray-800">
                     {" "}
-                    {res.id_groupe}{" "}
+                    {test.group.nom_groupe}{" "}
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
-      </div>
+        </div>
     </div>
   );
 };

@@ -1,26 +1,39 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Button } from "@/components/ui/button";
-import { mock_tests } from "@/constants/mock";
+import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
 import { useTest } from "@/context/TestContext";
+import { usePostTentative } from "@/hooks/tentative/usePostTentative";
 import { useGetActiveTestBYGroupId } from "@/hooks/test/useGetActiveTestBYGroupId";
+import { TentativeCreateInterface } from "@/interfaces/tentative.interface";
 import { ClockCircleOutlined, CloseOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentTest: React.FC = () => {
   const { updateSecondsLeft, updateIsFinished } = useTest();
   const { token } = useAuth();
-  const { data: tests } = useGetActiveTestBYGroupId(
+  const { data: tests, refetch } = useGetActiveTestBYGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );  
   const navigate = useNavigate();
+  const { mutateAsync: creerTentative } = usePostTentative({action() {
+    
+  },})
 
-  const debutTest = (test: any) => {
-    updateIsFinished(false);
-    const min = Number(test.duree_minutes) * 60;
-    updateSecondsLeft(min);
-    navigate(`/student/test/room/${test.id_test}`);
+  useEffect(() => {
+    refetch()
+  }, [])
+
+  const debutTest = async (test: any) => {
+    const data: TentativeCreateInterface = { id_test : test.id_test};
+    const response = await creerTentative(data);
+    if(response.status === HttpStatus.CREATED) {
+      updateIsFinished(false);
+      const min = Number(test.duree_minutes) * 60;
+      updateSecondsLeft(min);
+      navigate(`/student/test/room/${test.id_test}/${response.data.id_tentative}`);
+    }
   };
 
   return (
@@ -48,7 +61,7 @@ const StudentTest: React.FC = () => {
                     </div>
                     <div className="font-bold text-gray-800">
                       {" "}
-                      {test.id_utilisateur}{" "}
+                      {test.nom_groupe}{" "}
                     </div>
                   </div>
                   <div className="text-gray-700"> {test.description} </div>
