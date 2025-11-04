@@ -1,16 +1,15 @@
 import { QueryCacheKey } from "@/api/QueryCacheKey";
-import { getNoCorrectionTestByTeacherId } from "@/api/test.api";
+import { getAllCorrectedTest } from "@/api/test.api";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { showToast } from "@/utils/Toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useGetAllCorrectedTestByTeacherId = (id: number) => {
+export const useGetAllCorrectedTestByTeacherId = () => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.TESTS, id],
-    queryFn: () => getNoCorrectionTestByTeacherId(id),
+    queryKey: [QueryCacheKey.TESTS, "ALL_CORRECTED"],
+    queryFn: () => getAllCorrectedTest(),
     staleTime: Infinity,
-    enabled: id !== 0,
   });
 
   useEffect(() => {
@@ -19,6 +18,8 @@ export const useGetAllCorrectedTestByTeacherId = (id: number) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des tests corrigés !",
       });
+
+      console.log("ito le tsy mety", error)
     }
   }, [error]);
 

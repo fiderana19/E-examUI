@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const useGetAllTestForCorrectionByTeacherId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.TESTS, id],
+    queryKey: [QueryCacheKey.TESTS, "CORRECTION", id],
     queryFn: () => getTestForCorrectionByTeacherId(id),
     staleTime: Infinity,
     enabled: id !== 0,
@@ -19,7 +19,9 @@ export const useGetAllTestForCorrectionByTeacherId = (id: number) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des tests à corriger !",
       });
+    console.log("eto", error)
     }
+
   }, [error]);
 
   return {

@@ -1,12 +1,13 @@
 import { postTentative } from "@/api/tentative.api";
 import { TOAST_TYPE } from "@/constants/ToastType";
+import { TentativeCreateInterface } from "@/interfaces/tentative.interface";
 import { showToast } from "@/utils/Toast";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 export const usePostTentative = ({ action }: { action: () => void }) => {
   const mutation = useMutation({
-    mutationFn: (data: any) => postTentative(data),
+    mutationFn: (data: TentativeCreateInterface) => postTentative(data),
     onSuccess: () => {
       if (action) {
         action();

@@ -1,27 +1,25 @@
 import { QueryCacheKey } from "@/api/QueryCacheKey";
-import { getTentativeForResultByTestId } from "@/api/tentative.api";
+import { getAllCorrectedTest, getAllCorrectedTestForAdmin } from "@/api/test.api";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { showToast } from "@/utils/Toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useGetTentativeForResultByTestId = (id: number) => {
+export const useGetAllCorrectedTestForAdmin = () => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.TENTATIVES, "RESULTATS", id],
-    queryFn: () => getTentativeForResultByTestId(id),
+    queryKey: [QueryCacheKey.TESTS, "ALL_CORRECTED", "ADMIN"],
+    queryFn: () => getAllCorrectedTestForAdmin(),
     staleTime: Infinity,
-    enabled: id !== 0,
   });
 
   useEffect(() => {
     if (isError) {
       showToast({
         type: TOAST_TYPE.ERROR,
-        message:
-          "Erreur lors de la recuperations des tentatives des etudiants !",
+        message: "Erreur lors de la recuperations des tests corrigés !",
       });
 
-      console.log("reto ehh", error)
+      console.log("ito le tsy mety", error)
     }
   }, [error]);
 
