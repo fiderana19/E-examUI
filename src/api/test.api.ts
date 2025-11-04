@@ -3,7 +3,6 @@ import {
   TestEditInterface,
 } from "@/interfaces/test.interface";
 import axiosAuthInstance from "./Config";
-import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const TestAPIUrl = `${import.meta.env.VITE_BASE_URL}/tests`;
 
@@ -20,14 +19,15 @@ export const getTestByTeacherId = async (id: number) => {
 };
 
 export const getTestForCorrectionByTeacherId = async (id: number) => {
-  // return await axiosAuthInstance.get(`${TestAPIUrl}/teacher/correction/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/test/teacher/${id}`);
+  return await axiosAuthInstance.get(`${TestAPIUrl}/need_correction/${id}`)
 };
 
-export const getNoCorrectionTestByTeacherId = async (id: number) => {
-  return await axiosAuthInstance.get(`${TestAPIUrl}/teacher/final/${id}`);
+export const getAllCorrectedTest = async () => {
+  return await axiosAuthInstance.get(`${TestAPIUrl}/all_corrected`);
+};
+
+export const getAllCorrectedTestForAdmin = async () => {
+  return await axiosAuthInstance.get(`${TestAPIUrl}/all_corrected/admin`);
 };
 
 export const getFinishedTestByTeacherId = async (id: number) => {
@@ -44,6 +44,10 @@ export const launchTest = async (id: number) => {
 
 export const postTest = async (data: TestCreateInterface) => {
   return await axiosAuthInstance.post(`${TestAPIUrl}`, data)
+};
+
+export const putTestToFinishStatus = async (id: string) => {
+  return await axiosAuthInstance.put(`${TestAPIUrl}/finish/${id}`)
 };
 
 export const patchTest = async (data: TestEditInterface) => {
