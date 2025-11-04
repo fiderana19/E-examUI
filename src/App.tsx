@@ -54,7 +54,7 @@ function App() {
         <Route path="test" element={<StudentTest />} />
         <Route path="profile" element={<StudentProfile />} />
         <Route path="result" element={<StudentResult />} />
-        <Route path="test/room/:id" element={<TestRoom />} />
+        <Route path="test/room/:testId/:tentativeId" element={<TestRoom />} />
       </Route>
       {/* Admin route */}
       <Route
@@ -91,7 +91,7 @@ function App() {
         <Route path="correction" element={<TeacherCorrection />} />
         <Route path="correction/view/:id" element={<TeacherCorrectionView />} />
         <Route
-          path="correction/action/:id"
+          path="correction/action/:testId/:reponseId"
           element={<TeacherCorrectionAction />}
         />
         <Route path="result" element={<TeacherResult />} />
