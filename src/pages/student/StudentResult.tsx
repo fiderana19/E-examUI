@@ -9,7 +9,7 @@ import {
   FilePdfOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/dateFixation";
 import { Button } from "@/components/ui/button";
 import { useDownloadResult } from "@/hooks/result/useDownloadResult";
@@ -19,12 +19,32 @@ const StudentResult: React.FC = () => {
   const { data: results, isLoading } = useGetResultByGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
-  const [selectedToDowload, setSelectedToDownload] = useState<number>(0);
+  const [selectedToDowload, setSelectedToDownload] = useState<any>();
   const {
-    data,
+    data: download_data,
     isLoading: dowloadLoading,
     refetch: dowloadRefetch,
-  } = useDownloadResult(Number(selectedToDowload) | 0);
+  } = useDownloadResult(Number(selectedToDowload?.id_resultat) | 0);
+
+  useEffect(() => {
+    if(download_data) {
+    const blobData = download_data.data; 
+    console.log(download_data)
+    const fileName = String(formatFileName(selectedToDowload.fichier_resultat));
+
+    const url = window.URL.createObjectURL(new Blob([blobData]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', fileName); 
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove(); 
+
+    window.URL.revokeObjectURL(url);
+    }
+  } ,[download_data])
 
   const formatFileName = (data: string) => {
     const res = data.split("/")[1];
@@ -67,7 +87,7 @@ const StudentResult: React.FC = () => {
                       </div>
                       <Button
                         disabled={dowloadLoading}
-                        onClick={() => handleDownload(result.id_resultat)}
+                        onClick={() => handleDownload(result)}
                         variant={"secondary"}
                         size={"icon"}
                         className="text-xs text-gray-600"

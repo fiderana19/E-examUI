@@ -143,7 +143,7 @@ const TeacherResultView: React.FC = () => {
                     Nom
                   </th>
                   <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Note
+                    Note / 20
                   </th>
                   <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     Heure de soumission

@@ -23,7 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarClock } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const TeacherTestAdd: React.FC = () => {
   const { token } = useAuth();
@@ -59,6 +59,12 @@ const TeacherTestAdd: React.FC = () => {
       navigate("/teacher/test");
     }
   };
+  
+  const getGroupNameById = (id: number | string | undefined): string | undefined => {
+    if (!id) return undefined;
+    const groupe = groupes.find((g: any): any => String(g.id_groupe) === String(id));
+    return groupe ? groupe.nom_groupe : undefined;
+  };
 
   return (
     <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">
@@ -75,22 +81,23 @@ const TeacherTestAdd: React.FC = () => {
                 <Controller
                   control={control}
                   name="id_groupe"
-                  render={({ field: { value, onChange } }) => (
-                    <Select value={value} onValueChange={onChange}>
+                  render={({ field: { value, onChange } }) => {
+                    const displayedGroupName = getGroupNameById(value);
+                    return <Select value={value} onValueChange={onChange}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={value} />
+                        <SelectValue placeholder={displayedGroupName || "Sélectionner un groupe"} />
                       </SelectTrigger>
                       <SelectContent>
                         {groupes &&
                           groupes.map((groupe: any, index: number) => (
-                            <SelectItem key={index} value={groupe.id_groupe}>
+                            <SelectItem key={index} value={String(groupe.id_groupe)}>
                               {" "}
                               {groupe.nom_groupe}{" "}
                             </SelectItem>
                           ))}
                       </SelectContent>
                     </Select>
-                  )}
+                  }}
                 />
                 {errors?.id_groupe && (
                   <div className="text-xs w-full text-red-500 text-left">
@@ -149,7 +156,13 @@ const TeacherTestAdd: React.FC = () => {
                     {errors?.duree_minutes.message}
                   </div>
                 )}
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-end mt-4">
+                    <Link
+                      to="/teacher/test"
+                      className="px-4 py-0.5 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
+                    >
+                      Annuler
+                    </Link>
                   <Button disabled={createLoading} type="submit">
                     { createLoading && <LoadingOutlined /> }
                     Ajouter

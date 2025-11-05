@@ -88,6 +88,12 @@ const TeacherAnnounce: React.FC = () => {
     await deleteAnnonce(selectedAnnonce);
   };
 
+  const getGroupNameById = (id: number | string | undefined): string | undefined => {
+    if (!id) return undefined;
+    const groupe = groupes.find((g: any): any => String(g.id_groupe) === String(id));
+    return groupe ? groupe.nom_groupe : undefined;
+  };
+
   return (
     <div className="pl-64 pr-6">
       <TeacherNavigation />
@@ -117,22 +123,23 @@ const TeacherAnnounce: React.FC = () => {
                   <Controller
                     control={control}
                     name="id_groupe"
-                    render={({ field: { value, onChange } }) => (
-                      <Select value={value} onValueChange={onChange}>
+                    render={({ field: { value, onChange } }) => {
+                      const displayedGroupName = getGroupNameById(value);
+                      return <Select value={value} onValueChange={onChange}>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder={value} />
+                          <SelectValue placeholder={displayedGroupName || "Sélectionner un groupe"} />
                         </SelectTrigger>
                         <SelectContent>
                           {groupes &&
                             groupes.map((groupe: any, index: number) => (
-                              <SelectItem key={index} value={groupe.id_groupe}>
+                              <SelectItem key={index} value={String(groupe.id_groupe)}>
                                 {" "}
                                 {groupe.nom_groupe}{" "}
                               </SelectItem>
                             ))}
                         </SelectContent>
                       </Select>
-                    )}
+                    }}
                   />
                   {errors?.id_groupe && (
                     <div className="text-xs w-full text-red-500 text-left">

@@ -15,10 +15,6 @@ export const useDownloadResult = (id: number) => {
 
   useEffect(() => {
     if (isError) {
-      showToast({
-        type: TOAST_TYPE.ERROR,
-        message: "Erreur lors du telechargement du resultat !",
-      });
     }
   }, [error]);
 

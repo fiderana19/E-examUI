@@ -52,12 +52,12 @@ const AdminResult: React.FC = () => {
   const { data: groupes } = useGetAllGroup();
   const { data: results, refetch, isLoading } = useGetAllResult();
   const [selectedResult, setSelectedResult] = useState<number>(0);
-  const [selectedToDowload, setSelectedToDownload] = useState<number>(0);
+  const [selectedToDowload, setSelectedToDownload] = useState<any>();
   const {
-    data,
+    data: download_data,
     isLoading: dowloadLoading,
     refetch: dowloadRefetch,
-  } = useDownloadResult(Number(selectedToDowload) | 0);
+  } = useDownloadResult(Number(selectedToDowload?.id_resultat) | 0);
   const { mutateAsync: publierResultat, isPending: createLoading } = usePostResult({
     action() {
       refetch();
@@ -83,21 +83,24 @@ const AdminResult: React.FC = () => {
     setValue("fichier_resultat", null);
   }, []);
 
-  // useEffect(() => {
-  //   let timeoutId: any;
-  //   if (data && selectedResult !== 0) {
-  //       timeoutId = setTimeout(() => {
-  //           setSelectedResult(0);
-  //           dowloadRefetch();
-  //       }, 5000);
-  //   }
-
-  //   return () => {
-  //       if (timeoutId) {
-  //           clearTimeout(timeoutId);
-  //       }
-  //   };
-  //   }, [selectedResult])
+   useEffect(() => {
+     if(download_data) {
+     const blobData = download_data.data; 
+     const fileName = String(formatFileName(selectedToDowload?.fichier_resultat));
+ 
+     const url = window.URL.createObjectURL(new Blob([blobData]));
+     const link = document.createElement('a');
+ 
+     link.href = url;
+     link.setAttribute('download', fileName); 
+ 
+     document.body.appendChild(link);
+     link.click();
+     link.remove(); 
+ 
+     window.URL.revokeObjectURL(url);
+     }
+   } ,[download_data]) 
 
   const handleSubmit = async (data: PostCreateInterface) => {
     await publierResultat(data);
@@ -105,6 +108,11 @@ const AdminResult: React.FC = () => {
 
   const deleteConfirm = async () => {
     await supprimerResultat(selectedResult);
+  };
+  
+  const handleDownload = async (data: any) => {
+    setSelectedToDownload(data);
+    dowloadRefetch();
   };
 
   const formatFileName = (data: string) => {
@@ -122,6 +130,12 @@ const AdminResult: React.FC = () => {
         clearErrors("fichier_resultat");
       } catch (error) {}
     }
+  };
+
+  const getGroupNameById = (id: number | string | undefined): string | undefined => {
+    if (!id) return undefined;
+    const groupe = groupes.find((g: any): any => String(g.id_groupe) === String(id));
+    return groupe ? groupe.nom_groupe : undefined;
   };
 
   return (
@@ -147,22 +161,23 @@ const AdminResult: React.FC = () => {
                 <Controller
                   control={control}
                   name="id_groupe"
-                  render={({ field: { value, onChange } }) => (
-                    <Select value={value} onValueChange={onChange}>
+                  render={({ field: { value, onChange } }) => {
+                    const displayedGroupName = getGroupNameById(value);
+                    return <Select value={value} onValueChange={onChange}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={value} />
+                        <SelectValue placeholder={displayedGroupName || "Sélectionner un groupe"} />
                       </SelectTrigger>
                       <SelectContent>
                         {groupes &&
                           groupes.map((groupe: any, index: number) => (
-                            <SelectItem key={index} value={groupe.id_groupe}>
+                            <SelectItem key={index} value={String(groupe.id_groupe)}>
                               {" "}
                               {groupe.nom_groupe}{" "}
                             </SelectItem>
                           ))}
                       </SelectContent>
                     </Select>
-                  )}
+                  }}
                 />
                 {errors?.id_groupe && (
                   <div className="text-xs w-full text-red-500 text-left">
@@ -231,7 +246,7 @@ const AdminResult: React.FC = () => {
                     </div>
                     <Button
                       disabled={dowloadLoading}
-                      onClick={() => setSelectedToDownload(res.id_resultat)}
+                      onClick={() => handleDownload(res)}
                       variant={"secondary"}
                       size={"icon"}
                       className="text-xs text-gray-600"
