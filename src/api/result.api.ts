@@ -12,7 +12,9 @@ export const getResultByGroupId = async (id: string) => {
 };
 
 export const dowloadResult = async (id: number) => {
-  return await axiosAuthInstance.get(`${ResultAPIUrl}/download/${id}`);
+  return await axiosAuthInstance.get(`${ResultAPIUrl}/download/${id}`, {
+    responseType: 'blob' // 👈 Doit absolument être là
+});
 };
 
 export const postResult = async (data: PostCreateInterface) => {

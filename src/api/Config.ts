@@ -9,6 +9,13 @@ const axiosAuthInstance = axios.create({
   },
 });
 
+export const axiosDownloadInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 axiosAuthInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
