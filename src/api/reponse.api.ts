@@ -12,7 +12,7 @@ export const getNotCorrectedReponse = async () => {
 };
 
 export const postReponse = async (data: CreateResponseInterface) => {
-  return await axiosAuthInstance.post(`${ReponseAPIUrl}`, data)
+  return await axiosAuthInstance.post(`${ReponseAPIUrl}`, data);
 };
 
 export const patchReponse = async (data: any) => {
@@ -37,13 +37,16 @@ export const getReponseByTentativeId = async (id: number) => {
 };
 
 export const getReponseByTestId = async (id: number) => {
-  return await axiosAuthInstance.get(`${ReponseAPIUrl}/test/${id}`)
+  return await axiosAuthInstance.get(`${ReponseAPIUrl}/test/${id}`);
 };
 
 export const getReponseById = async (id: number) => {
-  return await axiosAuthInstance.get(`${ReponseAPIUrl}/${id}`)
+  return await axiosAuthInstance.get(`${ReponseAPIUrl}/${id}`);
 };
 
 export const patchReponseForCorrection = async (data: any) => {
-  return await axiosAuthInstance.put(`${ReponseAPIUrl}/corriger/${data.id_reponse}`, data)
+  return await axiosAuthInstance.put(
+    `${ReponseAPIUrl}/corriger/${data.id_reponse}`,
+    data,
+  );
 };

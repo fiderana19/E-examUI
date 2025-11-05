@@ -18,7 +18,7 @@ export const useGetAllGroup = () => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des groupes !",
       });
-      console.log("ito ", error)
+      console.log("ito ", error);
     }
   }, [error]);
 

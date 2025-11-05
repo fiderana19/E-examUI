@@ -9,10 +9,15 @@ import { LoginInterface } from "@/interfaces/user.interface";
 import { LoginValidation } from "@/validation/user.validation";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 
 const LoginPage: React.FC = () => {
   const { login, logout } = useAuth();
+  const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const {
     handleSubmit: submit,
@@ -24,10 +29,12 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     logout();
-  }, [])
+  }, []);
 
   const handleSubmit = async (data: LoginInterface) => {
+    setLoginLoading(true);
     await login(data);
+    setLoginLoading(false);
   };
 
   const handlePasswordVisible = async () => {
@@ -93,7 +100,10 @@ const LoginPage: React.FC = () => {
               </div>
             )}
             <div className="flex justify-center mt-4">
-              <Button type="submit">Se connecter</Button>
+              <Button disabled={loginLoading} type="submit">
+                {loginLoading && <LoadingOutlined />}
+                Se connecter
+              </Button>
             </div>
           </form>
           <Link to="/signup" className="w-max mx-auto">

@@ -33,33 +33,36 @@ const AdminHistory: React.FC = () => {
           </div>
         )}
         <div className="">
-          {results && results.map((test: any, index: any) => {
-            if (searchRef && !test.titre.includes(searchRef)) {
-              return null;
-            }
-            return (
-              <div
-                key={index}
-                onClick={() => navigate(`/admin/history/view/${test.id_test}`)}
-                className="shadow p-4 bg-white my-2 cursor-pointer"
-              >
-                <div className="flex justify-between">
-                  <div className="flex gap-4 text-lg">
-                    <div className=""> {test.titre} du</div>
-                    <div className="text-gray-800 font-bold">
-                      {test.date_declechement}
+          {results &&
+            results.map((test: any, index: any) => {
+              if (searchRef && !test.titre.includes(searchRef)) {
+                return null;
+              }
+              return (
+                <div
+                  key={index}
+                  onClick={() =>
+                    navigate(`/admin/history/view/${test.id_test}`)
+                  }
+                  className="shadow p-4 bg-white my-2 cursor-pointer"
+                >
+                  <div className="flex justify-between">
+                    <div className="flex gap-4 text-lg">
+                      <div className=""> {test.titre} du</div>
+                      <div className="text-gray-800 font-bold">
+                        {test.date_declechement}
+                      </div>
+                    </div>
+                    <div className="font-bold text-gray-800">
+                      {" "}
+                      {test.group.nom_groupe}{" "}
                     </div>
                   </div>
-                  <div className="font-bold text-gray-800">
-                    {" "}
-                    {test.group.nom_groupe}{" "}
-                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
-        </div>
+      </div>
     </div>
   );
 };

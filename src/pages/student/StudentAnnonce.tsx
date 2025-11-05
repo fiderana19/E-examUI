@@ -34,27 +34,28 @@ const StudentAnnonce: React.FC = () => {
           </div>
         )}
         <div className="">
-          {annonces && annonces.map((announce: any, index: any) => {
-            if (searchRef && !announce.texte_annonce.includes(searchRef)) {
-              return null;
-            }
-            return (
-              <div key={index} className="mb-2">
-                <div className="text-xs text-gray-600 mb-1">
-                  {" "}
-                  {announce.creation_annonce}{" "}
+          {annonces &&
+            annonces.map((announce: any, index: any) => {
+              if (searchRef && !announce.texte_annonce.includes(searchRef)) {
+                return null;
+              }
+              return (
+                <div key={index} className="mb-2">
+                  <div className="text-xs text-gray-600 mb-1">
+                    {" "}
+                    {announce.creation_annonce}{" "}
+                  </div>
+                  <blockquote className="border-l-2 pl-6 italic">
+                    <NotificationTwoTone /> {announce.titre_annonce} <br />
+                    {announce.texte_annonce}
+                  </blockquote>
+                  <div className="text-right font-medium">
+                    {" "}
+                    {announce.id_utilisateur}{" "}
+                  </div>
                 </div>
-                <blockquote className="border-l-2 pl-6 italic">
-                  <NotificationTwoTone /> {announce.titre_annonce} <br />
-                  {announce.texte_annonce}
-                </blockquote>
-                <div className="text-right font-medium">
-                  {" "}
-                  {announce.id_utilisateur}{" "}
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </div>

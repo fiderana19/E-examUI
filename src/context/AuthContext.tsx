@@ -34,8 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(data);
       localStorage.setItem("token", data);
 
-      const decodedToken = JSON.parse(atob(data.split('.')[1]));
-      
+      const decodedToken = JSON.parse(atob(data.split(".")[1]));
+
       if (decodedToken.role === USER_ROLE.ADMIN) {
         navigate("/admin/home");
       } else if (decodedToken.role === USER_ROLE.ENSEIGNANT) {

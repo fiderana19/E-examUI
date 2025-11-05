@@ -19,7 +19,7 @@ export const useGetAllOptionByQuestionId = (id: number) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des options !",
       });
-      console.log("ito", error)
+      console.log("ito", error);
     }
   }, [error]);
 

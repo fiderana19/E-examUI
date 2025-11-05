@@ -1,5 +1,8 @@
 import { QueryCacheKey } from "@/api/QueryCacheKey";
-import { getAllCorrectedTest, getAllCorrectedTestForAdmin } from "@/api/test.api";
+import {
+  getAllCorrectedTest,
+  getAllCorrectedTestForAdmin,
+} from "@/api/test.api";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { showToast } from "@/utils/Toast";
 import { useQuery } from "@tanstack/react-query";
@@ -19,7 +22,7 @@ export const useGetAllCorrectedTestForAdmin = () => {
         message: "Erreur lors de la recuperations des tests corrigés !",
       });
 
-      console.log("ito le tsy mety", error)
+      console.log("ito le tsy mety", error);
     }
   }, [error]);
 

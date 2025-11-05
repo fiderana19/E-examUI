@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const useGetAnnonceByGroupId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.ANNONCES, QueryCacheKey.GROUPS , id],
+    queryKey: [QueryCacheKey.ANNONCES, QueryCacheKey.GROUPS, id],
     queryFn: () => getAnnonceByGroupId(id),
     staleTime: Infinity,
     enabled: id !== 0,

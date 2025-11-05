@@ -19,7 +19,7 @@ export const useGetAllCorrectedTestByTeacherId = () => {
         message: "Erreur lors de la recuperations des tests corrigés !",
       });
 
-      console.log("ito le tsy mety", error)
+      console.log("ito le tsy mety", error);
     }
   }, [error]);
 

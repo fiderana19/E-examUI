@@ -35,20 +35,22 @@ const TeacherHome: React.FC = () => {
                 <div className="mt-4">Vous avez fait aucune annonce !</div>
               </div>
               <div className="">
-                {annonces && annonces.slice(0, 3).map((announce: any, index: any) => {
-                  return (
-                    <div key={index} className="my-2">
-                      <div className="text-xs text-gray-600 mb-1">
-                        {" "}
-                        {announce.creation_annonce}{" "}
+                {annonces &&
+                  annonces.slice(0, 3).map((announce: any, index: any) => {
+                    return (
+                      <div key={index} className="my-2">
+                        <div className="text-xs text-gray-600 mb-1">
+                          {" "}
+                          {announce.creation_annonce}{" "}
+                        </div>
+                        <blockquote className="border-l-2 pl-6 italic">
+                          <NotificationTwoTone /> {announce.titre_annonce}{" "}
+                          <br />
+                          {announce.texte_annonce}
+                        </blockquote>
                       </div>
-                      <blockquote className="border-l-2 pl-6 italic">
-                        <NotificationTwoTone /> {announce.titre_annonce} <br />
-                        {announce.texte_annonce}
-                      </blockquote>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             </div>
           </Card>

@@ -21,7 +21,7 @@ import { useValidateUser } from "@/hooks/user/useValidateUser";
 import { CloseOutlined } from "@ant-design/icons";
 import { Check, Filter, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { formatDate } from '../../utils/dateFixation';
+import { formatDate } from "../../utils/dateFixation";
 
 const AdminAccount: React.FC = () => {
   const { data: users, refetch } = useGetAllUser();
@@ -38,7 +38,7 @@ const AdminAccount: React.FC = () => {
 
   useEffect(() => {
     refetch();
-  }, [])
+  }, []);
   const validateConfirm = async () => {
     await validerUser(selectedAccount);
   };
@@ -46,9 +46,7 @@ const AdminAccount: React.FC = () => {
   async function filterData(text: string, value: number) {
     setFilterRef(true);
     setFilterText(text);
-    const acc = users.filter(
-      (accounts: any) => accounts.est_valider === value,
-    );
+    const acc = users.filter((accounts: any) => accounts.est_valider === value);
     setFiltereds(acc);
   }
 
@@ -155,7 +153,7 @@ const AdminAccount: React.FC = () => {
                       </td>
                       <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                         <div className="flex justify-end gap-1">
-                          {(et.est_valider === 0) && (
+                          {et.est_valider === 0 && (
                             <AlertDialog>
                               <AlertDialogTrigger>
                                 <Button
@@ -194,7 +192,8 @@ const AdminAccount: React.FC = () => {
                     </tr>
                   );
                 })
-              : (users && users.map((et: any, index: any) => {
+              : users &&
+                users.map((et: any, index: any) => {
                   if (searchRef && !et.matricule.includes(searchRef)) {
                     return null;
                   }
@@ -222,7 +221,7 @@ const AdminAccount: React.FC = () => {
                       </td>
                       <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
                         <div className="flex justify-end gap-1">
-                          {(et.est_valider === 0) && (
+                          {et.est_valider === 0 && (
                             <AlertDialog>
                               <AlertDialogTrigger>
                                 <Button
@@ -260,7 +259,7 @@ const AdminAccount: React.FC = () => {
                       </td>
                     </tr>
                   );
-                }))}
+                })}
           </tbody>
         </table>
       </div>

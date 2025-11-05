@@ -36,13 +36,16 @@ const TeacherQuestionEdit: React.FC = () => {
   });
   const { mutateAsync: modifierQuestion } = usePatchQuestion({
     action() {
-      refetch()
+      refetch();
     },
   });
 
   useEffect(() => {
     setValue("id_question", Id ? Id : "");
-    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
+    setValue(
+      "id_utilisateur",
+      token ? JSON.parse(atob(token.split(".")[1])).id : "",
+    );
   }, []);
 
   const handleSubmit = async (data: QuestionEditInterface) => {
@@ -57,76 +60,81 @@ const TeacherQuestionEdit: React.FC = () => {
       <TeacherNavigation />
       <div>
         <div className="w-1/3 mx-auto">
-        {
-          question && <Card className="px-4 py-10">
-            <div>
-              <div className="text-xl uppercase font-bold text-center mb-4 flex items-center gap-2">
-                <QuestionCircleOutlined /> Modifier une question
-              </div>
-              <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                <Label className="mb-1">Question :</Label>
-                <Controller
-                  control={control}
-                  name="texte_question"
-                  defaultValue={question.texte_question}
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      value={value}
-                      onChange={onChange}
-                      className={`${errors?.texte_question && "border border-red-500 text-red-500 rounded"}`}
-                    />
-                  )}
-                />
-                {errors?.texte_question && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.texte_question.message}
-                  </div>
-                )}
-                <Label className="mb-1 mt-4">Type :</Label>
-                <Controller
-                  control={control}
-                  name="type_question"
-                  defaultValue={question.type_question}
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      disabled
-                      value={value}
-                      onChange={onChange}
-                      className={`${errors?.type_question && "border border-red-500 text-red-500 rounded"}`}
-                    />
-                  )}
-                />
-                {errors?.type_question && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.type_question.message}
-                  </div>
-                )}
-                <Label className="mb-1 mt-4">Reponse correcte :</Label>
-                <Controller
-                  control={control}
-                  name="reponse_correcte"
-                  defaultValue={question.reponse_correcte}
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      disabled={question.type_question === QUESTION_TYPE.REPONSE_COURTE ? false : true}
-                      value={value}
-                      onChange={onChange}
-                      className={`${errors?.reponse_correcte && "border border-red-500 text-red-500 rounded"}`}
-                    />
-                  )}
-                />
-                {errors?.reponse_correcte && (
-                  <div className="text-xs w-full text-red-500 text-left">
-                    {errors?.reponse_correcte.message}
-                  </div>
-                )}
-                <div className="flex justify-center mt-4">
-                  <Button type="submit">Modifier</Button>
+          {question && (
+            <Card className="px-4 py-10">
+              <div>
+                <div className="text-xl uppercase font-bold text-center mb-4 flex items-center gap-2">
+                  <QuestionCircleOutlined /> Modifier une question
                 </div>
-              </form>
-            </div>
-          </Card>
-        }
+                <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
+                  <Label className="mb-1">Question :</Label>
+                  <Controller
+                    control={control}
+                    name="texte_question"
+                    defaultValue={question.texte_question}
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        value={value}
+                        onChange={onChange}
+                        className={`${errors?.texte_question && "border border-red-500 text-red-500 rounded"}`}
+                      />
+                    )}
+                  />
+                  {errors?.texte_question && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.texte_question.message}
+                    </div>
+                  )}
+                  <Label className="mb-1 mt-4">Type :</Label>
+                  <Controller
+                    control={control}
+                    name="type_question"
+                    defaultValue={question.type_question}
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        disabled
+                        value={value}
+                        onChange={onChange}
+                        className={`${errors?.type_question && "border border-red-500 text-red-500 rounded"}`}
+                      />
+                    )}
+                  />
+                  {errors?.type_question && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.type_question.message}
+                    </div>
+                  )}
+                  <Label className="mb-1 mt-4">Reponse correcte :</Label>
+                  <Controller
+                    control={control}
+                    name="reponse_correcte"
+                    defaultValue={question.reponse_correcte}
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        disabled={
+                          question.type_question ===
+                          QUESTION_TYPE.REPONSE_COURTE
+                            ? false
+                            : true
+                        }
+                        value={value}
+                        onChange={onChange}
+                        className={`${errors?.reponse_correcte && "border border-red-500 text-red-500 rounded"}`}
+                      />
+                    )}
+                  />
+                  {errors?.reponse_correcte && (
+                    <div className="text-xs w-full text-red-500 text-left">
+                      {errors?.reponse_correcte.message}
+                    </div>
+                  )}
+                  <div className="flex justify-center mt-4">
+                    <Button type="submit">Modifier</Button>
+                  </div>
+                </form>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     </div>

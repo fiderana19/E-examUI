@@ -34,4 +34,15 @@ export const axiosMutlipartFormDataInstance = axios.create({
   },
 });
 
+axiosMutlipartFormDataInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
 export default axiosAuthInstance;

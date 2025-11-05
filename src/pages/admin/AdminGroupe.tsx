@@ -131,63 +131,64 @@ const AdminGroupe: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {groupes && groupes.map((group: any, index: any) => {
-              return (
-                <tr key={index}>
-                  <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                    {" "}
-                    {group.nom_groupe}{" "}
-                  </td>
-                  <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                    {" "}
-                    {group.description}{" "}
-                  </td>
-                  <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        onClick={() =>
-                          navigate(`/admin/groupe/edit/${group.id_groupe}`)
-                        }
-                        variant={"outline"}
-                        size={"icon"}
-                      >
-                        <Edit2 />
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger>
-                          <Button
-                            onClick={() => setSelectedGroup(group.id_groupe)}
-                            variant={"destructive"}
-                            size={"icon"}
-                          >
-                            <Trash />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Suppression du groupe
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Voulez-vous vraiment supprimer ce groupe ?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            {groupes &&
+              groupes.map((group: any, index: any) => {
+                return (
+                  <tr key={index}>
+                    <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
+                      {" "}
+                      {group.nom_groupe}{" "}
+                    </td>
+                    <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
+                      {" "}
+                      {group.description}{" "}
+                    </td>
+                    <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          onClick={() =>
+                            navigate(`/admin/groupe/edit/${group.id_groupe}`)
+                          }
+                          variant={"outline"}
+                          size={"icon"}
+                        >
+                          <Edit2 />
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger>
                             <Button
-                              onClick={() => deleteConfirm()}
+                              onClick={() => setSelectedGroup(group.id_groupe)}
                               variant={"destructive"}
+                              size={"icon"}
                             >
-                              Supprimer
+                              <Trash />
                             </Button>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Suppression du groupe
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Voulez-vous vraiment supprimer ce groupe ?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Annuler</AlertDialogCancel>
+                              <Button
+                                onClick={() => deleteConfirm()}
+                                variant={"destructive"}
+                              >
+                                Supprimer
+                              </Button>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

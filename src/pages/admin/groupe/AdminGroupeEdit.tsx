@@ -18,12 +18,14 @@ import { useNavigate, useParams } from "react-router-dom";
 const AdminGroupeEdit: React.FC = () => {
   const req = useParams();
   const Id = req.id;
-  const { data: groupe, refetch: refetchGroupe } = useGetGroupById(Id ? Number(Id) : 0);
+  const { data: groupe, refetch: refetchGroupe } = useGetGroupById(
+    Id ? Number(Id) : 0,
+  );
   const {
     handleSubmit: submit,
     formState: { errors },
     control,
-    setValue
+    setValue,
   } = useForm<EditGroupInterface>({
     resolver: yupResolver(EditGroupValidation),
   });
@@ -37,8 +39,8 @@ const AdminGroupeEdit: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue('id_groupe', Id ? Id : "");
-  }, [groupe])
+    setValue("id_groupe", Id ? Id : "");
+  }, [groupe]);
 
   const handleSubmit = async (data: EditGroupInterface) => {
     const response = await modifierGroupe(data);
@@ -57,8 +59,8 @@ const AdminGroupeEdit: React.FC = () => {
               <div className="text-xl uppercase font-bold text-center mb-4">
                 <BookOutlined /> Modifier un groupe
               </div>
-              {
-                groupe && <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
+              {groupe && (
+                <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
                   <Label className="mb-1">Nom :</Label>
                   <Controller
                     control={control}
@@ -96,12 +98,19 @@ const AdminGroupeEdit: React.FC = () => {
                     </div>
                   )}
                   <div className="mt-4 flex justify-end gap-2">
-                    <Button onClick={() => navigate("/admin/groupe")} variant={'secondary'} className="w-max ">Annuler</Button>
-                    <Button type="submit" className="w-max ">Modifier</Button>
+                    <Button
+                      onClick={() => navigate("/admin/groupe")}
+                      variant={"secondary"}
+                      className="w-max "
+                    >
+                      Annuler
+                    </Button>
+                    <Button type="submit" className="w-max ">
+                      Modifier
+                    </Button>
                   </div>
                 </form>
-              }
-              
+              )}
             </div>
           </Card>
         </div>

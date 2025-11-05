@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
@@ -40,7 +46,10 @@ const TeacherTestAdd: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
+    setValue(
+      "id_utilisateur",
+      token ? JSON.parse(atob(token.split(".")[1])).id : "",
+    );
   }, []);
 
   const handleSubmit = async (data: TestCreateInterface) => {
@@ -66,16 +75,18 @@ const TeacherTestAdd: React.FC = () => {
                   control={control}
                   name="id_groupe"
                   render={({ field: { value, onChange } }) => (
-                    <Select value={value} onValueChange={onChange} >
+                    <Select value={value} onValueChange={onChange}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder={value} />
                       </SelectTrigger>
                       <SelectContent>
-                        {
-                          groupes && groupes.map((groupe: any, index: number) => (
-                            <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
-                          ))
-                        }
+                        {groupes &&
+                          groupes.map((groupe: any, index: number) => (
+                            <SelectItem key={index} value={groupe.id_groupe}>
+                              {" "}
+                              {groupe.nom_groupe}{" "}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   )}

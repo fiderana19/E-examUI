@@ -11,32 +11,37 @@ export const postLogin = async (data: LoginInterface) => {
   try {
     return await axiosInstance.post(`${UserAPIUrl}/login`, data);
   } catch (error: any) {
-    if(error?.status == HttpStatus.BAD_REQUEST || error?.status == HttpStatus.UNAUTHORIZED) {
+    if (
+      error?.status == HttpStatus.FORBIDDEN ||
+      error?.status == HttpStatus.UNAUTHORIZED
+    ) {
       showToast({
         type: TOAST_TYPE.ERROR,
-        message: error?.response.data.message
-      })
+        message: error?.response.data.message,
+      });
     } else if (error.code == "ERR_NETWORK") {
       showToast({
         type: TOAST_TYPE.ERROR,
-        message: "Erreur lors de la connexion au serveur !"
-      })
+        message: "Erreur lors de la connexion au serveur !",
+      });
     }
   }
 };
 
 export const postInscription = async (data: SignupInterface) => {
-  return await axiosInstance.post(`${UserAPIUrl}/register`, data)
+  return await axiosInstance.post(`${UserAPIUrl}/register`, data);
 };
 
 export const getAllUser = async () => {
-  return await axiosAuthInstance.get(`${AdminUserAPIUrl}/users`)
+  return await axiosAuthInstance.get(`${AdminUserAPIUrl}/users`);
 };
 
 export const getUserById = async (id: string) => {
-  return await axiosAuthInstance.get(`${UserAPIUrl}/${id}`)
+  return await axiosAuthInstance.get(`${UserAPIUrl}/${id}`);
 };
 
 export const patchUserValidation = async (data: any) => {
-  return await axiosAuthInstance.post(`${AdminUserAPIUrl}/users/approve/${data}`)
+  return await axiosAuthInstance.post(
+    `${AdminUserAPIUrl}/users/approve/${data}`,
+  );
 };

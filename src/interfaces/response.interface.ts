@@ -6,7 +6,7 @@ export interface GivePointsInterface {
 export interface CreateResponseInterface {
   id_test: string;
   id_tentative: string;
-  reponses: ResponseInterface[]
+  reponses: ResponseInterface[];
 }
 
 export interface ResponseInterface {

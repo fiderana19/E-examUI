@@ -21,7 +21,7 @@ export const useGetTentativeForResultByTestId = (id: number) => {
           "Erreur lors de la recuperations des tentatives des etudiants !",
       });
 
-      console.log("reto ehh", error)
+      console.log("reto ehh", error);
     }
   }, [error]);
 

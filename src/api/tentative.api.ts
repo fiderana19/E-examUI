@@ -5,7 +5,7 @@ import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 const TentativeAPIUrl = `${import.meta.env.VITE_BASE_URL}/tentatives`;
 
 export const postTentative = async (data: TentativeCreateInterface) => {
-  return await axiosAuthInstance.post(`${TentativeAPIUrl}`, data)
+  return await axiosAuthInstance.post(`${TentativeAPIUrl}`, data);
 };
 
 export const patchTentativeForFinish = async (data: any) => {
@@ -16,5 +16,11 @@ export const patchTentativeForFinish = async (data: any) => {
 };
 
 export const getTentativeForResultByTestId = async (id: any) => {
-  return await axiosAuthInstance.get(`${import.meta.env.VITE_BASE_URL}/tests/results/${id}`)
+  return await axiosAuthInstance.get(
+    `${import.meta.env.VITE_BASE_URL}/tests/results/${id}`,
+  );
+};
+
+export const getTentativeResponseByTestId = async (id: any) => {
+  return await axiosAuthInstance.get(`${TentativeAPIUrl}/responses/${id}`);
 };

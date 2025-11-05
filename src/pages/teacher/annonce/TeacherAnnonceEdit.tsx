@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceById } from "@/hooks/annonce/useGetAnnonceById";
@@ -40,7 +46,10 @@ const TeacherAnnounceEdit: React.FC = () => {
 
   useEffect(() => {
     setValue("id_annonce", Id ? String(Id) : "");
-    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
+    setValue(
+      "id_utilisateur",
+      token ? JSON.parse(atob(token.split(".")[1])).id : "",
+    );
   }, []);
 
   const handleSubmit = async (data: AnnounceEditInterface) => {
@@ -60,24 +69,26 @@ const TeacherAnnounceEdit: React.FC = () => {
               <div className="text-xl uppercase font-bold text-center mb-4">
                 <NotificationOutlined /> Modifier une annonce
               </div>
-              {
-                annonce && <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
+              {annonce && (
+                <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
                   <Label className="mb-1">Groupe :</Label>
                   <Controller
                     control={control}
                     name="id_groupe"
                     defaultValue={annonce.id_groupe}
                     render={({ field: { value, onChange } }) => (
-                      <Select disabled value={value} onValueChange={onChange} >
+                      <Select disabled value={value} onValueChange={onChange}>
                         <SelectTrigger className="w-full">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {
-                            groupes && groupes.map((groupe: any, index: number) => (
-                              <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
-                            ))
-                          }
+                          {groupes &&
+                            groupes.map((groupe: any, index: number) => (
+                              <SelectItem key={index} value={groupe.id_groupe}>
+                                {" "}
+                                {groupe.nom_groupe}{" "}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                     )}
@@ -124,12 +135,17 @@ const TeacherAnnounceEdit: React.FC = () => {
                     </div>
                   )}
                   <div className="mt-4 flex justify-end gap-2">
-                    <Button onClick={() => navigate("/teacher/announce")} variant={'secondary'} className="w-max ">Annuler</Button>
+                    <Button
+                      onClick={() => navigate("/teacher/announce")}
+                      variant={"secondary"}
+                      className="w-max "
+                    >
+                      Annuler
+                    </Button>
                     <Button type="submit">Modifier</Button>
                   </div>
                 </form>
-              }
-              
+              )}
             </div>
           </Card>
         </div>

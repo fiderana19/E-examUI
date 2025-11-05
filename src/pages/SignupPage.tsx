@@ -11,7 +11,12 @@ import { Link } from "react-router-dom";
 import { useSignup } from "@/hooks/user/useSignup";
 import { HttpStatus } from "@/constants/Http_status";
 import { CloseCircleFilled } from "@ant-design/icons";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
 import SelectDemo from "@/components/demo/SelectDemo";
@@ -30,9 +35,9 @@ const SignupPage: React.FC = () => {
   });
   const { mutateAsync: signup } = useSignup({ action() {} });
   const [reponseText, setReponseText] = useState<boolean>(false);
-  
+
   const handleSubmit = async (data: SignupInterface) => {
-    console.log(data)
+    console.log(data);
     const response = await signup(data);
     reset();
     if (
@@ -101,16 +106,18 @@ const SignupPage: React.FC = () => {
               control={control}
               name="id_groupe"
               render={({ field: { value, onChange } }) => (
-                <Select value={value} onValueChange={onChange} >
+                <Select value={value} onValueChange={onChange}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder={value} />
                   </SelectTrigger>
                   <SelectContent>
-                    {
-                      groupes && groupes.map((groupe: any, index: number) => (
-                        <SelectItem key={index} value={groupe.id_groupe}> { groupe.nom_groupe } </SelectItem>
-                      ))
-                    }
+                    {groupes &&
+                      groupes.map((groupe: any, index: number) => (
+                        <SelectItem key={index} value={groupe.id_groupe}>
+                          {" "}
+                          {groupe.nom_groupe}{" "}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               )}

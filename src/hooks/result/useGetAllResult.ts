@@ -18,6 +18,8 @@ export const useGetAllResult = () => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des resultats !",
       });
+
+      console.log("result error", error);
     }
   }, [error]);
 

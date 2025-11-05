@@ -9,7 +9,9 @@ import React from "react";
 
 const TeacherProfile: React.FC = () => {
   const { logout, token } = useAuth();
-  const { data: user } = useGetUserById(token ? JSON.parse(atob(token.split(".")[1])).id : "");
+  const { data: user } = useGetUserById(
+    token ? JSON.parse(atob(token.split(".")[1])).id : "",
+  );
 
   return (
     <div className="pl-64 pr-[4%] my-6">

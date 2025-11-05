@@ -7,7 +7,12 @@ import { useEffect } from "react";
 
 export const useGetReponseByTestId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.REPONSES, QueryCacheKey.TENTATIVES,"CORRECTION", id],
+    queryKey: [
+      QueryCacheKey.REPONSES,
+      QueryCacheKey.TENTATIVES,
+      "CORRECTION",
+      id,
+    ],
     queryFn: () => getReponseByTestId(id),
     staleTime: Infinity,
     enabled: id !== 0,
@@ -19,7 +24,7 @@ export const useGetReponseByTestId = (id: number) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations des reponses !",
       });
-      console.log("erreur test", error)
+      console.log("erreur test", error);
     }
   }, [error]);
 

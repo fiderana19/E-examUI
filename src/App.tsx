@@ -35,6 +35,7 @@ import TeacherTestLaunchedView from "./pages/teacher/test/TeacherTestLaunchedVie
 import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
 import { USER_ROLE } from "./enum/user.enum";
+import TeacherResultResponseView from "./pages/teacher/result/TeacherResultResponseView";
 
 function App() {
   return (
@@ -96,6 +97,10 @@ function App() {
         />
         <Route path="result" element={<TeacherResult />} />
         <Route path="result/view/:id" element={<TeacherResultView />} />
+        <Route
+          path="result/response/view/:id"
+          element={<TeacherResultResponseView />}
+        />
         <Route path="profile" element={<TeacherProfile />} />
       </Route>
     </Routes>

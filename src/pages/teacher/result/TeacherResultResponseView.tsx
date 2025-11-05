@@ -1,11 +1,30 @@
-import AdminNavigation from "@/components/Navigation/AdminNavigation";
+import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
+import { styles, TableHeader, TableRow } from "@/components/ResultPDF";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { mockResultData } from "@/constants/mock";
+import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
 import { useGetTentativeResponseByTestId } from "@/hooks/tentative/useGetTentativeResponseByTestId";
-import { ChevronLeft } from "lucide-react";
+import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
+import {
+  Document,
+  Page,
+  PDFDownloadLink,
+  PDFViewer,
+  Text,
+  View,
+} from "@react-pdf/renderer";
+import { BookText, ChevronLeft } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const AdminResponseView: React.FC = () => {
+const TeacherResultResponseView: React.FC = () => {
   const req = useParams();
   const TentativeId = req.id;
   const { data: result } = useGetTentativeResponseByTestId(
@@ -15,7 +34,7 @@ const AdminResponseView: React.FC = () => {
 
   return (
     <div className="pl-64 pr-6">
-      <AdminNavigation />
+      <TeacherNavigation />
       <div className="my-6">
         <div className="flex justify-between items-center">
           <div className="text-gray-800 text-xl font-bold mb-4 flex items-center gap-2">
@@ -80,4 +99,4 @@ const AdminResponseView: React.FC = () => {
   );
 };
 
-export default AdminResponseView;
+export default TeacherResultResponseView;

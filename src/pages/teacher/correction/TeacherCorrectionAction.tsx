@@ -23,7 +23,9 @@ const TeacherCorrectionAction: React.FC = () => {
   const reponseId = req.reponseId;
   const navigate = useNavigate();
   const { data: test } = useGetTestById(testId ? Number(testId) : 0);
-  const { data: reponse, refetch } = useGetReponseById(reponseId ? Number(reponseId) : 0);
+  const { data: reponse, refetch } = useGetReponseById(
+    reponseId ? Number(reponseId) : 0,
+  );
   const { mutateAsync: corrigerReponse } = usePatchReponseForCorrection({
     action() {
       refetch();
@@ -44,7 +46,7 @@ const TeacherCorrectionAction: React.FC = () => {
 
   const handleSubmit = async (data: GivePointsInterface) => {
     const res = await corrigerReponse(data);
-    if(res.status === HttpStatus.OK || res.status === HttpStatus.CREATED) {
+    if (res.status === HttpStatus.OK || res.status === HttpStatus.CREATED) {
       navigate(-1);
     }
   };
@@ -55,7 +57,9 @@ const TeacherCorrectionAction: React.FC = () => {
       <div className="my-6">
         <div className="flex justify-between items-center mb-4">
           <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <Button onClick={() => navigate(-1)} variant={'secondary'}><ChevronLeft /></Button> 
+            <Button onClick={() => navigate(-1)} variant={"secondary"}>
+              <ChevronLeft />
+            </Button>
             Correction d'un test
           </div>
         </div>

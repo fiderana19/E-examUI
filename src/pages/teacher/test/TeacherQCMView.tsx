@@ -38,9 +38,7 @@ const TeacherQCMView: React.FC = () => {
   const { data: options, refetch } = useGetAllOptionByQuestionId(
     Id ? Number(Id) : 0,
   );
-  const { data: question } = useGetQuestionById(
-    Id ? Number(Id) : 0,
-  );
+  const { data: question } = useGetQuestionById(Id ? Number(Id) : 0);
   const { mutateAsync: deleteOption } = useDeleteOption({
     action() {
       refetch();
@@ -63,8 +61,8 @@ const TeacherQCMView: React.FC = () => {
     defaultValues: {
       id_question: Id ? Id : "",
       est_correcte: false,
-      texte_option: ""
-    }
+      texte_option: "",
+    },
   });
   const [selectedOption, setSelectedOption] = useState<number>(0);
 
@@ -85,7 +83,7 @@ const TeacherQCMView: React.FC = () => {
   const handleCheckboxChange = async (e: any) => {
     const value = e.target.checked;
 
-    setValue('est_correcte', value);
+    setValue("est_correcte", value);
   };
 
   return (
@@ -95,7 +93,9 @@ const TeacherQCMView: React.FC = () => {
         <div className="">
           <div className="px-10">
             <div className="flex justify-between items-center">
-            <Button onClick={() => navigate(-1)} variant={'secondary'}><ChevronLeft /></Button> 
+              <Button onClick={() => navigate(-1)} variant={"secondary"}>
+                <ChevronLeft />
+              </Button>
               <div className="uppercase font-bold">
                 Les options de la question QCM
               </div>
@@ -168,57 +168,58 @@ const TeacherQCMView: React.FC = () => {
               )}
             </div>
             <div className="px-10 my-4">
-              {options && options.map((option: any, index: any) => {
-                return (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center my-2 gap-4"
-                  >
-                    <div className="flex gap-2">
-                      <div
-                        className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}
-                      >
-                        {option.est_correcte ? (
-                          <CheckCircleOutlined />
-                        ) : (
-                          <CloseCircleOutlined />
-                        )}
-                      </div>
-                      <div> {option.texte_option} </div>
-                    </div>
-                    <AlertDialog>
-                      <AlertDialogTrigger>
-                        <Button
-                          onClick={() => setSelectedOption(option.id_option)}
-                          size={"icon"}
-                          variant={"destructive"}
+              {options &&
+                options.map((option: any, index: any) => {
+                  return (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center my-2 gap-4"
+                    >
+                      <div className="flex gap-2">
+                        <div
+                          className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}
                         >
-                          <Trash />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Suppression d'une option
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Voulez-vous vraiment supprimer cette option ?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Annuler</AlertDialogCancel>
+                          {option.est_correcte ? (
+                            <CheckCircleOutlined />
+                          ) : (
+                            <CloseCircleOutlined />
+                          )}
+                        </div>
+                        <div> {option.texte_option} </div>
+                      </div>
+                      <AlertDialog>
+                        <AlertDialogTrigger>
                           <Button
-                            onClick={() => deleteConfirm()}
+                            onClick={() => setSelectedOption(option.id_option)}
+                            size={"icon"}
                             variant={"destructive"}
                           >
-                            Supprimer
+                            <Trash />
                           </Button>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                );
-              })}
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Suppression d'une option
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Voulez-vous vraiment supprimer cette option ?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Annuler</AlertDialogCancel>
+                            <Button
+                              onClick={() => deleteConfirm()}
+                              variant={"destructive"}
+                            >
+                              Supprimer
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

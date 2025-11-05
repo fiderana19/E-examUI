@@ -14,26 +14,31 @@ const TeacherTestLaunchedView: React.FC = () => {
   const req = useParams();
   const Id = req.id ? req.id : "";
   const { token } = useAuth();
-  const [testId, setTestId] = useState<string>("")
+  const [testId, setTestId] = useState<string>("");
   const { data: test, refetch } = useGetTestById(Id ? Number(Id) : 0);
   const { refetch: refetchTests } = useGetAllTestByTeacherId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
-  const { mutateAsync: finish } = usePutTestToFinishStatus({action() {
-    refetch();
-    refetchTests();
-  },})
+  const { mutateAsync: finish } = usePutTestToFinishStatus({
+    action() {
+      refetch();
+      refetchTests();
+    },
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(Id) {
-      setTestId(Id)
+    if (Id) {
+      setTestId(Id);
     }
-  }, [Id])
+  }, [Id]);
 
   const finishTest = async () => {
     const reponse = await finish(testId);
-    if(reponse.status === HttpStatus.OK || reponse.status === HttpStatus.CREATED) {
+    if (
+      reponse.status === HttpStatus.OK ||
+      reponse.status === HttpStatus.CREATED
+    ) {
       navigate("/teacher/test");
     }
   };
@@ -74,7 +79,10 @@ const TeacherTestLaunchedView: React.FC = () => {
               </div>
               <div className="font-bold text-gray-800">Note maximum : 20 </div>
             </div>
-            <div className="text-gray-700" onClick={() => finishTest()}> {test.description} </div>
+            <div className="text-gray-700" onClick={() => finishTest()}>
+              {" "}
+              {test.description}{" "}
+            </div>
           </div>
           <Card className="my-10 w-max mx-auto px-4">
             <div>

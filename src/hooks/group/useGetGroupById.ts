@@ -20,7 +20,7 @@ export const useGetGroupById = (id: number) => {
         message: "Erreur lors de la recuperations du groupe !",
       });
     }
-    console.log("eto", error)
+    console.log("eto", error);
   }, [error]);
 
   return {

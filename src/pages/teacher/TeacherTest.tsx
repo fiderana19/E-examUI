@@ -141,12 +141,12 @@ const TeacherTest: React.FC = () => {
             </Button>
           </div>
         </div>
-        {
-          tests && tests.length < 1 && <div className="w-max mx-auto text-center text-gray-600 my-10">
+        {tests && tests.length < 1 && (
+          <div className="w-max mx-auto text-center text-gray-600 my-10">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Vous avez créé aucun test</div>
           </div>
-        }
+        )}
         <div className="">
           {filterRef && tests
             ? filtereds.map((test: any, index: any) => {
@@ -214,9 +214,7 @@ const TeacherTest: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button
-                                onClick={() => launchConfirm(test)}
-                              >
+                              <Button onClick={() => launchConfirm(test)}>
                                 Confirmer
                               </Button>
                             </AlertDialogFooter>
@@ -276,7 +274,8 @@ const TeacherTest: React.FC = () => {
                   </div>
                 );
               })
-            : tests && tests.map((test: any, index: any) => {
+            : tests &&
+              tests.map((test: any, index: any) => {
                 return (
                   <div key={index} className="shadow p-4 bg-white my-2">
                     <div className="mb-4">
@@ -341,9 +340,7 @@ const TeacherTest: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button
-                                onClick={() => launchConfirm(test)}
-                              >
+                              <Button onClick={() => launchConfirm(test)}>
                                 Confirmer
                               </Button>
                             </AlertDialogFooter>

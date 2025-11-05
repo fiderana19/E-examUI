@@ -11,11 +11,13 @@ const StudentNavigation: React.FC = () => {
   const { logout, token } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const { data: user, refetch } = useGetUserById(token ? JSON.parse(atob(token.split(".")[1])).id : "");
+  const { data: user, refetch } = useGetUserById(
+    token ? JSON.parse(atob(token.split(".")[1])).id : "",
+  );
 
   useEffect(() => {
     refetch();
-  }, [])
+  }, []);
   return (
     <div className="z-40 fixed w-full px-4 top-0 left-0 flex justify-between items-center bg-second-custom text-center">
       <Link to="/student/home" className="font-extrabold">

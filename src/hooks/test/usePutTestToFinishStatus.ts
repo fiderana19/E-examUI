@@ -5,7 +5,11 @@ import { showToast } from "@/utils/Toast";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-export const usePutTestToFinishStatus = ({ action }: { action: () => void }) => {
+export const usePutTestToFinishStatus = ({
+  action,
+}: {
+  action: () => void;
+}) => {
   const mutation = useMutation({
     mutationFn: (data: string) => putTestToFinishStatus(data),
     onSuccess: () => {

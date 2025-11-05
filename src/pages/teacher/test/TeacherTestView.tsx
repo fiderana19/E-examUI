@@ -18,7 +18,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/context/AuthContext";
 import { useDeleteQuestion } from "@/hooks/question/useDeleteQuestion";
 import { useGetAllQuestionByTestId } from "@/hooks/question/useGetAllQuestionByTestId";
@@ -70,23 +76,26 @@ const TeacherTestView: React.FC = () => {
       id_test: Id ? Id : "",
       type_question: "",
       texte_question: "",
-      reponse_correcte: ""
-    }
+      reponse_correcte: "",
+    },
   });
 
   useEffect(() => {
-    setValue("id_utilisateur", token ? JSON.parse(atob(token.split(".")[1])).id : "");
+    setValue(
+      "id_utilisateur",
+      token ? JSON.parse(atob(token.split(".")[1])).id : "",
+    );
     setValue("id_test", Id ? Id : "");
   }, []);
 
   const handleSubmit = async (data: QuestionCreateInterface) => {
-    console.log(data)
+    console.log(data);
     await createQuestion(data);
   };
 
   const deleteConfirm = async () => {
     await deleteQuestion(selectedQuestion);
-  }
+  };
 
   return (
     <div className="pl-64 pt-24 pr-6">
@@ -96,7 +105,12 @@ const TeacherTestView: React.FC = () => {
           <div className="">
             <div className="flex justify-between items-center">
               <div className="flex gap-4 items-center">
-                <Button onClick={() => navigate("/teacher/test")} variant={'secondary'}><ChevronLeft /></Button> 
+                <Button
+                  onClick={() => navigate("/teacher/test")}
+                  variant={"secondary"}
+                >
+                  <ChevronLeft />
+                </Button>
                 <div className="font-bold text-lg"> {test.titre} </div>
                 <div className="border rounded-full px-2 bg-gray-400 text-white">
                   <ClockCircleOutlined /> {test.duree_minutes}:00
@@ -172,14 +186,20 @@ const TeacherTestView: React.FC = () => {
                       control={control}
                       name="type_question"
                       render={({ field: { value, onChange } }) => (
-                        <Select value={value} onValueChange={onChange} >
+                        <Select value={value} onValueChange={onChange}>
                           <SelectTrigger className="w-full">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                                <SelectItem value='qcm'> QCM </SelectItem>
-                                <SelectItem value='reponse courte'> Reponse courte </SelectItem>
-                                <SelectItem value='developpement'> A developper </SelectItem>
+                            <SelectItem value="qcm"> QCM </SelectItem>
+                            <SelectItem value="reponse courte">
+                              {" "}
+                              Reponse courte{" "}
+                            </SelectItem>
+                            <SelectItem value="developpement">
+                              {" "}
+                              A developper{" "}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       )}
@@ -214,71 +234,83 @@ const TeacherTestView: React.FC = () => {
               </Popover>
             </div>
             <div className="my-2">
-              {questions && questions.map((question: any, index: any) => {
-                return (
-                  <Card key={index} className="mb-2 px-4">
-                    <div>
-                      <div className="flex justify-between">
-                        <div className="text-gray-600">
-                          Type: {question.type_question}
+              {questions &&
+                questions.map((question: any, index: any) => {
+                  return (
+                    <Card key={index} className="mb-2 px-4">
+                      <div>
+                        <div className="flex justify-between">
+                          <div className="text-gray-600">
+                            Type: {question.type_question}
+                          </div>
+                          <div className="my-1 font-semibold">
+                            Note pour la question : {question.points} point(s)
+                          </div>
                         </div>
-                        <div className="my-1 font-semibold">
-                          Note pour la question : {question.points} point(s)
+                        <div className="font-semibold">
+                          Question : {question.texte_question}{" "}
                         </div>
-                      </div>
-                      <div className="font-semibold">
-                        Question : {question.texte_question}{" "}
-                      </div>
-                      <div className="text-gray-700">
-                        Reponse correcte : {question.reponse_correcte}
-                      </div>
-                      <div className="flex justify-end gap-2 items-center">
-                        {question.type_question === "qcm" && (
+                        <div className="text-gray-700">
+                          Reponse correcte : {question.reponse_correcte}
+                        </div>
+                        <div className="flex justify-end gap-2 items-center">
+                          {question.type_question === "qcm" && (
+                            <Button
+                              onClick={() =>
+                                navigate(`/teacher/qcm/${question.id_question}`)
+                              }
+                              variant={"secondary"}
+                            >
+                              <QuestionCircleOutlined /> Voir les options
+                            </Button>
+                          )}
                           <Button
                             onClick={() =>
-                              navigate(`/teacher/qcm/${question.id_question}`)
+                              navigate(
+                                `/teacher/question/edit/${question.id_question}`,
+                              )
                             }
                             variant={"secondary"}
                           >
-                            <QuestionCircleOutlined /> Voir les options
+                            <EditOutlined /> Modifier
                           </Button>
-                        )}
-                        <Button
-                          onClick={() =>
-                            navigate(
-                              `/teacher/question/edit/${question.id_question}`,
-                            )
-                          }
-                          variant={"secondary"}
-                        >
-                          <EditOutlined /> Modifier
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <Button onClick={() => setSelectedQuestion(question.id_question)} variant={"destructive"}>
-                              <Trash /> Supprimer
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Suppression d'une question
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer cette question ?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button onClick={() => deleteConfirm()} variant={"destructive"}>Supprimer</Button>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                          <AlertDialog>
+                            <AlertDialogTrigger>
+                              <Button
+                                onClick={() =>
+                                  setSelectedQuestion(question.id_question)
+                                }
+                                variant={"destructive"}
+                              >
+                                <Trash /> Supprimer
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Suppression d'une question
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Voulez-vous vraiment supprimer cette question
+                                  ?
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                <Button
+                                  onClick={() => deleteConfirm()}
+                                  variant={"destructive"}
+                                >
+                                  Supprimer
+                                </Button>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </div>
-                    </div>
-                  </Card>
-                );
-              })}
+                    </Card>
+                  );
+                })}
             </div>
           </div>
         </div>

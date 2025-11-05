@@ -107,7 +107,10 @@ export const TableRow: React.FC<{ data: any; index: number }> = ({
         <Text>{data.utilisateur.nom}</Text>
       </View>
       <View style={[styles.tableCell, styles.colNote]}>
-        <Text>{data.note_obtenue < 10 && "0"}{data.note_obtenue}</Text>
+        <Text>
+          {data.note_obtenue < 10 && "0"}
+          {data.note_obtenue}
+        </Text>
       </View>
       <View style={[styles.tableCell, styles.colHeure]}>
         <Text>{data.heure_soumission}</Text>

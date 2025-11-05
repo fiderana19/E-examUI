@@ -1,14 +1,14 @@
 import { QueryCacheKey } from "@/api/QueryCacheKey";
-import { getTestForCorrectionByTeacherId } from "@/api/test.api";
+import { getTentativeResponseByTestId } from "@/api/tentative.api";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { showToast } from "@/utils/Toast";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useGetAllTestForCorrectionByTeacherId = (id: number) => {
+export const useGetTentativeResponseByTestId = (id: number) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [QueryCacheKey.TESTS, "CORRECTION", id],
-    queryFn: () => getTestForCorrectionByTeacherId(id),
+    queryKey: [QueryCacheKey.TENTATIVES, "RESPONSES", id],
+    queryFn: () => getTentativeResponseByTestId(id),
     staleTime: Infinity,
     enabled: id !== 0,
   });
@@ -17,9 +17,11 @@ export const useGetAllTestForCorrectionByTeacherId = (id: number) => {
     if (isError) {
       showToast({
         type: TOAST_TYPE.ERROR,
-        message: "Erreur lors de la recuperations des tests à corriger !",
+        message:
+          "Erreur lors de la recuperations des responses de la tentative des etudiants !",
       });
-      console.log("eto", error);
+
+      console.log("reto ehh", error);
     }
   }, [error]);
 
