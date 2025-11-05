@@ -19,6 +19,7 @@ export const useGetUserById = (id: string) => {
         type: TOAST_TYPE.ERROR,
         message: "Erreur lors de la recuperations de l'utilisateur !",
       });
+      console.log("999" , error)
     }
   }, [error]);
 
