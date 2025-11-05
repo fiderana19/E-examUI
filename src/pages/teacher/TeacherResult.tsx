@@ -1,13 +1,13 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Input } from "@/components/ui/input";
 import { useGetAllCorrectedTestByTeacherId } from "@/hooks/test/useGetAllCorrectedTestByTeacherId";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherResult: React.FC = () => {
-  const { data: results } = useGetAllCorrectedTestByTeacherId();
+  const { data: results, isLoading } = useGetAllCorrectedTestByTeacherId();
   const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState<string>("");
 
@@ -25,8 +25,13 @@ const TeacherResult: React.FC = () => {
             placeholder="Titre du test..."
           />
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {results && results.length < 1 && (
-          <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
+          <div className="w-max mx-auto text-center text-gray-600 my-10">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Vous avez aucune resultat</div>
           </div>

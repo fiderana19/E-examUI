@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAllTestForCorrectionByTeacherId } from "@/hooks/test/useGetAllTestForCorrectionByTeacherId";
-import { CloseOutlined, HourglassOutlined } from "@ant-design/icons";
+import { CloseOutlined, HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Edit } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ const TeacherCorrection: React.FC = () => {
   const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState<string>("");
   const { token } = useAuth();
-  const { data: tests, refetch } = useGetAllTestForCorrectionByTeacherId(
+  const { data: tests, refetch, isLoading } = useGetAllTestForCorrectionByTeacherId(
     token ? Number(JSON.parse(atob(token.split(".")[1])).id) : 0,
   );
 
@@ -35,6 +35,11 @@ const TeacherCorrection: React.FC = () => {
             placeholder="Titre du test..."
           />
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {tests && tests.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600 my-10">
             <CloseOutlined className="text-7xl" />

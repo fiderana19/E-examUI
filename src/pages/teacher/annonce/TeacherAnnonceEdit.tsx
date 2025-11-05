@@ -17,21 +17,22 @@ import { usePatchAnnonce } from "@/hooks/annonce/usePatchAnnonce";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
 import { AnnounceEditInterface } from "@/interfaces/announce.interface";
 import { EditAnnounceValidation } from "@/validation/announce.validation";
-import { NotificationOutlined } from "@ant-design/icons";
+import { LoadingOutlined, NotificationOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const TeacherAnnounceEdit: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const { token } = useAuth();
-  const { data: annonce, refetch } = useGetAnnonceById(Id ? Number(Id) : 0);
-  const { data: groupes } = useGetAllGroup();
-  const { mutateAsync: modifierAnnonce } = usePatchAnnonce({
+  const { data: annonce, refetch, isLoading } = useGetAnnonceById(Id ? Number(Id) : 0);
+  const { data: groupes, refetch: refetchGroupe } = useGetAllGroup();
+  const { mutateAsync: modifierAnnonce, isPending: editLoading } = usePatchAnnonce({
     action() {
       refetch();
+      refetchGroupe();
     },
   });
   const {
@@ -69,6 +70,11 @@ const TeacherAnnounceEdit: React.FC = () => {
               <div className="text-xl uppercase font-bold text-center mb-4">
                 <NotificationOutlined /> Modifier une annonce
               </div>
+              {
+                isLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {annonce && (
                 <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
                   <Label className="mb-1">Groupe :</Label>
@@ -135,14 +141,16 @@ const TeacherAnnounceEdit: React.FC = () => {
                     </div>
                   )}
                   <div className="mt-4 flex justify-end gap-2">
-                    <Button
-                      onClick={() => navigate("/teacher/announce")}
-                      variant={"secondary"}
-                      className="w-max "
+                    <Link
+                      to="/teacher/announce"
+                      className="px-4 py-0.5 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
                     >
                       Annuler
+                    </Link>
+                    <Button disabled={editLoading} type="submit">
+                      { editLoading && <LoadingOutlined /> }
+                      Modifier
                     </Button>
-                    <Button type="submit">Modifier</Button>
                   </div>
                 </form>
               )}

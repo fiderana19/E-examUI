@@ -1,6 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -25,7 +26,7 @@ import { usePostOption } from "@/hooks/option/usePostOption";
 import { useGetQuestionById } from "@/hooks/question/useGetQuestionById";
 import { OptionCreateInterface } from "@/interfaces/option.interface";
 import { OptionAddValidation } from "@/validation/option.validation";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ChevronLeft, Plus, Trash } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -35,18 +36,20 @@ import { useNavigate, useParams } from "react-router-dom";
 const TeacherQCMView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
-  const { data: options, refetch } = useGetAllOptionByQuestionId(
+  const { data: options, refetch, isLoading: optionLoading } = useGetAllOptionByQuestionId(
     Id ? Number(Id) : 0,
   );
-  const { data: question } = useGetQuestionById(Id ? Number(Id) : 0);
-  const { mutateAsync: deleteOption } = useDeleteOption({
+  const { data: question, isLoading: questionLoading, refetch: refetchQuestion } = useGetQuestionById(Id ? Number(Id) : 0);
+  const { mutateAsync: deleteOption, isPending: deleteOptionLoading } = useDeleteOption({
     action() {
       refetch();
+      refetchQuestion();
     },
   });
-  const { mutateAsync: createOption } = usePostOption({
+  const { mutateAsync: createOption, isPending: createOptionLoading } = usePostOption({
     action() {
       refetch();
+      refetchQuestion();
     },
   });
   const navigate = useNavigate();
@@ -139,13 +142,21 @@ const TeacherQCMView: React.FC = () => {
                       <Label htmlFor="est_correcte">Reponse correcte</Label>
                     </div>
                     <div className="flex justify-center mt-4">
-                      <Button type="submit">Ajouter</Button>
+                      <Button disabled={createOptionLoading} type="submit">
+                        { createOptionLoading && <LoadingOutlined /> }
+                        Ajouter
+                      </Button>
                     </div>
                   </form>
                 </PopoverContent>
               </Popover>
             </div>
             <div className="my-2">
+              {
+                questionLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {question && (
                 <Card className="mb-2 px-4">
                   <div>
@@ -168,6 +179,11 @@ const TeacherQCMView: React.FC = () => {
               )}
             </div>
             <div className="px-10 my-4">
+              {
+                optionLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {options &&
                 options.map((option: any, index: any) => {
                   return (
@@ -208,12 +224,16 @@ const TeacherQCMView: React.FC = () => {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <Button
-                              onClick={() => deleteConfirm()}
-                              variant={"destructive"}
-                            >
-                              Supprimer
-                            </Button>
+                            <AlertDialogAction className="p-0">
+                              <Button
+                                disabled={deleteOptionLoading}
+                                onClick={() => deleteConfirm()}
+                                variant={"destructive"}
+                              >
+                                { deleteOptionLoading && <LoadingOutlined /> }
+                                Supprimer
+                              </Button>
+                            </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

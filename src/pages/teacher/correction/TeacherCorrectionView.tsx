@@ -2,7 +2,7 @@ import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
 import { useGetReponseByTestId } from "@/hooks/reponse/useGetReponseByTestId";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
-import { HourglassOutlined } from "@ant-design/icons";
+import { HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
 import { ChevronLeft, Edit } from "lucide-react";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,8 +11,8 @@ const TeacherCorrectionView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
-  const { data: test } = useGetTestById(Id ? Number(Id) : 0);
-  const { data: reponses, refetch } = useGetReponseByTestId(
+  const { data: test, isLoading: testLoading } = useGetTestById(Id ? Number(Id) : 0);
+  const { data: reponses, refetch, isLoading: reponseLoading } = useGetReponseByTestId(
     Id ? Number(Id) : 0,
   );
 
@@ -46,6 +46,11 @@ const TeacherCorrectionView: React.FC = () => {
           </div>
         </div>
         <div className="">
+          {
+            testLoading && <div className="text-5xl flex justify-center">
+              <LoadingOutlined />
+            </div>
+          }
           {test && (
             <div className="shadow px-4 py-2 bg-white my-2">
               <div className="flex justify-between">
@@ -79,6 +84,11 @@ const TeacherCorrectionView: React.FC = () => {
           )}
         </div>
         <div>
+          {
+            reponseLoading && <div className="text-5xl flex justify-center">
+              <LoadingOutlined />
+            </div>
+          }
           {reponses &&
             reponses.map((reponse: any, index: any) => {
               return (

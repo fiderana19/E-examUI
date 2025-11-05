@@ -1,6 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -25,17 +26,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useDeleteAnnonce } from "@/hooks/annonce/useDeleteAnnonce";
 import { useGetAnnonceByUserId } from "@/hooks/annonce/useGetAnnonceByUserId";
 import { usePostAnnonce } from "@/hooks/annonce/usePostAnnonce";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
-import { useGetUserById } from "@/hooks/user/useGetUserById";
 import { AnnounceAddInterface } from "@/interfaces/announce.interface";
 import { AddAnnounceValidation } from "@/validation/announce.validation";
 import {
   CloseOutlined,
+  LoadingOutlined,
   NotificationOutlined,
   NotificationTwoTone,
 } from "@ant-design/icons";
@@ -49,16 +49,16 @@ const TeacherAnnounce: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
   const [selectedAnnonce, setSelectedAnnonce] = useState<number>(0);
-  const { data: annonces, refetch } = useGetAnnonceByUserId(
+  const { data: annonces, refetch, isLoading } = useGetAnnonceByUserId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
   const { data: groupes } = useGetAllGroup();
-  const { mutateAsync: creerAnnonce } = usePostAnnonce({
+  const { mutateAsync: creerAnnonce, isPending: createLoading } = usePostAnnonce({
     action() {
       refetch();
     },
   });
-  const { mutateAsync: deleteAnnonce } = useDeleteAnnonce({
+  const { mutateAsync: deleteAnnonce, isPending: deleteLoading } = useDeleteAnnonce({
     action() {
       refetch();
     },
@@ -174,8 +174,8 @@ const TeacherAnnounce: React.FC = () => {
                     </div>
                   )}
                   <div className="flex justify-center mt-4">
-                    <Button type="submit">
-                      <NotificationOutlined /> Annoncer
+                    <Button disabled={createLoading} type="submit">
+                      {createLoading ? < LoadingOutlined /> : <NotificationOutlined />} Annoncer
                     </Button>
                   </div>
                 </form>
@@ -183,6 +183,11 @@ const TeacherAnnounce: React.FC = () => {
             </Popover>
           </div>
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {annonces && annonces.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600 my-10">
             <CloseOutlined className="text-7xl" />
@@ -203,7 +208,7 @@ const TeacherAnnounce: React.FC = () => {
                         {" "}
                         {announce.creation_annonce}{" "}
                       </div>
-                      <div> {announce.id_groupe} </div>
+                      <div> {announce.group.nom_groupe} </div>
                     </div>
                     <blockquote className="border-l-2 pl-6 italic">
                       <NotificationTwoTone /> {announce.titre_annonce} <br />
@@ -241,12 +246,16 @@ const TeacherAnnounce: React.FC = () => {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Annuler</AlertDialogCancel>
-                            <Button
-                              onClick={() => deleteConfirm()}
-                              variant={"destructive"}
-                            >
-                              Supprimer
-                            </Button>
+                            <AlertDialogAction className="p-0">
+                              <Button
+                              disabled={deleteLoading}
+                                onClick={() => deleteConfirm()}
+                                variant={"destructive"}
+                              >
+                                { deleteLoading && <LoadingOutlined /> }
+                                Supprimer
+                              </Button>
+                            </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>

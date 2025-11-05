@@ -1,33 +1,15 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
-import { styles, TableHeader, TableRow } from "@/components/ResultPDF";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { mockResultData } from "@/constants/mock";
-import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
 import { useGetTentativeResponseByTestId } from "@/hooks/tentative/useGetTentativeResponseByTestId";
-import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
-import {
-  Document,
-  Page,
-  PDFDownloadLink,
-  PDFViewer,
-  Text,
-  View,
-} from "@react-pdf/renderer";
-import { BookText, ChevronLeft } from "lucide-react";
+import { LoadingOutlined } from "@ant-design/icons";
+import { ChevronLeft } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherResultResponseView: React.FC = () => {
   const req = useParams();
   const TentativeId = req.id;
-  const { data: result } = useGetTentativeResponseByTestId(
+  const { data: result, isLoading } = useGetTentativeResponseByTestId(
     TentativeId ? Number(TentativeId) : 0,
   );
   const navigate = useNavigate();
@@ -44,6 +26,11 @@ const TeacherResultResponseView: React.FC = () => {
             Reponse d'un étudiant
           </div>
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {result && (
           <div className="">
             <div className="shadow px-4 py-2 bg-white my-2">

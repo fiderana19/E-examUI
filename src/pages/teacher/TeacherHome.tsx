@@ -39,9 +39,15 @@ const TeacherHome: React.FC = () => {
                   annonces.slice(0, 3).map((announce: any, index: any) => {
                     return (
                       <div key={index} className="my-2">
-                        <div className="text-xs text-gray-600 mb-1">
-                          {" "}
-                          {announce.creation_annonce}{" "}
+                        <div className="flex justify-between">
+                          <div className="text-xs text-gray-600 mb-1">
+                            {" "}
+                            {announce.creation_annonce}{" "}
+                          </div>
+                          <div className="font-semibold text-gray-600 mb-1">
+                            {" "}
+                            {announce.group.nom_groupe}{" "}
+                          </div>
                         </div>
                         <blockquote className="border-l-2 pl-6 italic">
                           <NotificationTwoTone /> {announce.titre_annonce}{" "}

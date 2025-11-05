@@ -1,6 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -36,6 +37,7 @@ import {
   ClockCircleOutlined,
   EditOutlined,
   HourglassOutlined,
+  LoadingOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -48,18 +50,20 @@ const TeacherTestView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const { token } = useAuth();
-  const { data: test } = useGetTestById(Id ? Number(Id) : 0);
-  const { data: questions, refetch } = useGetAllQuestionByTestId(
+  const { data: test, isLoading: testLoading, refetch: refetchTest } = useGetTestById(Id ? Number(Id) : 0);
+  const { data: questions, refetch, isLoading: questionLoading } = useGetAllQuestionByTestId(
     Id ? Number(Id) : 0,
   );
-  const { mutateAsync: createQuestion } = usePostQuestion({
+  const { mutateAsync: createQuestion, isPending: createLoading } = usePostQuestion({
     action() {
       refetch();
+      refetchTest();
     },
   });
-  const { mutateAsync: deleteQuestion } = useDeleteQuestion({
+  const { mutateAsync: deleteQuestion, isPending: deleteLoading } = useDeleteQuestion({
     action() {
       refetch();
+      refetchTest();
     },
   });
   const [selectedQuestion, setSelectedQuestion] = useState<number>(0);
@@ -89,7 +93,6 @@ const TeacherTestView: React.FC = () => {
   }, []);
 
   const handleSubmit = async (data: QuestionCreateInterface) => {
-    console.log(data);
     await createQuestion(data);
   };
 
@@ -100,6 +103,11 @@ const TeacherTestView: React.FC = () => {
   return (
     <div className="pl-64 pt-24 pr-6">
       <TeacherNavigation />
+      {
+        testLoading && <div className="text-5xl flex justify-center">
+          <LoadingOutlined />
+        </div>
+      }
       {test && (
         <div className="shadow p-4 bg-white fixed top-0 right-0 w-[1110px]">
           <div className="">
@@ -227,13 +235,21 @@ const TeacherTestView: React.FC = () => {
                       </div>
                     )}
                     <div className="flex justify-center mt-4">
-                      <Button type="submit">Ajouter</Button>
+                      <Button disabled={createLoading} type="submit">
+                        { createLoading && <LoadingOutlined /> }
+                        Ajouter
+                      </Button>
                     </div>
                   </form>
                 </PopoverContent>
               </Popover>
             </div>
             <div className="my-2">
+              {
+                questionLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {questions &&
                 questions.map((question: any, index: any) => {
                   return (
@@ -297,12 +313,16 @@ const TeacherTestView: React.FC = () => {
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                <Button
-                                  onClick={() => deleteConfirm()}
-                                  variant={"destructive"}
-                                >
-                                  Supprimer
-                                </Button>
+                                <AlertDialogAction className="p-0">
+                                  <Button
+                                    disabled={deleteLoading}
+                                    onClick={() => deleteConfirm()}
+                                    variant={"destructive"}
+                                  >
+                                    { deleteLoading && <LoadingOutlined /> }
+                                    Supprimer
+                                  </Button>
+                                </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
                           </AlertDialog>

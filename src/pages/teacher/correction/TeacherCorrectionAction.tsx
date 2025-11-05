@@ -8,7 +8,7 @@ import { usePatchReponseForCorrection } from "@/hooks/reponse/usePatchReponseFor
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { GivePointsInterface } from "@/interfaces/response.interface";
 import { GivePointsValidation } from "@/validation/response.validation";
-import { HourglassOutlined } from "@ant-design/icons";
+import { HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ChevronLeft } from "lucide-react";
 import React, { useEffect } from "react";
@@ -16,19 +16,25 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleFloatKeyPress } from "../../../utils/handleKeyPress";
 import { HttpStatus } from "@/constants/Http_status";
+import { useGetReponseByTestId } from "@/hooks/reponse/useGetReponseByTestId";
 
 const TeacherCorrectionAction: React.FC = () => {
   const req = useParams();
   const testId = req.testId;
   const reponseId = req.reponseId;
   const navigate = useNavigate();
-  const { data: test } = useGetTestById(testId ? Number(testId) : 0);
-  const { data: reponse, refetch } = useGetReponseById(
+  const { data: test, isLoading: testLoading, refetch: refetchTest } = useGetTestById(testId ? Number(testId) : 0);
+  const { refetch: refetchAllReponse } = useGetReponseByTestId(
+    testId ? Number(testId) : 0
+  );  
+  const { data: reponse, refetch, isLoading: reponseLoading } = useGetReponseById(
     reponseId ? Number(reponseId) : 0,
   );
-  const { mutateAsync: corrigerReponse } = usePatchReponseForCorrection({
+  const { mutateAsync: corrigerReponse, isPending: corrigerLoading } = usePatchReponseForCorrection({
     action() {
       refetch();
+      refetchTest();
+      refetchAllReponse();
     },
   });
   const {
@@ -64,6 +70,11 @@ const TeacherCorrectionAction: React.FC = () => {
           </div>
         </div>
         <div className="">
+          {
+            testLoading && <div className="text-5xl flex justify-center">
+              <LoadingOutlined />
+            </div>
+          }
           {test && (
             <div className="shadow px-4 py-2 bg-white my-2">
               <div className="flex justify-between">
@@ -97,6 +108,11 @@ const TeacherCorrectionAction: React.FC = () => {
           )}
         </div>
         <div>
+          {
+            reponseLoading && <div className="text-5xl flex justify-center">
+              <LoadingOutlined />
+            </div>
+          }
           {reponse && (
             <div className="mb-2 px-4 py-2 cursor-pointer border rounded">
               <div>
@@ -134,7 +150,8 @@ const TeacherCorrectionAction: React.FC = () => {
                   {errors?.score_question.message}
                 </div>
               )}
-              <Button type="submit" className="mt-4 w-full">
+              <Button disabled={corrigerLoading} type="submit" className="mt-4 w-full">
+                { corrigerLoading && <LoadingOutlined /> }
                 Noter
               </Button>
             </form>

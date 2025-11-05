@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { mockResultData } from "@/constants/mock";
 import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
-import { CloseOutlined, FilePdfOutlined } from "@ant-design/icons";
+import { CloseOutlined, FilePdfOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Document,
   Page,
@@ -27,7 +27,7 @@ const TeacherResultView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
-  const { data: results } = useGetTentativeForResultByTestId(
+  const { data: results, isLoading } = useGetTentativeForResultByTestId(
     Id ? Number(Id) : 0,
   );
 
@@ -85,6 +85,11 @@ const TeacherResultView: React.FC = () => {
   return (
     <div className="pl-64 pr-6">
       <TeacherNavigation />
+      {
+        isLoading && <div className="text-5xl flex justify-center">
+          <LoadingOutlined />
+        </div>
+      }
       {results && (
         <div className="my-6">
           <div className="flex justify-between items-center mb-4">

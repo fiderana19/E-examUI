@@ -6,14 +6,14 @@ import { useTest } from "@/context/TestContext";
 import { usePostTentative } from "@/hooks/tentative/usePostTentative";
 import { useGetActiveTestBYGroupId } from "@/hooks/test/useGetActiveTestBYGroupId";
 import { TentativeCreateInterface } from "@/interfaces/tentative.interface";
-import { ClockCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentTest: React.FC = () => {
   const { updateSecondsLeft, updateIsFinished } = useTest();
   const { token } = useAuth();
-  const { data: tests, refetch } = useGetActiveTestBYGroupId(
+  const { data: tests, refetch, isLoading } = useGetActiveTestBYGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
   const navigate = useNavigate();
@@ -41,6 +41,11 @@ const StudentTest: React.FC = () => {
       <StudentNavigation />
       <div>
         <div className="text-gray-800 text-xl font-bold mb-10">Les tests</div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {tests && tests.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600">
             <CloseOutlined className="text-7xl" />

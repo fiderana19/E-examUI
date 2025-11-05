@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByGroupId } from "@/hooks/annonce/useGetAnnonceByGroupId";
-import { NotificationTwoTone } from "@ant-design/icons";
+import { LoadingOutlined, NotificationTwoTone } from "@ant-design/icons";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentHome: React.FC = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { data: annonces } = useGetAnnonceByGroupId(
+  const { data: annonces, isLoading } = useGetAnnonceByGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
 
@@ -21,7 +21,7 @@ const StudentHome: React.FC = () => {
       <div className="flex justify-between items-center">
         <div className="w-1/2">
           <div className="text-3xl font-bold">
-            <Typewriter text="Bienvenue sur E-exam, Antsa Fiderana !" />
+            <Typewriter text={`Bienvenue sur E-exam`} />
           </div>
           <div className="my-4">
             La plateforme dedié aux examens en ligne, vous pouvez voir vos
@@ -37,6 +37,11 @@ const StudentHome: React.FC = () => {
               Les dernieres annonces
             </div>
             <div className="">
+              {
+                isLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {annonces &&
                 annonces.slice(0, 3).map((announce: any, index: any) => {
                   return (
@@ -51,7 +56,7 @@ const StudentHome: React.FC = () => {
                       </blockquote>
                       <div className="text-right font-medium">
                         {" "}
-                        {announce.id_utilisateur}{" "}
+                        {announce.utilisateur.nom}{" "}
                       </div>
                     </div>
                   );

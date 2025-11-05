@@ -9,10 +9,6 @@ const AdminHome: React.FC = () => {
         <div className="text-3xl uppercase font-bold">
           Bienvenue sur l'espace d'administration de E-exam !
         </div>
-        <div className="text-xl text-gray-600 mt-3">
-          Les groupes et les comptes des utilisateurs sont administrés dans cet
-          espace.
-        </div>
       </div>
     </div>
   );

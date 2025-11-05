@@ -2,13 +2,13 @@ import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import { Input } from "@/components/ui/input";
 import { mock_tests } from "@/constants/mock";
 import { useGetAllCorrectedTestForAdmin } from "@/hooks/test/useGetAllCorrectedTestForAdmin";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AdminHistory: React.FC = () => {
   const navigate = useNavigate();
-  const { data: results } = useGetAllCorrectedTestForAdmin();
+  const { data: results, isLoading } = useGetAllCorrectedTestForAdmin();
   const [searchRef, setSearchRef] = useState<string>("");
 
   return (
@@ -26,6 +26,17 @@ const AdminHistory: React.FC = () => {
             onChange={(e) => setSearchRef(e.target.value)}
           />
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
+        {results && results.length < 1 && (
+          <div className="w-max mx-auto text-center text-gray-600">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">Aucun historique pour l'instant.</div>
+          </div>
+        )}
         {results && results.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600 my-10 hidden">
             <CloseOutlined className="text-7xl" />

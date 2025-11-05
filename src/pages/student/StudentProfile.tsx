@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { useGetUserById } from "@/hooks/user/useGetUserById";
-import { UserOutlined } from "@ant-design/icons";
+import { LoadingOutlined, UserOutlined } from "@ant-design/icons";
 import { LogOut } from "lucide-react";
 import React from "react";
 
 const StudentProfile: React.FC = () => {
   const { logout, token } = useAuth();
-  const { data: user } = useGetUserById(
+  const { data: user, isLoading } = useGetUserById(
     token ? JSON.parse(atob(token.split(".")[1])).id : "",
   );
 
@@ -18,6 +18,11 @@ const StudentProfile: React.FC = () => {
       <StudentNavigation />
       <div>
         <div className="text-gray-800 text-xl font-bold mb-4">Profile</div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {user && (
           <Card className="px-4 py-10 w-1/3 mx-auto">
             <div className="p-4 border w-max rounded-full mx-auto">
@@ -34,7 +39,7 @@ const StudentProfile: React.FC = () => {
               </div>
               <div className="flex justify-between items-center">
                 <div>Groupe :</div>
-                <div className="font-bold">{user.email}</div>
+                <div className="font-bold">{user.nom_groupe}</div>
               </div>
               <div className="flex justify-between items-center">
                 <div>Adresse mail :</div>

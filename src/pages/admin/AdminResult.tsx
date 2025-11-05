@@ -1,6 +1,7 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -34,6 +35,7 @@ import { usePostResult } from "@/hooks/result/usePostResult";
 import { PostCreateInterface } from "@/interfaces/post.interface";
 import { PostCreateValidation } from "@/validation/post.validation";
 import {
+  CloseOutlined,
   DownloadOutlined,
   FilePdfOutlined,
   LoadingOutlined,
@@ -48,7 +50,7 @@ import { useDownloadResult } from "@/hooks/result/useDownloadResult";
 const AdminResult: React.FC = () => {
   const { token } = useAuth();
   const { data: groupes } = useGetAllGroup();
-  const { data: results, refetch } = useGetAllResult();
+  const { data: results, refetch, isLoading } = useGetAllResult();
   const [selectedResult, setSelectedResult] = useState<number>(0);
   const [selectedToDowload, setSelectedToDownload] = useState<number>(0);
   const {
@@ -56,12 +58,12 @@ const AdminResult: React.FC = () => {
     isLoading: dowloadLoading,
     refetch: dowloadRefetch,
   } = useDownloadResult(Number(selectedToDowload) | 0);
-  const { mutateAsync: publierResultat } = usePostResult({
+  const { mutateAsync: publierResultat, isPending: createLoading } = usePostResult({
     action() {
       refetch();
     },
   });
-  const { mutateAsync: supprimerResultat } = useDeleteResult({
+  const { mutateAsync: supprimerResultat, isPending: deleteLoading } = useDeleteResult({
     action() {
       refetch();
     },
@@ -196,7 +198,10 @@ const AdminResult: React.FC = () => {
                   </div>
                 )}
                 <div className="flex justify-center mt-4">
-                  <Button type="submit">Publier</Button>
+                  <Button disabled={createLoading} type="submit">
+                    { createLoading && <LoadingOutlined /> }
+                    Publier
+                  </Button>
                 </div>
               </form>
             </PopoverContent>
@@ -204,6 +209,17 @@ const AdminResult: React.FC = () => {
         </div>
       </div>
       <div className="my-6">
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
+        {results && results.length < 1 && (
+          <div className="w-max mx-auto text-center text-gray-600">
+            <CloseOutlined className="text-7xl" />
+            <div className="mt-4 text-xl">Aucun resultat publié pour l'instant.</div>
+          </div>
+        )}
         {results &&
           results.map((res: any, index: any) => {
             return (
@@ -254,12 +270,16 @@ const AdminResult: React.FC = () => {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Annuler</AlertDialogCancel>
-                          <Button
-                            onClick={() => deleteConfirm()}
-                            variant={"destructive"}
-                          >
-                            Supprimer
-                          </Button>
+                          <AlertDialogAction className="p-0">                            
+                            <Button
+                              onClick={() => deleteConfirm()}
+                              variant={"destructive"}
+                              disabled={deleteLoading}
+                            >
+                              { deleteLoading && <LoadingOutlined /> }
+                              Supprimer
+                            </Button>
+                          </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>

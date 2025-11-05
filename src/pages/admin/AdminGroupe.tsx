@@ -1,6 +1,7 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -23,7 +24,7 @@ import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
 import { usePostGroup } from "@/hooks/group/usePostGroup";
 import { AddGroupInterface } from "@/interfaces/groupe.interface";
 import { AddGroupValidation } from "@/validation/group.validation";
-import { BookOutlined } from "@ant-design/icons";
+import { BookOutlined, LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Edit2, Plus, Trash } from "lucide-react";
 import React, { useState } from "react";
@@ -33,13 +34,13 @@ import { useNavigate } from "react-router-dom";
 const AdminGroupe: React.FC = () => {
   const navigate = useNavigate();
   const [selectedGroup, setSelectedGroup] = useState<number>(0);
-  const { data: groupes, refetch } = useGetAllGroup();
-  const { mutateAsync: creerGroupe } = usePostGroup({
+  const { data: groupes, refetch, isLoading } = useGetAllGroup();
+  const { mutateAsync: creerGroupe, isPending: createLoading } = usePostGroup({
     action() {
       refetch();
     },
   });
-  const { mutateAsync: supprimerGroupe } = useDeleteGroup({
+  const { mutateAsync: supprimerGroupe, isPending: deleteLoading } = useDeleteGroup({
     action() {
       refetch();
     },
@@ -112,7 +113,10 @@ const AdminGroupe: React.FC = () => {
                   </div>
                 )}
                 <div className="flex justify-center mt-4">
-                  <Button type="submit">Ajouter</Button>
+                  <Button disabled={createLoading} type="submit">
+                    { createLoading && <LoadingOutlined /> }
+                    Ajouter
+                  </Button>
                 </div>
               </form>
             </PopoverContent>
@@ -175,12 +179,16 @@ const AdminGroupe: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button
-                                onClick={() => deleteConfirm()}
-                                variant={"destructive"}
-                              >
-                                Supprimer
-                              </Button>
+                              <AlertDialogAction className="w-max p-0">
+                                <Button
+                                  onClick={() => deleteConfirm()}
+                                  variant={"destructive"}
+                                  disabled={deleteLoading}
+                                >
+                                  { deleteLoading && <LoadingOutlined /> }
+                                  Supprimer
+                                </Button>
+                              </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -191,6 +199,11 @@ const AdminGroupe: React.FC = () => {
               })}
           </tbody>
         </table>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
       </div>
     </div>
   );

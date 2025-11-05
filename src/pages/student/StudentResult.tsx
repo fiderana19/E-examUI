@@ -16,7 +16,7 @@ import { useDownloadResult } from "@/hooks/result/useDownloadResult";
 
 const StudentResult: React.FC = () => {
   const { token } = useAuth();
-  const { data: results } = useGetResultByGroupId(
+  const { data: results, isLoading } = useGetResultByGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
   const [selectedToDowload, setSelectedToDownload] = useState<number>(0);
@@ -44,6 +44,11 @@ const StudentResult: React.FC = () => {
         <div className="text-gray-800 text-xl font-bold mb-10">
           Les resultats
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {results && results.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600">
             <CloseOutlined className="text-7xl" />

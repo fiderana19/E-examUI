@@ -10,7 +10,7 @@ import { SignupValidation } from "@/validation/user.validation";
 import { Link } from "react-router-dom";
 import { useSignup } from "@/hooks/user/useSignup";
 import { HttpStatus } from "@/constants/Http_status";
-import { CloseCircleFilled } from "@ant-design/icons";
+import { CloseCircleFilled, LoadingOutlined } from "@ant-design/icons";
 import {
   Select,
   SelectContent,
@@ -19,8 +19,6 @@ import {
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
-import SelectDemo from "@/components/demo/SelectDemo";
-import { useGetAllUser } from "@/hooks/user/useGettAllUser";
 
 const SignupPage: React.FC = () => {
   const { data: groupes } = useGetAllGroup();
@@ -33,11 +31,10 @@ const SignupPage: React.FC = () => {
   } = useForm<SignupInterface>({
     resolver: yupResolver(SignupValidation),
   });
-  const { mutateAsync: signup } = useSignup({ action() {} });
+  const { mutateAsync: signup, isPending } = useSignup({ action() {} });
   const [reponseText, setReponseText] = useState<boolean>(false);
 
   const handleSubmit = async (data: SignupInterface) => {
-    console.log(data);
     const response = await signup(data);
     reset();
     if (
@@ -162,7 +159,10 @@ const SignupPage: React.FC = () => {
               </div>
             )}
             <div className="flex justify-center mt-4">
-              <Button type="submit">S'inscrire</Button>
+              <Button disabled={isPending} type="submit">
+                {isPending && <LoadingOutlined />}
+                S'inscrire
+              </Button>
             </div>
           </form>
           <Link to="/" className="w-max mx-auto">

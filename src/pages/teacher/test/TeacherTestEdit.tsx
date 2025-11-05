@@ -19,18 +19,19 @@ import { usePatchTest } from "@/hooks/test/usePatchTest";
 import { TestEditInterface } from "@/interfaces/test.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { TestEditValidation } from "@/validation/test.validation";
+import { LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarClock } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const TeacherTestEdit: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const { token } = useAuth();
   const { data: groupes } = useGetAllGroup();
-  const { data: test, refetch } = useGetTestById(Id ? Number(Id) : 0);
+  const { data: test, refetch, isLoading } = useGetTestById(Id ? Number(Id) : 0);
   const { refetch: refetchTestByTeacher } = useGetAllTestByTeacherId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
@@ -42,7 +43,7 @@ const TeacherTestEdit: React.FC = () => {
   } = useForm<TestEditInterface>({
     resolver: yupResolver(TestEditValidation),
   });
-  const { mutateAsync: modifierTest } = usePatchTest({
+  const { mutateAsync: modifierTest, isPending: editLoading } = usePatchTest({
     action() {
       refetch();
       refetchTestByTeacher();
@@ -73,6 +74,11 @@ const TeacherTestEdit: React.FC = () => {
               <div className="text-lg uppercase font-bold text-center mb-4 flex items-center gap-2">
                 <CalendarClock /> Modifier un test
               </div>
+              {
+                isLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {test && (
                 <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
                   <Label className="mb-1 mt-4">Groupe :</Label>
@@ -158,14 +164,16 @@ const TeacherTestEdit: React.FC = () => {
                     </div>
                   )}
                   <div className="mt-4 flex justify-end gap-2">
-                    <Button
-                      onClick={() => navigate("/teacher/test")}
-                      variant={"secondary"}
-                      className="w-max "
+                    <Link
+                      to="/teacher/test"
+                      className="px-4 py-0.5 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
                     >
                       Annuler
+                    </Link>
+                    <Button disabled={editLoading} type="submit">
+                      { editLoading && <LoadingOutlined /> }
+                      Modifier
                     </Button>
-                    <Button type="submit">Modifier</Button>
                   </div>
                 </form>
               )}

@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { usePutTestToFinishStatus } from "@/hooks/test/usePutTestToFinishStatus";
-import { ClockCircleOutlined, HourglassOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -15,11 +15,11 @@ const TeacherTestLaunchedView: React.FC = () => {
   const Id = req.id ? req.id : "";
   const { token } = useAuth();
   const [testId, setTestId] = useState<string>("");
-  const { data: test, refetch } = useGetTestById(Id ? Number(Id) : 0);
+  const { data: test, refetch, isLoading } = useGetTestById(Id ? Number(Id) : 0);
   const { refetch: refetchTests } = useGetAllTestByTeacherId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
-  const { mutateAsync: finish } = usePutTestToFinishStatus({
+  const { mutateAsync: finish, isPending: finishLoading } = usePutTestToFinishStatus({
     action() {
       refetch();
       refetchTests();
@@ -46,6 +46,11 @@ const TeacherTestLaunchedView: React.FC = () => {
   return (
     <div className="pl-64 pt-4 pr-6">
       <TeacherNavigation />
+      {
+        isLoading && <div className="text-5xl flex justify-center">
+          <LoadingOutlined />
+        </div>
+      }
       {test && (
         <div className="">
           <div className="">
@@ -56,7 +61,7 @@ const TeacherTestLaunchedView: React.FC = () => {
                   <ClockCircleOutlined /> {test.duree_minutes}:00
                 </div>
               </div>
-              <div className="font-bold text-gray-800"> {test.id_groupe} </div>
+              {/* <div className="font-bold text-gray-800"> {test?.group.nom_groupe} </div> */}
               {test.status === "Terminé" ? (
                 <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
                   <HourglassOutlined /> <div>Terminé</div>
@@ -84,6 +89,14 @@ const TeacherTestLaunchedView: React.FC = () => {
               {test.description}{" "}
             </div>
           </div>
+          {
+            finishLoading && <div>
+              <div className="text-5xl flex justify-center">
+                <LoadingOutlined />
+              </div>
+              Fermeture du test...
+            </div>
+          }
           <Card className="my-10 w-max mx-auto px-4">
             <div>
               <div>Temps restant(s) :</div>

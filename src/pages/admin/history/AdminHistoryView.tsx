@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { mockResultData } from "@/constants/mock";
 import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
-import { FilePdfOutlined } from "@ant-design/icons";
+import { FilePdfOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Document, Page, PDFViewer, Text, View } from "@react-pdf/renderer";
 import { BookText, ChevronLeft } from "lucide-react";
 import React from "react";
@@ -20,7 +20,7 @@ const AdminHistoryView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
-  const { data: results } = useGetTentativeForResultByTestId(
+  const { data: results, isLoading } = useGetTentativeForResultByTestId(
     Id ? Number(Id) : 0,
   );
 
@@ -109,6 +109,11 @@ const AdminHistoryView: React.FC = () => {
             </SheetContent>
           </Sheet>
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {results && (
           <div className="">
             <div className="border p-2">

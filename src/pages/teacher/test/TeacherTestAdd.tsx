@@ -18,6 +18,7 @@ import { usePostTest } from "@/hooks/test/usePostTest";
 import { TestCreateInterface } from "@/interfaces/test.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { TestCreateValidation } from "@/validation/test.validation";
+import { LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CalendarClock } from "lucide-react";
 import React, { useEffect } from "react";
@@ -38,7 +39,7 @@ const TeacherTestAdd: React.FC = () => {
   const { refetch } = useGetAllTestByTeacherId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
-  const { mutateAsync: createTest } = usePostTest({
+  const { mutateAsync: createTest, isPending: createLoading } = usePostTest({
     action() {
       refetch();
     },
@@ -149,7 +150,10 @@ const TeacherTestAdd: React.FC = () => {
                   </div>
                 )}
                 <div className="flex justify-center mt-4">
-                  <Button type="submit">Ajouter</Button>
+                  <Button disabled={createLoading} type="submit">
+                    { createLoading && <LoadingOutlined /> }
+                    Ajouter
+                  </Button>
                 </div>
               </form>
             </div>

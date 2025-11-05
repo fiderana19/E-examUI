@@ -1,6 +1,7 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -18,14 +19,14 @@ import {
 } from "@/components/ui/popover";
 import { useGetAllUser } from "@/hooks/user/useGettAllUser";
 import { useValidateUser } from "@/hooks/user/useValidateUser";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Check, Filter, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/dateFixation";
 
 const AdminAccount: React.FC = () => {
-  const { data: users, refetch } = useGetAllUser();
-  const { mutateAsync: validerUser } = useValidateUser({
+  const { data: users, refetch, isLoading } = useGetAllUser();
+  const { mutateAsync: validerUser, isPending: validateLoading } = useValidateUser({
     action() {
       refetch();
     },
@@ -39,6 +40,7 @@ const AdminAccount: React.FC = () => {
   useEffect(() => {
     refetch();
   }, []);
+  
   const validateConfirm = async () => {
     await validerUser(selectedAccount);
   };
@@ -177,12 +179,16 @@ const AdminAccount: React.FC = () => {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                  <Button
-                                    onClick={() => validateConfirm()}
-                                    variant={"success"}
-                                  >
-                                    Valider
-                                  </Button>
+                                  <AlertDialogAction className="p-0">
+                                    <Button
+                                      onClick={() => validateConfirm()}
+                                      variant={"success"}
+                                      disabled={validateLoading}
+                                    >
+                                      { validateLoading && <LoadingOutlined /> }
+                                      Valider
+                                    </Button>
+                                  </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
                             </AlertDialog>
@@ -245,12 +251,16 @@ const AdminAccount: React.FC = () => {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                  <Button
-                                    onClick={() => validateConfirm()}
-                                    variant={"success"}
-                                  >
-                                    Valider
-                                  </Button>
+                                  <AlertDialogAction className="p-0">
+                                    <Button
+                                      onClick={() => validateConfirm()}
+                                      variant={"success"}
+                                      disabled={validateLoading}
+                                    >
+                                      { validateLoading && <LoadingOutlined /> }
+                                      Valider
+                                    </Button>
+                                  </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
                             </AlertDialog>
@@ -262,6 +272,11 @@ const AdminAccount: React.FC = () => {
                 })}
           </tbody>
         </table>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
       </div>
     </div>
   );

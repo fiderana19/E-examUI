@@ -3,13 +3,13 @@ import { Input } from "@/components/ui/input";
 import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByGroupId } from "@/hooks/annonce/useGetAnnonceByGroupId";
-import { CloseOutlined, NotificationTwoTone } from "@ant-design/icons";
+import { CloseOutlined, LoadingOutlined, NotificationTwoTone } from "@ant-design/icons";
 import React, { useState } from "react";
 
 const StudentAnnonce: React.FC = () => {
   const [searchRef, setSearchRef] = useState<string>("");
   const { token } = useAuth();
-  const { data: annonces } = useGetAnnonceByGroupId(
+  const { data: annonces, isLoading } = useGetAnnonceByGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
 
@@ -27,6 +27,11 @@ const StudentAnnonce: React.FC = () => {
             placeholder="Mot clés de l'annonce..."
           />
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {annonces && annonces.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600">
             <CloseOutlined className="text-7xl" />
@@ -51,7 +56,7 @@ const StudentAnnonce: React.FC = () => {
                   </blockquote>
                   <div className="text-right font-medium">
                     {" "}
-                    {announce.id_utilisateur}{" "}
+                    {announce.utilisateur.nom}{" "}
                   </div>
                 </div>
               );

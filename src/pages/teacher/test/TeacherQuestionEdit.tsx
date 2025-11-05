@@ -11,7 +11,7 @@ import { useGetQuestionById } from "@/hooks/question/useGetQuestionById";
 import { usePatchQuestion } from "@/hooks/question/usePatchQuestion";
 import { QuestionEditInterface } from "@/interfaces/question.interface";
 import { QuestionEditValidation } from "@/validation/question.validation";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -22,7 +22,7 @@ const TeacherQuestionEdit: React.FC = () => {
   const Id = req.id;
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { data: question } = useGetQuestionById(Id ? Number(Id) : 0);
+  const { data: question, isLoading, refetch: refetchQuestion } = useGetQuestionById(Id ? Number(Id) : 0);
   const { refetch } = useGetAllQuestionByTestId(
     question ? question.id_test : 0,
   );
@@ -34,9 +34,10 @@ const TeacherQuestionEdit: React.FC = () => {
   } = useForm<QuestionEditInterface>({
     resolver: yupResolver(QuestionEditValidation),
   });
-  const { mutateAsync: modifierQuestion } = usePatchQuestion({
+  const { mutateAsync: modifierQuestion, isPending: editLoading } = usePatchQuestion({
     action() {
       refetch();
+      refetchQuestion();
     },
   });
 
@@ -60,6 +61,11 @@ const TeacherQuestionEdit: React.FC = () => {
       <TeacherNavigation />
       <div>
         <div className="w-1/3 mx-auto">
+          {
+            isLoading && <div className="text-5xl flex justify-center">
+              <LoadingOutlined />
+            </div>
+          }
           {question && (
             <Card className="px-4 py-10">
               <div>
@@ -129,7 +135,10 @@ const TeacherQuestionEdit: React.FC = () => {
                     </div>
                   )}
                   <div className="flex justify-center mt-4">
-                    <Button type="submit">Modifier</Button>
+                    <Button disabled={editLoading} type="submit">
+                      { editLoading && <LoadingOutlined /> }
+                      Modifier
+                    </Button>
                   </div>
                 </form>
               </div>

@@ -1,6 +1,7 @@
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import { Button } from "@/components/ui/button";
 import { useGetTentativeResponseByTestId } from "@/hooks/tentative/useGetTentativeResponseByTestId";
+import { LoadingOutlined } from "@ant-design/icons";
 import { ChevronLeft } from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const AdminResponseView: React.FC = () => {
   const req = useParams();
   const TentativeId = req.id;
-  const { data: result } = useGetTentativeResponseByTestId(
+  const { data: result, isLoading } = useGetTentativeResponseByTestId(
     TentativeId ? Number(TentativeId) : 0,
   );
   const navigate = useNavigate();
@@ -25,6 +26,11 @@ const AdminResponseView: React.FC = () => {
             Reponse d'un étudiant
           </div>
         </div>
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         {result && (
           <div className="">
             <div className="shadow px-4 py-2 bg-white my-2">

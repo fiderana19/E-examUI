@@ -1,6 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -25,6 +26,7 @@ import {
   ClockCircleOutlined,
   CloseOutlined,
   HourglassOutlined,
+  LoadingOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 import {
@@ -43,15 +45,15 @@ const TeacherTest: React.FC = () => {
   const navigate = useNavigate();
   const { updateIsFinished, updateSecondsLeft } = useTest();
   const { token } = useAuth();
-  const { data: tests, refetch } = useGetAllTestByTeacherId(
+  const { data: tests, refetch, isLoading } = useGetAllTestByTeacherId(
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
-  const { mutateAsync: launchTest } = useLaunchTest({
+  const { mutateAsync: launchTest, isPending: launchLoading } = useLaunchTest({
     action() {
       refetch();
     },
   });
-  const { mutateAsync: deleteTest } = useDeleteTest({
+  const { mutateAsync: deleteTest, isPending: deleteLoading } = useDeleteTest({
     action() {
       refetch();
     },
@@ -147,6 +149,11 @@ const TeacherTest: React.FC = () => {
             <div className="mt-4 text-xl">Vous avez créé aucun test</div>
           </div>
         )}
+        {
+          isLoading && <div className="text-5xl flex justify-center">
+            <LoadingOutlined />
+          </div>
+        }
         <div className="">
           {filterRef && tests
             ? filtereds.map((test: any, index: any) => {
@@ -214,9 +221,12 @@ const TeacherTest: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button onClick={() => launchConfirm(test)}>
-                                Confirmer
-                              </Button>
+                              <AlertDialogAction className="p-0">
+                                <Button disabled={launchLoading} onClick={() => launchConfirm(test)}>
+                                  { launchLoading && <LoadingOutlined /> }
+                                  Confirmer
+                                </Button>
+                              </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -260,12 +270,16 @@ const TeacherTest: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button
-                                onClick={() => deleteConfirm()}
-                                variant={"destructive"}
-                              >
-                                Supprimer
-                              </Button>
+                              <AlertDialogAction className="p-0">
+                                <Button
+                                  disabled={deleteLoading}
+                                  onClick={() => deleteConfirm()}
+                                  variant={"destructive"}
+                                >
+                                  { deleteLoading && <LoadingOutlined /> }
+                                  Supprimer
+                                </Button>
+                              </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -340,9 +354,12 @@ const TeacherTest: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button onClick={() => launchConfirm(test)}>
-                                Confirmer
-                              </Button>
+                              <AlertDialogAction className="p-0">
+                                <Button disabled={launchLoading} onClick={() => launchConfirm(test)}>
+                                  { launchLoading && <LoadingOutlined />}
+                                  Confirmer
+                                </Button>
+                              </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
@@ -386,12 +403,16 @@ const TeacherTest: React.FC = () => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <Button
-                                onClick={() => deleteConfirm()}
-                                variant={"destructive"}
-                              >
-                                Supprimer
-                              </Button>
+                              <AlertDialogAction className="p-0">
+                                <Button
+                                  disabled={deleteLoading}
+                                  onClick={() => deleteConfirm()}
+                                  variant={"destructive"}
+                                >
+                                  { deleteLoading && <LoadingOutlined /> }
+                                  Supprimer
+                                </Button>
+                              </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>

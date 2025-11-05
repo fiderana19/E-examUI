@@ -11,6 +11,7 @@ import { useTest } from "@/context/TestContext";
 import { QUESTION_TYPE } from "@/enum/question.enum";
 import { useGetRandomQuestionByTestId } from "@/hooks/question/useGetRandomQuestionByTestId";
 import { usePostReponse } from "@/hooks/reponse/usePostReponse";
+import { useGetTestById } from "@/hooks/test/useGetTestById";
 import {
   CreateResponseInterface,
   ResponseInterface,
@@ -25,7 +26,10 @@ const TestRoom: React.FC = () => {
   const req = useParams();
   const TestId = req.testId;
   const TentativeId = req.tentativeId;
-  const { data: questions } = useGetRandomQuestionByTestId(
+  const { data: questions, isLoading } = useGetRandomQuestionByTestId(
+    TestId ? Number(TestId) : 0,
+  );
+  const { data: test } = useGetTestById(
     TestId ? Number(TestId) : 0,
   );
   const { mutateAsync: creerResponse } = usePostReponse({ action() {} });
@@ -159,20 +163,27 @@ const TestRoom: React.FC = () => {
           </div>
         </div>
       )}
-      <div
+      {
+        test && <div
         className="fixed pt-14 w-full px-[12%]"
         onClick={() => console.log(questions)}
       >
         <div className="shadow p-4 bg-white flex justify-between items-center">
-          <div className="font-bold text-lg">Test de HTML</div>
+          <div className="font-bold text-lg">Test de { test.titre }</div>
           <ClokcTest afterTimeOver={onTimeUp} />
-          <div className="font-bold text-gray-800">Mr Andry</div>
+          <div className="font-bold text-gray-800">{ test?.nom }</div>
         </div>
       </div>
+      }
       <div className="pt-32 pb-10 px-[12%] min-h-screen">
         <StudentNavigation />
         <div className="">
           <div>
+            {
+              isLoading && <div >
+                <LoadingOutlined className="text-xl" />
+              </div>
+            }
             {questions &&
               questions.map((question: any, index: any) => {
                 return (

@@ -9,16 +9,16 @@ import { useGetGroupById } from "@/hooks/group/useGetGroupById";
 import { usePatchGroup } from "@/hooks/group/usePatchGroup";
 import { EditGroupInterface } from "@/interfaces/groupe.interface";
 import { EditGroupValidation } from "@/validation/group.validation";
-import { BookOutlined } from "@ant-design/icons";
+import { BookOutlined, LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminGroupeEdit: React.FC = () => {
   const req = useParams();
   const Id = req.id;
-  const { data: groupe, refetch: refetchGroupe } = useGetGroupById(
+  const { data: groupe, refetch: refetchGroupe, isLoading } = useGetGroupById(
     Id ? Number(Id) : 0,
   );
   const {
@@ -30,7 +30,7 @@ const AdminGroupeEdit: React.FC = () => {
     resolver: yupResolver(EditGroupValidation),
   });
   const { refetch } = useGetAllGroup();
-  const { mutateAsync: modifierGroupe } = usePatchGroup({
+  const { mutateAsync: modifierGroupe, isPending: editLoading } = usePatchGroup({
     action() {
       refetch();
       refetchGroupe();
@@ -59,6 +59,11 @@ const AdminGroupeEdit: React.FC = () => {
               <div className="text-xl uppercase font-bold text-center mb-4">
                 <BookOutlined /> Modifier un groupe
               </div>
+              {
+                isLoading && <div className="text-5xl flex justify-center">
+                  <LoadingOutlined />
+                </div>
+              }
               {groupe && (
                 <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
                   <Label className="mb-1">Nom :</Label>
@@ -98,14 +103,14 @@ const AdminGroupeEdit: React.FC = () => {
                     </div>
                   )}
                   <div className="mt-4 flex justify-end gap-2">
-                    <Button
-                      onClick={() => navigate("/admin/groupe")}
-                      variant={"secondary"}
-                      className="w-max "
+                    <Link
+                      to="/admin/groupe"
+                      className="px-4 py-0.5 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
                     >
                       Annuler
-                    </Button>
-                    <Button type="submit" className="w-max ">
+                    </Link>
+                    <Button disabled={editLoading} type="submit" className="w-max ">
+                      { editLoading && <LoadingOutlined /> }
                       Modifier
                     </Button>
                   </div>
