@@ -1,4 +1,5 @@
 import { postTentative } from "@/api/tentative.api";
+import { HttpStatus } from "@/constants/Http_status";
 import { TOAST_TYPE } from "@/constants/ToastType";
 import { TentativeCreateInterface } from "@/interfaces/tentative.interface";
 import { showToast } from "@/utils/Toast";
@@ -17,11 +18,18 @@ export const usePostTentative = ({ action }: { action: () => void }) => {
         message: "Bonne chance pour votre test !",
       });
     },
-    onError: (error: AxiosError) => {
-      showToast({
-        type: TOAST_TYPE.ERROR,
-        message: "Erreur lors de la création de tentative !",
-      });
+    onError: (error: any) => {
+      if(error.status === HttpStatus.UNAUTHORIZED) {
+        showToast({ 
+          type: TOAST_TYPE.ERROR,
+          message: "Vous ne pouvez plus passer ce test ! Vous avez deja passer ce test",
+        });
+      } else {
+        showToast({ 
+          type: TOAST_TYPE.ERROR,
+          message: "Erreur lors de la création de tentative !",
+        });
+      }
     },
   });
 

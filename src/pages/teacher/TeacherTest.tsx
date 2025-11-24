@@ -38,7 +38,7 @@ import {
   Plus,
   Trash,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherTest: React.FC = () => {
@@ -63,6 +63,10 @@ const TeacherTest: React.FC = () => {
   const [filterRef, setFilterRef] = useState<boolean>(false);
   const [selectedTest, setSelectedTest] = useState<number>(0);
 
+  useEffect(() => {
+    refetch();
+  }, [])
+
   async function filterData(filter: string) {
     setFilterRef(true);
     setFilterText(filter);
@@ -75,7 +79,8 @@ const TeacherTest: React.FC = () => {
   const launchConfirm = async (data: any) => {
     await launchTest(data.id_test);
     updateIsFinished(false);
-    updateSecondsLeft(Number(data.duree_minutes) * 60);
+    const min = Number(data.duree_minutes) * 60;
+    updateSecondsLeft(min + 10);
 
     navigate(`/teacher/test/launched/view/${data.id_test}`);
   };

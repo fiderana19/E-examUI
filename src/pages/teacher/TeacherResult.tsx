@@ -3,13 +3,17 @@ import { Input } from "@/components/ui/input";
 import { useGetAllCorrectedTestByTeacherId } from "@/hooks/test/useGetAllCorrectedTestByTeacherId";
 import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { BookText } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherResult: React.FC = () => {
-  const { data: results, isLoading } = useGetAllCorrectedTestByTeacherId();
+  const { data: results, isLoading, refetch } = useGetAllCorrectedTestByTeacherId();
   const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState<string>("");
+
+  useEffect(() => {
+    refetch();
+  } , [])
 
   return (
     <div className="pl-64 pr-6">

@@ -1,5 +1,6 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import ClokcTest from "@/components/Test/ClockTest";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
@@ -84,13 +85,13 @@ const TeacherTestLaunchedView: React.FC = () => {
               </div>
               <div className="font-bold text-gray-800">Note maximum : 20 </div>
             </div>
-            <div className="text-gray-700" onClick={() => finishTest()}>
+            <div className="text-gray-700">
               {" "}
               {test.description}{" "}
             </div>
           </div>
           {
-            finishLoading && <div>
+            finishLoading && <div className="flex justify-center">
               <div className="text-5xl flex justify-center">
                 <LoadingOutlined />
               </div>
@@ -105,6 +106,11 @@ const TeacherTestLaunchedView: React.FC = () => {
               </div>
             </div>
           </Card>
+          <div className="my-4 flex justify-center w-full">
+            <Button onClick={() => finishTest()}>
+              Terminer
+            </Button>
+          </div>
         </div>
       )}
     </div>
