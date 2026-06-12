@@ -3,7 +3,6 @@ import {
   EditGroupInterface,
 } from "@/interfaces/groupe.interface";
 import axiosAuthInstance from "./Config";
-import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const GroupAPIUrl = `${import.meta.env.VITE_BASE_URL}/groupes`;
 

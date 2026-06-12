@@ -3,7 +3,6 @@ import {
   QuestionEditInterface,
 } from "@/interfaces/question.interface";
 import axiosAuthInstance from "./Config";
-import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const QuestionAPIUrl = `${import.meta.env.VITE_BASE_URL}/questions`;
 

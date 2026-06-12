@@ -1,14 +1,10 @@
 import { CreateResponseInterface } from "@/interfaces/response.interface";
 import axiosAuthInstance from "./Config";
-import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const ReponseAPIUrl = `${import.meta.env.VITE_BASE_URL}/reponses`;
 
 export const getNotCorrectedReponse = async () => {
-  // return await axiosAuthInstance.get(`${ReponseAPIUrl}/need/correction`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/reponse/non-corriger`);
+  return await axiosAuthInstance.get(`${ReponseAPIUrl}/non-corrigees`);
 };
 
 export const postReponse = async (data: CreateResponseInterface) => {
@@ -16,24 +12,15 @@ export const postReponse = async (data: CreateResponseInterface) => {
 };
 
 export const patchReponse = async (data: any) => {
-  // return await axiosAuthInstance.patch(`${ReponseAPIUrl}/edit/${data.id_reponse}`, data)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/reponse/${data.id_reponse}/text`, data);
+  return await axiosAuthInstance.put(`${ReponseAPIUrl}/${data.id_reponse}/texte`, data);
 };
 
 export const patchNoterReponse = async (data: any) => {
-  // return await axiosAuthInstance.patch(`${ReponseAPIUrl}/edit/${data.id_reponse}`, data)
-
-  initMockAdapter();
-  return await mockedAxios.put(`/reponse/${data.id_reponse}/score`, data);
+  return await axiosAuthInstance.put(`${ReponseAPIUrl}/corriger/${data.id_reponse}`, data);
 };
 
 export const getReponseByTentativeId = async (id: number) => {
-  // return await axiosAuthInstance.get(`${ReponseAPIUrl}/tentative/${id}`)
-
-  initMockAdapter();
-  return await mockedAxios.get(`/reponse/tentative/${id}`);
+  return await axiosAuthInstance.get(`${import.meta.env.VITE_BASE_URL}/tentatives/responses/${id}`);
 };
 
 export const getReponseByTestId = async (id: number) => {

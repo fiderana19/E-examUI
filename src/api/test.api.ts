@@ -31,7 +31,7 @@ export const getAllCorrectedTestForAdmin = async () => {
 };
 
 export const getFinishedTestByTeacherId = async (id: number) => {
-  return await axiosAuthInstance.get(`${TestAPIUrl}/teacher/finish/${id}`);
+  return await axiosAuthInstance.get(`${TestAPIUrl}/user/${id}`);
 };
 
 export const deleteTest = async (id: number) => {

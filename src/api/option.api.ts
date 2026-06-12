@@ -1,6 +1,5 @@
 import { OptionCreateInterface } from "@/interfaces/option.interface";
 import axiosAuthInstance from "./Config";
-import mockedAxios, { initMockAdapter } from "./mock/axios.mock";
 
 const OptionAPIUrl = `${import.meta.env.VITE_BASE_URL}/options`;
 
