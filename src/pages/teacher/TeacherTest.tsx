@@ -148,7 +148,7 @@ const TeacherTest: React.FC = () => {
             </Button>
           </div>
         </div>
-        {tests && tests.length < 1 && (
+        {tests?.data && tests.data.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600 my-10">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Vous avez créé aucun test</div>
@@ -160,7 +160,7 @@ const TeacherTest: React.FC = () => {
           </div>
         }
         <div className="">
-          {filterRef && tests
+          {filterRef && tests?.data
             ? filtereds.map((test: any, index: any) => {
                 return (
                   <div key={index} className="shadow p-4 bg-white my-2">
@@ -293,8 +293,8 @@ const TeacherTest: React.FC = () => {
                   </div>
                 );
               })
-            : tests &&
-              tests.map((test: any, index: any) => {
+            : tests?.data &&
+              tests.data.map((test: any, index: any) => {
                 return (
                   <div key={index} className="shadow p-4 bg-white my-2">
                     <div className="mb-4">

@@ -35,8 +35,8 @@ const TeacherHome: React.FC = () => {
                 <div className="mt-4">Vous avez fait aucune annonce !</div>
               </div>
               <div className="">
-                {annonces &&
-                  annonces.slice(0, 3).map((announce: any, index: any) => {
+              {annonces?.data &&
+                annonces.data.slice(0, 3).map((announce: any, index: any) => {
                     return (
                       <div key={index} className="my-2">
                         <div className="flex justify-between">

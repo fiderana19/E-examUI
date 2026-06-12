@@ -1,6 +1,5 @@
 import StudentNavigation from "@/components/Navigation/StudentNavigation";
 import { Input } from "@/components/ui/input";
-import { mock_annonces } from "@/constants/mock";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByGroupId } from "@/hooks/annonce/useGetAnnonceByGroupId";
 import { CloseOutlined, LoadingOutlined, NotificationTwoTone } from "@ant-design/icons";
@@ -40,7 +39,7 @@ const StudentAnnonce: React.FC = () => {
         )}
         <div className="">
           {annonces &&
-            annonces.map((announce: any, index: any) => {
+            annonces?.data.map((announce: any, index: any) => {
               if (searchRef && !announce.texte_annonce.includes(searchRef)) {
                 return null;
               }

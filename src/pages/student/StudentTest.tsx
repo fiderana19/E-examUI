@@ -46,15 +46,15 @@ const StudentTest: React.FC = () => {
             <LoadingOutlined />
           </div>
         }
-        {tests && tests.length < 1 && (
+        {tests?.data && tests.data.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Aucun test disponible.</div>
           </div>
         )}
         <div className="">
-          {tests &&
-            tests.slice(0, 1).map((test: any, index: any) => {
+          {tests?.data &&
+            tests.data.slice(0, 1).map((test: any, index: any) => {
               return (
                 <div key={index} className="shadow p-4 bg-white">
                   <div className="mb-4">

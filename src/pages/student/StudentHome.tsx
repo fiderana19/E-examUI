@@ -14,7 +14,7 @@ const StudentHome: React.FC = () => {
   const { data: annonces, isLoading } = useGetAnnonceByGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
-
+  
   return (
     <div className="pt-20 pb-6 px-[12%] min-h-screen flex flex-col justify-center">
       <StudentNavigation />
@@ -43,7 +43,7 @@ const StudentHome: React.FC = () => {
                 </div>
               }
               {annonces &&
-                annonces.slice(0, 3).map((announce: any, index: any) => {
+                annonces?.data.slice(0, 3).map((announce: any, index: any) => {
                   return (
                     <div key={index} className="mb-1">
                       <div className="text-xs text-gray-600 mb-1">

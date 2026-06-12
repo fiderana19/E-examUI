@@ -195,15 +195,15 @@ const TeacherAnnounce: React.FC = () => {
             <LoadingOutlined />
           </div>
         }
-        {annonces && annonces.length < 1 && (
+        {annonces?.data && annonces.data.length < 1 && (
           <div className="w-max mx-auto text-center text-gray-600 my-10">
             <CloseOutlined className="text-7xl" />
             <div className="mt-4 text-xl">Vous avez fait aucune annonce </div>
           </div>
         )}
         <div className="">
-          {annonces &&
-            annonces.map((announce: any, index: any) => {
+          {annonces?.data &&
+            annonces.data.map((announce: any, index: any) => {
               if (searchRef && !announce.texte_annonce.includes(searchRef)) {
                 return null;
               }
