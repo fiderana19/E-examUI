@@ -24,7 +24,7 @@ export const useGetTestById = (id: number) => {
   }, [error]);
 
   return {
-    data: data?.data,
+    data: data?.data?.data,
     isLoading,
     refetch,
   };

@@ -38,9 +38,11 @@ const Unauthorized = lazy(() => import("./pages/Unauthorized"));
 import { USER_ROLE } from "./enum/user.enum";
 const TeacherResultResponseView = lazy(() => import("./pages/teacher/result/TeacherResultResponseView"));
 import { LoadingOutlined } from "@ant-design/icons";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   return (
+    <ErrorBoundary>
     <Routes>
       {/* Public routes */}
       <Route index path="/" element={
@@ -246,6 +248,7 @@ function App() {
           } />
       </Route>
     </Routes>
+    </ErrorBoundary>
   );
 }
 

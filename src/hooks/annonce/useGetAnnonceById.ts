@@ -23,7 +23,7 @@ export const useGetAnnonceById = (id: number) => {
   }, [error]);
 
   return {
-    data: data?.data,
+    data: data?.data?.data,
     isLoading,
     refetch,
   };

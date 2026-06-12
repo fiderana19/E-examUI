@@ -1,4 +1,5 @@
-export const formatDateForPdf = (date: Date) => {
+export const formatDateForPdf = (date: Date | null | undefined) => {
+  if (!date) return "";
   let yyyy = date.getFullYear();
   let mm = date.getMonth() + 1; // JS months are 0 indexed, 0 = January, 11 = December
   let dd = date.getDate();
@@ -11,6 +12,7 @@ export const formatDateForPdf = (date: Date) => {
 };
 
 export const formatDateForPlaceholder = (datee: any) => {
+  if (!datee) return "";
   const date = new Date(datee);
   let yyyy = date.getFullYear();
   let mm = date.getMonth() + 1; // JS months are 0 indexed, 0 = January, 11 = December
@@ -24,6 +26,7 @@ export const formatDateForPlaceholder = (datee: any) => {
 };
 
 export const formatDate = (datee: any) => {
+  if (!datee) return "";
   const date = new Date(datee);
   let yyyy = date.getFullYear();
   let mm = date.getMonth() + 1; // JS months are 0 indexed, 0 = January, 11 = December
