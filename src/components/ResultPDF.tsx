@@ -101,19 +101,18 @@ export const TableRow: React.FC<{ data: any; index: number }> = ({
   return (
     <View style={[styles.tableRow]}>
       <View style={[styles.tableCell, styles.colMatricule]}>
-        <Text>{data.utilisateur.matricule}</Text>
+        <Text>{data?.utilisateur?.matricule ?? ""}</Text>
       </View>
       <View style={[styles.tableCell, styles.colNom]}>
-        <Text>{data.utilisateur.nom}</Text>
+        <Text>{data?.utilisateur?.nom ?? ""}</Text>
       </View>
       <View style={[styles.tableCell, styles.colNote]}>
         <Text>
-          {data.note_obtenue < 10 && "0"}
-          {data.note_obtenue}
+          {data?.note_obtenue !== undefined && data?.note_obtenue !== null && data.note_obtenue < 10 ? `0${data.note_obtenue}` : data?.note_obtenue ?? ""}
         </Text>
       </View>
       <View style={[styles.tableCell, styles.colHeure]}>
-        <Text>{data.heure_soumission}</Text>
+        <Text>{data?.heure_soumission ?? ""}</Text>
       </View>
     </View>
   );

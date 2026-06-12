@@ -15,7 +15,7 @@ import {
 import { MenuProps, Dropdown } from "antd";
 import { useAuth } from "../context/AuthContext";
 import MidLogo from "../assets/image/mid-logo.jpg";
-import { useGetUserById } from "@/hooks/useGetUserById";
+import { useGetUserById } from "@/hooks/user/useGetUserById";
 import React from "react";
 import { Button } from "./ui/button";
 
@@ -202,10 +202,9 @@ const Header: React.FC = () => {
           <a onClick={(e) => e.preventDefault()}>
             {user && (
               <Button variant={"secondary"}>
-                <img
-                  src={`data:image/png;base64,${user.profile_photo}`}
-                  className="w-6 h-6 object-cover  rounded-full border"
-                />
+                <div className="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold">
+                  {user?.nom?.charAt(0)?.toUpperCase() || "U"}
+                </div>
                 <div className="sm:block hidden font-latobold mx-1">
                   {user.email}
                 </div>
