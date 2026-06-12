@@ -17,266 +17,164 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import StatusBadge from "@/components/StatusBadge";
 import { useGetAllUser } from "@/hooks/user/useGettAllUser";
 import { useValidateUser } from "@/hooks/user/useValidateUser";
-import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Check, Filter, User } from "lucide-react";
+import { Loader2, Check, Filter, User, Search, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../../utils/dateFixation";
 
 const AdminAccount: React.FC = () => {
   const { data: users, refetch, isLoading } = useGetAllUser();
   const { mutateAsync: validerUser, isPending: validateLoading } = useValidateUser({
-    action() {
-      refetch();
-    },
+    action() { refetch(); },
   });
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [searchRef, setSearchRef] = useState<string>("");
-  const [filtereds, setFiltereds] = useState<any[]>([]);
-  const [filterText, setFilterText] = useState<string>("Tout");
-  const [filterRef, setFilterRef] = useState<boolean>(false);
+  const [filterStatus, setFilterStatus] = useState<string>("Tout");
 
-  useEffect(() => {
-    refetch();
-  }, []);
-  
+  useEffect(() => { refetch(); }, []);
+
   const validateConfirm = async () => {
     await validerUser(selectedAccount);
   };
 
-  async function filterData(text: string, value: number) {
-    setFilterRef(true);
-    setFilterText(text);
-    const acc = users.filter((accounts: any) => accounts.est_valider === value);
-    setFiltereds(acc);
+  const roleLabels: Record<string, string> = {
+    admin: "Admin",
+    enseignant: "Enseignant",
+    etudiant: "Étudiant",
+  };
+
+  let displayedUsers = users || [];
+  if (filterStatus === "Validé") {
+    displayedUsers = displayedUsers.filter((u: any) => u.est_valider);
+  } else if (filterStatus === "Non valide") {
+    displayedUsers = displayedUsers.filter((u: any) => !u.est_valider);
+  }
+  if (searchRef) {
+    displayedUsers = displayedUsers.filter((u: any) =>
+      u.matricule?.toLowerCase().includes(searchRef.toLowerCase())
+    );
   }
 
   return (
-    <div className="pl-64 pr-[4%] py-6">
+    <div className="ml-64 min-h-screen bg-background">
       <AdminNavigation />
-      <div>
-        <div className="flex justify-between items-center">
-          <div className="text-xl uppercase font-bold">Les comptes</div>
+      <div className="p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Les comptes</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Gérez et validez les comptes utilisateurs
+            </p>
+          </div>
           <div className="flex items-center gap-2">
-            <Input
-              placeholder="Matricule..."
-              onChange={(e) => setSearchRef(e.target.value)}
-            />
+            <div className="relative w-full sm:w-48">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                className="pl-9"
+                value={searchRef}
+                onChange={(e) => setSearchRef(e.target.value)}
+                placeholder="Matricule..."
+              />
+            </div>
             <Popover>
               <PopoverTrigger asChild>
-                <Button>
-                  <Filter />
-                  {filterText}{" "}
+                <Button variant="outline">
+                  <Filter className="w-4 h-4" /> {filterStatus}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto mr-14">
-                <div className="mb-2 text-gray-700 font-medium">
-                  Fitrer par :
-                </div>
-                <div className="w-40 text-left">
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => {
-                      setFilterRef(false);
-                      setFilterText("Tout");
-                    }}
-                  >
-                    <User /> Tous les comptes
-                  </Button>
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => filterData("Validé", 1)}
-                  >
-                    <Check /> Compte validé
-                  </Button>
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => filterData("Non valide", 0)}
-                  >
-                    <CloseOutlined /> Compte non valide
-                  </Button>
+              <PopoverContent className="w-44 p-2" align="end">
+                <div className="space-y-1">
+                  {["Tout", "Validé", "Non valide"].map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setFilterStatus(s)}
+                      className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                        filterStatus === s
+                          ? "bg-primary-custom/10 text-primary-custom font-medium"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
                 </div>
               </PopoverContent>
             </Popover>
           </div>
         </div>
-        <table className=" min-w-full divide-y divide-gray-200 my-4">
-          <thead>
-            <tr>
-              <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Nom
-              </th>
-              <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Matricule
-              </th>
-              <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Mail
-              </th>
-              <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Date de création
-              </th>
-              <th className="px-1 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"></th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filterRef && users
-              ? filtereds.map((et: any, index: any) => {
-                  if (searchRef && !et.matricule.includes(searchRef)) {
-                    return null;
-                  }
-                  return (
-                    <tr key={index}>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.nom}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.matricule}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.email}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.role}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {formatDate(et.created_at)}{" "}
-                      </td>
-                      <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                        <div className="flex justify-end gap-1">
-                          {et.est_valider === 0 && (
-                            <AlertDialog>
-                              <AlertDialogTrigger>
-                                <Button
-                                  onClick={() =>
-                                    setSelectedAccount(et.id_utilisateur)
-                                  }
-                                  variant={"success"}
-                                  size={"icon"}
-                                >
-                                  <Check />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Validation du compte
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Voulez-vous vraiment valider ce compte ?
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                  <AlertDialogAction className="p-0">
-                                    <Button
-                                      onClick={() => validateConfirm()}
-                                      variant={"success"}
-                                      disabled={validateLoading}
-                                    >
-                                      { validateLoading && <LoadingOutlined /> }
-                                      Valider
-                                    </Button>
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              : users &&
-                users.map((et: any, index: any) => {
-                  if (searchRef && !et.matricule.includes(searchRef)) {
-                    return null;
-                  }
-                  return (
-                    <tr key={index}>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.nom}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.matricule}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.email}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {et.role}{" "}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {" "}
-                        {formatDate(et.created_at)}{" "}
-                      </td>
-                      <td className="px-1 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                        <div className="flex justify-end gap-1">
-                          {et.est_valider === 0 && (
-                            <AlertDialog>
-                              <AlertDialogTrigger>
-                                <Button
-                                  onClick={() =>
-                                    setSelectedAccount(et.id_utilisateur)
-                                  }
-                                  variant={"success"}
-                                  size={"icon"}
-                                >
-                                  <Check />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Validation du compte
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Voulez-vous vraiment valider ce compte ?
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Annuler</AlertDialogCancel>
-                                  <AlertDialogAction className="p-0">
-                                    <Button
-                                      onClick={() => validateConfirm()}
-                                      variant={"success"}
-                                      disabled={validateLoading}
-                                    >
-                                      { validateLoading && <LoadingOutlined /> }
-                                      Valider
-                                    </Button>
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-          </tbody>
-        </table>
-        {
-          isLoading && <div className="text-5xl flex justify-center">
-            <LoadingOutlined />
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-        }
+        ) : !displayedUsers.length ? (
+          <div className="text-center py-20">
+            <User className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground">Aucun compte trouvé</h3>
+          </div>
+        ) : (
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <table className="min-w-full divide-y divide-border">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Nom</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Matricule</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Rôle</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Statut</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {displayedUsers.map((et: any, index: any) => (
+                  <tr key={index} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-6 py-4 text-sm font-medium">{et.nom ?? ""}</td>
+                    <td className="px-6 py-4 text-sm">{et.matricule ?? ""}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">{et.email ?? ""}</td>
+                    <td className="px-6 py-4 text-sm">{roleLabels[et.role] ?? et.role ?? ""}</td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={et.est_valider ? "Validé" : "Non valide"} />
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">{formatDate(et.created_at)}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex justify-end gap-2">
+                        {!et.est_valider && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm">
+                                <Check className="w-4 h-4" /> Valider
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Validation du compte</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Voulez-vous vraiment valider ce compte ?
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                                <AlertDialogAction className="p-0">
+                                  <Button onClick={() => validateConfirm()} variant="success" disabled={validateLoading}>
+                                    {validateLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                                    Valider
+                                  </Button>
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

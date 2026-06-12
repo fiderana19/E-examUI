@@ -2,12 +2,13 @@ import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import ClokcTest from "@/components/Test/ClockTest";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import StatusBadge from "@/components/StatusBadge";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { usePutTestToFinishStatus } from "@/hooks/test/usePutTestToFinishStatus";
-import { ClockCircleOutlined, HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Clock, Loader2, Timer, ChevronLeft } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -29,90 +30,82 @@ const TeacherTestLaunchedView: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (Id) {
-      setTestId(Id);
-    }
+    if (Id) setTestId(Id);
   }, [Id]);
 
   const finishTest = async () => {
     const reponse = await finish(testId);
-    if (
-      reponse.status === HttpStatus.OK ||
-      reponse.status === HttpStatus.CREATED
-    ) {
+    if (reponse.status === HttpStatus.OK || reponse.status === HttpStatus.CREATED) {
       navigate("/teacher/test");
     }
   };
 
   return (
-    <div className="pl-64 pt-4 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      {
-        isLoading && <div className="text-5xl flex justify-center">
-          <LoadingOutlined />
-        </div>
-      }
-      {test && (
-        <div className="">
-          <div className="">
-            <div className="flex justify-between">
-              <div className="flex gap-4">
-                <div className="font-bold text-lg"> {test.titre} </div>
-                <div className="border rounded-full px-2 bg-gray-400 text-white">
-                  <ClockCircleOutlined /> {test.duree_minutes}:00
-                </div>
-              </div>
-              {/* <div className="font-bold text-gray-800"> {test?.group.nom_groupe} </div> */}
-              {test.status === "Terminé" ? (
-                <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                  <HourglassOutlined /> <div>Terminé</div>
-                </div>
-              ) : test.status === "En cours" ? (
-                <div className="border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                  <HourglassOutlined /> <div>En cours</div>
-                </div>
-              ) : (
-                <div className="border rounded-full px-2 bg-yellow-200 text-white flex items-center gap-2">
-                  <HourglassOutlined /> <div>En attente</div>
-                </div>
-              )}
-            </div>
-            <div className="flex justify-between my-1">
-              <div className="flex gap-4">
-                <div className="font-bold text-lg text-gray-600">
-                  15 questions max
-                </div>
-              </div>
-              <div className="font-bold text-gray-800">Note maximum : 20 </div>
-            </div>
-            <div className="text-gray-700">
-              {" "}
-              {test.description}{" "}
-            </div>
+      <div className="p-8 max-w-3xl mx-auto">
+        <Button
+          onClick={() => navigate("/teacher/test")}
+          variant="outline"
+          size="sm"
+          className="mb-6"
+        >
+          <ChevronLeft className="w-4 h-4" /> Retour
+        </Button>
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-          {
-            finishLoading && <div className="flex justify-center">
-              <div className="text-5xl flex justify-center">
-                <LoadingOutlined />
+        ) : test ? (
+          <>
+            <Card className="border-border overflow-hidden mb-8">
+              <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Timer className="w-5 h-5 text-white" />
+                    <h1 className="text-lg font-semibold text-white">{test.titre ?? ""}</h1>
+                  </div>
+                  <StatusBadge status={test.status} />
+                </div>
               </div>
-              Fermeture du test...
-            </div>
-          }
-          <Card className="my-10 w-max mx-auto px-4">
-            <div>
-              <div>Temps restant(s) :</div>
-              <div className="mx-auto w-max mt-2">
-                <ClokcTest afterTimeOver={finishTest} />
+              <div className="p-6 space-y-4">
+                <div className="flex flex-wrap items-center gap-4 text-sm">
+                  <div className="flex items-center gap-1.5 text-muted-foreground">
+                    <Clock className="w-4 h-4" />
+                    <span>Durée: {test.duree_minutes ?? "?"} min</span>
+                  </div>
+                  <div className="text-muted-foreground">{test?.nom_groupe ?? ""}</div>
+                </div>
+                <p className="text-sm text-muted-foreground">{test.description ?? ""}</p>
               </div>
-            </div>
-          </Card>
-          <div className="my-4 flex justify-center w-full">
-            <Button onClick={() => finishTest()}>
-              Terminer
-            </Button>
-          </div>
-        </div>
-      )}
+            </Card>
+
+            <Card className="border-border">
+              <div className="p-8 flex flex-col items-center gap-6">
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Temps restant (secondes)</p>
+                  <div className="text-4xl font-mono font-bold text-primary-custom">
+                    <ClokcTest afterTimeOver={finishTest} />
+                  </div>
+                </div>
+
+                {finishLoading && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Fermeture du test...
+                  </div>
+                )}
+
+                <Button onClick={finishTest} disabled={finishLoading} size="lg">
+                  {finishLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Terminer le test
+                </Button>
+              </div>
+            </Card>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 };

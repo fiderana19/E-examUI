@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import PageHeader from "@/components/PageHeader";
 import { HttpStatus } from "@/constants/Http_status";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAllGroup } from "@/hooks/group/useGetAllGroup";
@@ -19,12 +20,11 @@ import { usePatchTest } from "@/hooks/test/usePatchTest";
 import { TestEditInterface } from "@/interfaces/test.interface";
 import { handleNumberKeyPress } from "@/utils/handleKeyPress";
 import { TestEditValidation } from "@/validation/test.validation";
-import { LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CalendarClock } from "lucide-react";
+import { CalendarClock, Loader2 } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const TeacherTestEdit: React.FC = () => {
   const req = useParams();
@@ -52,134 +52,142 @@ const TeacherTestEdit: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue("id_utilisateur", test ? test.id_utilisateur : 0);
-    setValue("id_test", Id ? Id : "");
-  }, []);
+    if (test) {
+      setValue("id_utilisateur", String(test.id_utilisateur ?? ""));
+      setValue("id_test", Id ?? "");
+      setValue("id_groupe", String(test.id_groupe ?? ""));
+      setValue("titre", test.titre ?? "");
+      setValue("description", test.description ?? "");
+      setValue("duree_minutes", test.duree_minutes ?? 0);
+    }
+  }, [test]);
 
   const handleSubmit = async (data: TestEditInterface) => {
-    console.log(data);
     const response = await modifierTest(data);
-    if (response?.status === HttpStatus.OK) {
-      navigate("/teacher/test");
-    }
+    if (response?.status === HttpStatus.OK) navigate("/teacher/test");
   };
 
   return (
-    <div className="pl-64 pr-[4%] py-10 flex flex-col justify-center">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      <div>
-        <div className="w-1/3 mx-auto">
-          <Card className="px-4 py-10">
-            <div>
-              <div className="text-lg uppercase font-bold text-center mb-4 flex items-center gap-2">
-                <CalendarClock /> Modifier un test
-              </div>
-              {
-                isLoading && <div className="text-5xl flex justify-center">
-                  <LoadingOutlined />
-                </div>
-              }
-              {test && (
-                <form onSubmit={submit(handleSubmit)} className="w-64 mx-auto">
-                  <Label className="mb-1 mt-4">Groupe :</Label>
-                  <Controller
-                    control={control}
-                    name="id_groupe"
-                    defaultValue={test.id_groupe}
-                    render={({ field: { value, onChange } }) => (
-                      <Select disabled value={value} onValueChange={onChange}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder={value} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {groupes &&
-                            groupes.map((groupe: any, index: number) => (
-                              <SelectItem key={index} value={groupe.id_groupe}>
-                                {" "}
-                                {groupe.nom_groupe}{" "}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  {errors?.id_groupe && (
-                    <div className="text-xs w-full text-red-500 text-left">
-                      {errors?.id_groupe.message}
-                    </div>
-                  )}
-                  <Label className="mb-1 mt-4">Titre :</Label>
-                  <Controller
-                    control={control}
-                    name="titre"
-                    defaultValue={test.titre}
-                    render={({ field: { value, onChange } }) => (
-                      <Input
-                        value={value}
-                        onChange={onChange}
-                        className={`${errors?.titre && "border border-red-500 text-red-500 rounded"}`}
-                      />
-                    )}
-                  />
-                  {errors?.titre && (
-                    <div className="text-xs w-full text-red-500 text-left">
-                      {errors?.titre.message}
-                    </div>
-                  )}
-                  <Label className="mb-1 mt-4">Description :</Label>
-                  <Controller
-                    control={control}
-                    name="description"
-                    defaultValue={test.description}
-                    render={({ field: { value, onChange } }) => (
-                      <Input
-                        value={value}
-                        onChange={onChange}
-                        className={`${errors?.description && "border border-red-500 text-red-500 rounded"}`}
-                      />
-                    )}
-                  />
-                  {errors?.description && (
-                    <div className="text-xs w-full text-red-500 text-left">
-                      {errors?.description.message}
-                    </div>
-                  )}
-                  <Label className="mb-1 mt-4">Durée (minutes) :</Label>
-                  <Controller
-                    control={control}
-                    name="duree_minutes"
-                    defaultValue={test.duree_minutes}
-                    render={({ field: { value, onChange } }) => (
-                      <Input
-                        value={value ? Number(value) : 0}
-                        onKeyPress={handleNumberKeyPress}
-                        onChange={onChange}
-                        className={`${errors?.duree_minutes && "border border-red-500 text-red-500 rounded"}`}
-                      />
-                    )}
-                  />
-                  {errors?.duree_minutes && (
-                    <div className="text-xs w-full text-red-500 text-left">
-                      {errors?.duree_minutes.message}
-                    </div>
-                  )}
-                  <div className="mt-4 flex justify-end gap-2">
-                    <Link
-                      to="/teacher/test"
-                      className="px-4 py-0.5 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80"
-                    >
-                      Annuler
-                    </Link>
-                    <Button disabled={editLoading} type="submit">
-                      { editLoading && <LoadingOutlined /> }
-                      Modifier
-                    </Button>
-                  </div>
-                </form>
-              )}
+      <div className="p-8 max-w-2xl mx-auto">
+        <PageHeader
+          title="Modifier un test"
+          subtitle="Modifiez les informations du test"
+          onBack={() => navigate("/teacher/test")}
+        />
+
+        <Card className="border-border overflow-hidden">
+          <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-4">
+            <div className="flex items-center gap-2 text-white">
+              <CalendarClock className="w-5 h-5" />
+              <h2 className="text-lg font-semibold">Modification du test</h2>
             </div>
-          </Card>
-        </div>
+          </div>
+
+          {isLoading ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+            </div>
+          ) : test ? (
+            <form onSubmit={submit(handleSubmit)} className="p-6 space-y-5">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Groupe</Label>
+                <Controller
+                  control={control}
+                  name="id_groupe"
+                  defaultValue={test.id_groupe}
+                  render={({ field: { value, onChange } }) => (
+                    <Select disabled value={value} onValueChange={onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={value} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {groupes?.map((groupe: any, index: number) => (
+                          <SelectItem key={index} value={groupe.id_groupe}>
+                            {groupe.nom_groupe}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors?.id_groupe && (
+                  <p className="text-xs text-destructive">{errors?.id_groupe.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Titre</Label>
+                <Controller
+                  control={control}
+                  name="titre"
+                  defaultValue={test.titre}
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value ?? ""}
+                      onChange={onChange}
+                      className={errors?.titre ? "border-destructive" : ""}
+                    />
+                  )}
+                />
+                {errors?.titre && (
+                  <p className="text-xs text-destructive">{errors?.titre.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Description</Label>
+                <Controller
+                  control={control}
+                  name="description"
+                  defaultValue={test.description}
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value ?? ""}
+                      onChange={onChange}
+                      className={errors?.description ? "border-destructive" : ""}
+                    />
+                  )}
+                />
+                {errors?.description && (
+                  <p className="text-xs text-destructive">{errors?.description.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Durée (minutes)</Label>
+                <Controller
+                  control={control}
+                  name="duree_minutes"
+                  defaultValue={test.duree_minutes}
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      type="number"
+                      value={value ? Number(value) : 0}
+                      onKeyPress={handleNumberKeyPress}
+                      onChange={onChange}
+                      className={errors?.duree_minutes ? "border-destructive" : ""}
+                    />
+                  )}
+                />
+                {errors?.duree_minutes && (
+                  <p className="text-xs text-destructive">{errors?.duree_minutes.message}</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
+                <Button type="button" variant="outline" onClick={() => navigate("/teacher/test")}>
+                  Annuler
+                </Button>
+                <Button disabled={editLoading} type="submit">
+                  {editLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Modifier
+                </Button>
+              </div>
+            </form>
+          ) : null}
+        </Card>
       </div>
     </div>
   );

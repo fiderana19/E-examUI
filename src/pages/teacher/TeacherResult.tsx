@@ -1,75 +1,82 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Input } from "@/components/ui/input";
+import PageHeader from "@/components/PageHeader";
 import { useGetAllCorrectedTestByTeacherId } from "@/hooks/test/useGetAllCorrectedTestByTeacherId";
-import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
-import { BookText } from "lucide-react";
+import { Loader2, FileText, Search, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "../../utils/dateFixation";
 
 const TeacherResult: React.FC = () => {
   const { data: results, isLoading, refetch } = useGetAllCorrectedTestByTeacherId();
   const navigate = useNavigate();
   const [searchRef, setSearchRef] = useState<string>("");
 
-  useEffect(() => {
-    refetch();
-  } , [])
+  useEffect(() => { refetch(); }, []);
+
+  const filteredResults = results?.filter((test: any) =>
+    !searchRef || test?.titre?.toLowerCase()?.includes(searchRef.toLowerCase())
+  );
 
   return (
-    <div className="pl-64 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <BookText /> Les tests corrigés
+      <div className="p-8">
+        <PageHeader
+          title="Tests corrigés"
+          subtitle="Consultez les résultats des tests terminés"
+          action={
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                className="w-48 pl-9"
+                onChange={(e) => setSearchRef(e.target.value)}
+                placeholder="Titre du test..."
+              />
+            </div>
+          }
+        />
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-          <Input
-            className="w-48"
-            onChange={(e) => setSearchRef(e.target.value)}
-            placeholder="Titre du test..."
-          />
-        </div>
-        {
-          isLoading && <div className="text-5xl flex justify-center">
-            <LoadingOutlined />
-          </div>
-        }
-        {results && results.length < 1 && (
-          <div className="w-max mx-auto text-center text-gray-600 my-10">
-            <CloseOutlined className="text-7xl" />
-            <div className="mt-4 text-xl">Vous avez aucune resultat</div>
-          </div>
-        )}
-        <div className="">
-          {results &&
-            results.map((test: any, index: any) => {
-              if (searchRef && !test.titre.includes(searchRef)) {
-                return null;
-              }
-              return (
-                <div
-                  key={index}
-                  onClick={() =>
-                    navigate(`/teacher/result/view/${test.id_test}`)
-                  }
-                  className="shadow p-4 bg-white my-2 cursor-pointer"
-                >
-                  <div className="flex justify-between">
-                    <div className="flex gap-4 text-lg">
-                      <div className=""> {test.titre} du</div>
-                      <div className="text-gray-800 font-bold">
-                        {test.date_declechement}
-                      </div>
-                    </div>
-                    <div className="font-bold text-gray-800">
-                      {" "}
-                      {test.group.nom_groupe}{" "}
-                    </div>
+        ) : filteredResults?.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredResults.map((test: any, index: number) => (
+              <div
+                key={index}
+                onClick={() => test?.id_test && navigate(`/teacher/result/view/${test.id_test}`)}
+                className="bg-card border border-border rounded-xl p-6 card-hover cursor-pointer"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="p-2 rounded-lg bg-primary-custom/10 shrink-0">
+                    <FileText className="w-5 h-5 text-primary-custom" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-semibold truncate">{test?.titre ?? ""}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {formatDate(test?.date_declechement)}
+                    </p>
                   </div>
                 </div>
-              );
-            })}
-        </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">{test?.group?.nom_groupe ?? ""}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <X className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+              {searchRef ? "Aucun résultat trouvé" : "Aucun test corrigé"}
+            </h3>
+            <p className="text-sm text-muted-foreground/60">
+              {searchRef ? "Essayez un autre terme de recherche" : "Les tests corrigés apparaîtront ici"}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

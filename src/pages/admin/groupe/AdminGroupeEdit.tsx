@@ -39,7 +39,11 @@ const AdminGroupeEdit: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setValue("id_groupe", Id ? Id : "");
+    if (groupe) {
+      setValue("id_groupe", Id ? Id : "");
+      setValue("nom_groupe", groupe.nom_groupe ?? "");
+      setValue("description", groupe.description ?? "");
+    }
   }, [groupe]);
 
   const handleSubmit = async (data: EditGroupInterface) => {
@@ -50,7 +54,7 @@ const AdminGroupeEdit: React.FC = () => {
   };
 
   return (
-    <div className="pl-64 pr-[4%] py-6 min-h-screen flex flex-col justify-center">
+    <div className="ml-64 pr-[4%] py-6 min-h-screen flex flex-col justify-center">
       <AdminNavigation />
       <div>
         <div className="w-1/3 mx-auto">
@@ -75,7 +79,7 @@ const AdminGroupeEdit: React.FC = () => {
                       <Input
                         value={value}
                         onChange={onChange}
-                        className={`${errors?.nom_groupe && "border border-red-500 text-red-500 rounded"}`}
+                        className={errors?.nom_groupe ? "border border-red-500 text-red-500 rounded" : ""}
                       />
                     )}
                   />
@@ -93,7 +97,7 @@ const AdminGroupeEdit: React.FC = () => {
                       <Input
                         value={value}
                         onChange={onChange}
-                        className={`${errors?.description && "border border-red-500 text-red-500 rounded"}`}
+                        className={errors?.description ? "border border-red-500 text-red-500 rounded" : ""}
                       />
                     )}
                   />

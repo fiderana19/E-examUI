@@ -1,123 +1,113 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import StatusBadge from "@/components/StatusBadge";
 import { useGetReponseByTestId } from "@/hooks/reponse/useGetReponseByTestId";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
-import { HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
-import { ChevronLeft, Edit } from "lucide-react";
+import { Loader2, ChevronLeft, HelpCircle, Clock } from "lucide-react";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { formatDate } from "../../../utils/dateFixation";
 
 const TeacherCorrectionView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
   const { data: test, isLoading: testLoading } = useGetTestById(Id ? Number(Id) : 0);
-  const { data: reponses, refetch, isLoading: reponseLoading } = useGetReponseByTestId(
-    Id ? Number(Id) : 0,
-  );
+  const { data: reponses, refetch, isLoading: reponseLoading } = useGetReponseByTestId(Id ? Number(Id) : 0);
+
+  useEffect(() => { refetch(); }, []);
 
   useEffect(() => {
-    refetch();
-    if (reponses && reponses.length < 1) {
-      navigate("/teacher/correction");
-    }
+    if (reponses && reponses.length < 1) navigate("/teacher/correction");
   }, [reponses]);
 
-  useEffect(() => {
-    refetch();
-    if (reponses && reponses.length < 1) {
-      navigate("/teacher/correction");
-    }
-  }, []);
-
   return (
-    <div className="pl-64 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <Button
-              onClick={() => navigate("/teacher/correction")}
-              variant={"secondary"}
-            >
-              <ChevronLeft />
-            </Button>
-            Correction d'un test
+      <div className="p-8 max-w-4xl mx-auto">
+        <Button onClick={() => navigate("/teacher/correction")} variant="outline" size="sm" className="mb-6">
+          <ChevronLeft className="w-4 h-4" /> Retour
+        </Button>
+
+        {testLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-        </div>
-        <div className="">
-          {
-            testLoading && <div className="text-5xl flex justify-center">
-              <LoadingOutlined />
-            </div>
-          }
-          {test && (
-            <div className="shadow px-4 py-2 bg-white my-2">
-              <div className="flex justify-between">
-                <div className="flex gap-4 text-lg">
-                  <div className=""> {test.titre} du</div>
-                  <div className="text-gray-800 font-bold">
-                    {test.date_declechement}
-                  </div>
-                  <div className="flex">
-                    {test.status === "Terminé" ? (
-                      <div className="text-xs border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                        <HourglassOutlined /> <div>Terminé</div>
-                      </div>
-                    ) : test.status === "En cours" ? (
-                      <div className="text-xs border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                        <HourglassOutlined /> <div>En cours</div>
-                      </div>
-                    ) : (
-                      <div className="text-xs border rounded-full px-1 bg-yellow-200 text-white flex items-center gap-2">
-                        <HourglassOutlined /> <div>En attente</div>
-                      </div>
-                    )}
-                  </div>
+        ) : test ? (
+          <Card className="border-border overflow-hidden mb-8">
+            <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-4">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-3">
+                  <HelpCircle className="w-5 h-5 text-white" />
+                  <h1 className="text-lg font-semibold text-white">Correction: {test.titre ?? ""}</h1>
                 </div>
-                <div className="font-bold text-gray-800">
-                  {" "}
-                  {test.nom_groupe}{" "}
-                </div>
+                <StatusBadge status={test.status} />
               </div>
             </div>
-          )}
-        </div>
-        <div>
-          {
-            reponseLoading && <div className="text-5xl flex justify-center">
-              <LoadingOutlined />
+            <div className="p-5">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4" />
+                  <span>{formatDate(test.date_declechement)}</span>
+                </div>
+                <span className="font-medium">{test?.nom_groupe ?? ""}</span>
+              </div>
             </div>
-          }
-          {reponses &&
-            reponses.map((reponse: any, index: any) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() =>
-                    navigate(
-                      `/teacher/correction/action/${reponse.tentative.id_test}/${reponse.id_reponse}`,
-                    )
-                  }
-                  className="mb-2 px-4 py-2 cursor-pointer border rounded"
-                >
-                  <div>
-                    <div className="flex justify-end">
-                      <div className="my-1 font-semibold">
-                        Note maximum : {reponse.question.points}
-                      </div>
+          </Card>
+        ) : null}
+
+        <h2 className="text-xl font-bold tracking-tight mb-6">Réponses des étudiants</h2>
+
+        {reponseLoading ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+          </div>
+        ) : reponses?.length > 0 ? (
+          <div className="space-y-3">
+            {reponses.map((reponse: any, index: number) => (
+              <div
+                key={index}
+                onClick={() =>
+                  reponse?.tentative?.id_test && reponse?.id_reponse &&
+                  navigate(`/teacher/correction/action/${reponse.tentative.id_test}/${reponse.id_reponse}`)
+                }
+                className="bg-card border border-border rounded-xl p-5 card-hover cursor-pointer"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                      <span className="bg-muted px-2 py-0.5 rounded font-medium">
+                        {reponse?.question?.type_question ?? ""}
+                      </span>
+                      <span className="font-medium text-primary-custom">
+                        Note max: {reponse?.question?.points ?? "?"}
+                      </span>
                     </div>
-                    <div className="font-semibold">
-                      Question : {reponse.question.texte_question}{" "}
-                    </div>
-                    <div className="text-gray-700">
-                      Reponse de l'étudiant : {reponse.reponse_texte}{" "}
-                    </div>
+                    <p className="font-medium mb-1">{reponse?.question?.texte_question ?? ""}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-2">
+                      <span className="font-medium">Réponse: </span>
+                      {reponse?.reponse_texte ?? ""}
+                    </p>
+                  </div>
+                  <div className="shrink-0">
+                    <Button size="sm" variant="outline">
+                      Noter
+                    </Button>
                   </div>
                 </div>
-              );
-            })}
-        </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <HelpCircle className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">Aucune réponse</h3>
+            <p className="text-sm text-muted-foreground/60">
+              Les réponses des étudiants apparaîtront ici
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

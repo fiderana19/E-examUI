@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAnnonceByGroupId } from "@/hooks/annonce/useGetAnnonceByGroupId";
-import { LoadingOutlined, NotificationTwoTone } from "@ant-design/icons";
+import { Loader2, Bell, GraduationCap, FileText } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "../../utils/dateFixation";
 
 const StudentHome: React.FC = () => {
   const navigate = useNavigate();
@@ -14,56 +15,82 @@ const StudentHome: React.FC = () => {
   const { data: annonces, isLoading } = useGetAnnonceByGroupId(
     token ? JSON.parse(atob(token.split(".")[1])).id_groupe : 0,
   );
-  
+
   return (
-    <div className="pt-20 pb-6 px-[12%] min-h-screen flex flex-col justify-center">
+    <div className="min-h-screen bg-background pt-16">
       <StudentNavigation />
-      <div className="flex justify-between items-center">
-        <div className="w-1/2">
-          <div className="text-3xl font-bold">
-            <Typewriter text={`Bienvenue sur E-exam`} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="gradient-primary rounded-2xl p-8 md:p-12 mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+              <Typewriter text="Bienvenue sur E-exam" />
+            </h1>
+            <p className="text-white/80 text-lg max-w-2xl mb-6">
+              La plateforme dédiée aux examens en ligne. Consultez vos annonces, passez vos tests et voyez vos résultats.
+            </p>
+            <Button onClick={() => navigate("/student/announce")} variant="secondary" size="lg">
+              <Bell className="w-4 h-4" /> Voir les annonces
+            </Button>
           </div>
-          <div className="my-4">
-            La plateforme dedié aux examens en ligne, vous pouvez voir vos
-            resultats d'examens ici.
-          </div>
-          <Button onClick={() => navigate("/student/announce")}>
-            Voir les annonces
-          </Button>
         </div>
-        <Card className="w-1/3 px-4">
-          <div>
-            <div className="text-gray-800 font-medium">
-              Les dernieres annonces
-            </div>
-            <div className="">
-              {
-                isLoading && <div className="text-5xl flex justify-center">
-                  <LoadingOutlined />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <h2 className="text-lg font-semibold">Actions rapides</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button onClick={() => navigate("/student/test")} className="bg-card border border-border rounded-xl p-5 card-hover text-left cursor-pointer">
+                <div className="w-10 h-10 rounded-lg bg-primary-custom/10 text-primary-custom flex items-center justify-center mb-3">
+                  <GraduationCap className="w-5 h-5" />
                 </div>
-              }
-              {annonces &&
-                annonces?.data.slice(0, 3).map((announce: any, index: any) => {
-                  return (
-                    <div key={index} className="mb-1">
-                      <div className="text-xs text-gray-600 mb-1">
-                        {" "}
-                        {announce.creation_annonce}{" "}
-                      </div>
-                      <blockquote className="border-l-2 pl-6 italic text-justify">
-                        <NotificationTwoTone /> {announce.titre_annonce} <br />
-                        {announce.texte_annonce}
-                      </blockquote>
-                      <div className="text-right font-medium">
-                        {" "}
-                        {announce.utilisateur.nom}{" "}
-                      </div>
-                    </div>
-                  );
-                })}
+                <h3 className="font-semibold mb-1">Mes tests</h3>
+                <p className="text-sm text-muted-foreground">Passer les examens disponibles</p>
+              </button>
+              <button onClick={() => navigate("/student/result")} className="bg-card border border-border rounded-xl p-5 card-hover text-left cursor-pointer">
+                <div className="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center mb-3">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <h3 className="font-semibold mb-1">Mes résultats</h3>
+                <p className="text-sm text-muted-foreground">Consulter vos notes publiées</p>
+              </button>
             </div>
           </div>
-        </Card>
+
+          <div>
+            <h2 className="text-lg font-semibold mb-4">Dernières annonces</h2>
+            <Card className="p-5">
+              {isLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : annonces?.data?.length ? (
+                <div className="space-y-4">
+                  {annonces.data.slice(0, 3).map((announce: any, index: any) => (
+                    <div key={index} className="pb-3 border-b border-border last:border-0 last:pb-0">
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-xs text-muted-foreground">{formatDate(announce?.creation_annonce)}</span>
+                      </div>
+                      <p className="text-sm font-medium">{announce?.titre_annonce ?? ""}</p>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{announce?.texte_annonce ?? ""}</p>
+                      <p className="text-xs font-medium text-primary-custom mt-1">— {announce?.utilisateur?.nom ?? ""}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-8">Aucune annonce pour le moment</p>
+              )}
+              <button onClick={() => navigate("/student/announce")} className="w-full text-sm text-primary-custom font-medium mt-3 text-center hover:underline">
+                Voir toutes les annonces
+              </button>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

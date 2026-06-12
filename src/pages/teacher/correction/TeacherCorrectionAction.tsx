@@ -3,18 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import StatusBadge from "@/components/StatusBadge";
 import { useGetReponseById } from "@/hooks/reponse/useGetReponseById";
 import { usePatchReponseForCorrection } from "@/hooks/reponse/usePatchReponseForCorrection";
 import { useGetTestById } from "@/hooks/test/useGetTestById";
 import { GivePointsInterface } from "@/interfaces/response.interface";
 import { GivePointsValidation } from "@/validation/response.validation";
-import { HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Clock, Loader2, HelpCircle, Award } from "lucide-react";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleFloatKeyPress } from "../../../utils/handleKeyPress";
+import { formatDate } from "../../../utils/dateFixation";
 import { HttpStatus } from "@/constants/Http_status";
 import { useGetReponseByTestId } from "@/hooks/reponse/useGetReponseByTestId";
 
@@ -24,18 +25,10 @@ const TeacherCorrectionAction: React.FC = () => {
   const reponseId = req.reponseId;
   const navigate = useNavigate();
   const { data: test, isLoading: testLoading, refetch: refetchTest } = useGetTestById(testId ? Number(testId) : 0);
-  const { refetch: refetchAllReponse } = useGetReponseByTestId(
-    testId ? Number(testId) : 0
-  );  
-  const { data: reponse, refetch, isLoading: reponseLoading } = useGetReponseById(
-    reponseId ? Number(reponseId) : 0,
-  );
+  const { refetch: refetchAllReponse } = useGetReponseByTestId(testId ? Number(testId) : 0);
+  const { data: reponse, refetch, isLoading: reponseLoading } = useGetReponseById(reponseId ? Number(reponseId) : 0);
   const { mutateAsync: corrigerReponse, isPending: corrigerLoading } = usePatchReponseForCorrection({
-    action() {
-      refetch();
-      refetchTest();
-      refetchAllReponse();
-    },
+    action() { refetch(); refetchTest(); refetchAllReponse(); },
   });
   const {
     handleSubmit: submit,
@@ -47,116 +40,113 @@ const TeacherCorrectionAction: React.FC = () => {
   });
 
   useEffect(() => {
-    setValue("id_reponse", reponseId ? String(reponseId) : "");
+    setValue("id_reponse", reponseId ?? "");
   }, []);
 
   const handleSubmit = async (data: GivePointsInterface) => {
     const res = await corrigerReponse(data);
-    if (res.status === HttpStatus.OK || res.status === HttpStatus.CREATED) {
-      navigate(-1);
-    }
+    if (res.status === HttpStatus.OK || res.status === HttpStatus.CREATED) navigate(-1);
   };
 
   return (
-    <div className="pl-64 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <Button onClick={() => navigate(-1)} variant={"secondary"}>
-              <ChevronLeft />
-            </Button>
-            Correction d'un test
+      <div className="p-8 max-w-3xl mx-auto">
+        <Button onClick={() => navigate(-1)} variant="outline" size="sm" className="mb-6">
+          <ChevronLeft className="w-4 h-4" /> Retour
+        </Button>
+
+        {testLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-        </div>
-        <div className="">
-          {
-            testLoading && <div className="text-5xl flex justify-center">
-              <LoadingOutlined />
-            </div>
-          }
-          {test && (
-            <div className="shadow px-4 py-2 bg-white my-2">
-              <div className="flex justify-between">
-                <div className="flex gap-4 text-lg">
-                  <div className=""> {test.titre} du</div>
-                  <div className="text-gray-800 font-bold">
-                    {test.date_declechement}
-                  </div>
-                  <div className="flex">
-                    {test.status === "Terminé" ? (
-                      <div className="text-xs border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                        <HourglassOutlined /> <div>Terminé</div>
-                      </div>
-                    ) : test.status === "En cours" ? (
-                      <div className="text-xs border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                        <HourglassOutlined /> <div>En cours</div>
-                      </div>
-                    ) : (
-                      <div className="text-xs border rounded-full px-1 bg-yellow-200 text-white flex items-center gap-2">
-                        <HourglassOutlined /> <div>En attente</div>
-                      </div>
-                    )}
-                  </div>
+        ) : test ? (
+          <Card className="border-border overflow-hidden mb-8">
+            <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-4">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-3">
+                  <Award className="w-5 h-5 text-white" />
+                  <h1 className="text-lg font-semibold text-white">Correction: {test.titre ?? ""}</h1>
                 </div>
-                <div className="font-bold text-gray-800">
-                  {" "}
-                  {test.nom_groupe}{" "}
-                </div>
+                <StatusBadge status={test.status} />
               </div>
             </div>
-          )}
-        </div>
-        <div>
-          {
-            reponseLoading && <div className="text-5xl flex justify-center">
-              <LoadingOutlined />
-            </div>
-          }
-          {reponse && (
-            <div className="mb-2 px-4 py-2 cursor-pointer border rounded">
-              <div>
-                <div className="flex justify-end">
-                  <div className="my-1 font-semibold">
-                    Note maximum : {reponse.question.points}
-                  </div>
+            <div className="p-5">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4" />
+                  <span>{formatDate(test.date_declechement)}</span>
                 </div>
-                <div className="font-semibold">
-                  Question : {reponse.question.texte_question}{" "}
-                </div>
-                <div className="text-gray-700">
-                  Reponse de l'étudiant : {reponse.reponse_texte}{" "}
-                </div>
+                <span className="font-medium">{test?.nom_groupe ?? ""}</span>
               </div>
             </div>
-          )}
-          <Card className="w-max mx-auto">
-            <form onSubmit={submit(handleSubmit)} className="w-64 p-4">
-              <Label className="mb-1">Note pour ce reponse : </Label>
-              <Controller
-                control={control}
-                name="score_question"
-                render={({ field: { value, onChange } }) => (
-                  <Input
-                    value={value ? value : 0}
-                    onChange={onChange}
-                    onKeyPress={handleFloatKeyPress}
-                    className={`${errors?.score_question && "border border-red-500 text-red-500 rounded"}`}
-                  />
-                )}
-              />
-              {errors?.score_question && (
-                <div className="text-xs w-full text-red-500 text-left">
-                  {errors?.score_question.message}
-                </div>
-              )}
-              <Button disabled={corrigerLoading} type="submit" className="mt-4 w-full">
-                { corrigerLoading && <LoadingOutlined /> }
-                Noter
-              </Button>
-            </form>
           </Card>
-        </div>
+        ) : null}
+
+        {reponseLoading ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+          </div>
+        ) : reponse ? (
+          <div className="space-y-6">
+            <Card className="border-border">
+              <div className="p-5">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                  <span className="bg-muted px-2 py-0.5 rounded font-medium">
+                    {reponse?.question?.type_question ?? ""}
+                  </span>
+                  <span className="font-medium text-primary-custom">
+                    Note maximum: {reponse?.question?.points ?? "?"}
+                  </span>
+                </div>
+                <p className="font-semibold mb-2">
+                  <HelpCircle className="w-4 h-4 inline mr-1 text-muted-foreground" />
+                  {reponse?.question?.texte_question ?? ""}
+                </p>
+                <div className="bg-muted/50 rounded-lg p-4 mt-3">
+                  <p className="text-sm font-medium text-muted-foreground mb-1">Réponse de l'étudiant :</p>
+                  <p className="text-sm">{reponse?.reponse_texte ?? ""}</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="border-border max-w-md mx-auto">
+              <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3">
+                <div className="flex items-center gap-2 text-white">
+                  <Award className="w-5 h-5" />
+                  <h2 className="font-semibold">Attribuer une note</h2>
+                </div>
+              </div>
+              <form onSubmit={submit(handleSubmit)} className="p-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Note pour cette réponse</Label>
+                  <Controller
+                    control={control}
+                    name="score_question"
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        type="number"
+                        step="0.25"
+                        value={value ?? 0}
+                        onChange={onChange}
+                        onKeyPress={handleFloatKeyPress}
+                        placeholder="0.00"
+                        className={errors?.score_question ? "border-destructive" : ""}
+                      />
+                    )}
+                  />
+                  {errors?.score_question && (
+                    <p className="text-xs text-destructive">{errors?.score_question.message}</p>
+                  )}
+                </div>
+                <Button disabled={corrigerLoading} type="submit" className="w-full">
+                  {corrigerLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Noter
+                </Button>
+              </form>
+            </Card>
+          </div>
+        ) : null}
       </div>
     </div>
   );

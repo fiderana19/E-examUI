@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { useGetUserById } from "@/hooks/user/useGetUserById";
-import { LoadingOutlined, UserOutlined } from "@ant-design/icons";
-import { LogOut } from "lucide-react";
+import { Loader2, User, Mail, Hash, Users, LogOut } from "lucide-react";
 import React from "react";
 
 const StudentProfile: React.FC = () => {
@@ -14,45 +13,60 @@ const StudentProfile: React.FC = () => {
   );
 
   return (
-    <div className="pt-20 pb-10 px-[12%] min-h-screen">
+    <div className="min-h-screen bg-background pt-16">
       <StudentNavigation />
-      <div>
-        <div className="text-gray-800 text-xl font-bold mb-4">Profile</div>
-        {
-          isLoading && <div className="text-5xl flex justify-center">
-            <LoadingOutlined />
+      <div className="max-w-lg mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold tracking-tight mb-8">Profil</h1>
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-        }
-        {user && (
-          <Card className="px-4 py-10 w-1/3 mx-auto">
-            <div className="p-4 border w-max rounded-full mx-auto">
-              <UserOutlined className="text-6xl" />
+        ) : user ? (
+          <Card className="border-border overflow-hidden">
+            <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-8 flex flex-col items-center">
+              <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-3">
+                <User className="w-10 h-10 text-white" />
+              </div>
+              <h2 className="text-xl font-semibold text-white">{user.nom ?? ""}</h2>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center">
-                <div>Nom :</div>
-                <div className="font-bold"> {user.nom} </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <User className="w-4 h-4" />
+                  <span className="text-sm">Nom</span>
+                </div>
+                <span className="text-sm font-medium">{user.nom ?? ""}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <div>Matricule :</div>
-                <div className="font-bold">{user.matricule}</div>
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Hash className="w-4 h-4" />
+                  <span className="text-sm">Matricule</span>
+                </div>
+                <span className="text-sm font-medium">{user.matricule ?? ""}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <div>Groupe :</div>
-                <div className="font-bold">{user.nom_groupe}</div>
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Users className="w-4 h-4" />
+                  <span className="text-sm">Groupe</span>
+                </div>
+                <span className="text-sm font-medium">{user.nom_groupe ?? ""}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <div>Adresse mail :</div>
-                <div className="font-bold">{user.email}</div>
+              <div className="flex items-center justify-between py-3 border-b border-border">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Mail className="w-4 h-4" />
+                  <span className="text-sm">Adresse mail</span>
+                </div>
+                <span className="text-sm font-medium">{user.email ?? ""}</span>
+              </div>
+              <div className="pt-4">
+                <Button onClick={logout} variant="destructive" className="w-full">
+                  <LogOut className="w-4 h-4" /> Se déconnecter
+                </Button>
               </div>
             </div>
           </Card>
-        )}
-        <div className="flex justify-center mt-4">
-          <Button onClick={() => logout()} className="w-max">
-            <LogOut /> Se deconnecter
-          </Button>
-        </div>
+        ) : null}
       </div>
     </div>
   );

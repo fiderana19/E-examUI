@@ -6,7 +6,7 @@ import { useTest } from "@/context/TestContext";
 import { usePostTentative } from "@/hooks/tentative/usePostTentative";
 import { useGetActiveTestBYGroupId } from "@/hooks/test/useGetActiveTestBYGroupId";
 import { TentativeCreateInterface } from "@/interfaces/tentative.interface";
-import { ClockCircleOutlined, CloseOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Clock, GraduationCap, Loader2, Timer, XCircle } from "lucide-react";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,9 +19,7 @@ const StudentTest: React.FC = () => {
   const navigate = useNavigate();
   const { mutateAsync: creerTentative } = usePostTentative({ action() {} });
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  useEffect(() => { refetch(); }, []);
 
   const debutTest = async (test: any) => {
     const data: TentativeCreateInterface = { id_test: test.id_test };
@@ -30,57 +28,59 @@ const StudentTest: React.FC = () => {
       updateIsFinished(false);
       const min = Number(test.duree_minutes) * 60;
       updateSecondsLeft(min);
-      navigate(
-        `/student/test/room/${test.id_test}/${response.data.id_tentative}`,
-      );
+      navigate(`/student/test/room/${test.id_test}/${response.data.id_tentative}`);
     }
   };
 
   return (
-    <div className="pt-20 pb-10 px-[12%] min-h-screen">
+    <div className="min-h-screen bg-background pt-16">
       <StudentNavigation />
-      <div>
-        <div className="text-gray-800 text-xl font-bold mb-10">Les tests</div>
-        {
-          isLoading && <div className="text-5xl flex justify-center">
-            <LoadingOutlined />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold tracking-tight">Mes tests</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Les examens disponibles pour votre groupe
+          </p>
+        </div>
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-        }
-        {tests?.data && tests.data.length < 1 && (
-          <div className="w-max mx-auto text-center text-gray-600">
-            <CloseOutlined className="text-7xl" />
-            <div className="mt-4 text-xl">Aucun test disponible.</div>
+        ) : !tests?.data?.length ? (
+          <div className="text-center py-20">
+            <GraduationCap className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground">Aucun test disponible</h3>
+            <p className="text-sm text-muted-foreground/60 mt-1">Les tests apparaîtront ici quand ils seront publiés</p>
           </div>
-        )}
-        <div className="">
-          {tests?.data &&
-            tests.data.slice(0, 1).map((test: any, index: any) => {
-              return (
-                <div key={index} className="shadow p-4 bg-white">
-                  <div className="mb-4">
-                    <div className="flex justify-between">
-                      <div className="flex gap-4">
-                        <div className="font-bold text-lg"> {test.titre} </div>
-                        <div className="border rounded-full px-2 bg-gray-400 text-white">
-                          <ClockCircleOutlined /> {test.duree_minutes}:00
-                        </div>
-                      </div>
-                      <div className="font-bold text-gray-800">
-                        {" "}
-                        {test.nom_groupe}{" "}
+        ) : (
+          <div className="space-y-4">
+            {tests.data.map((test: any, index: any) => (
+              <div key={index} className="bg-card border border-border rounded-xl p-6 card-hover">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h2 className="text-xl font-bold">{test.titre ?? ""}</h2>
+                      <div className="flex items-center gap-1.5 text-xs bg-primary-custom/10 text-primary-custom px-2.5 py-1 rounded-full font-medium">
+                        <Timer className="w-3.5 h-3.5" />
+                        {test.duree_minutes ?? "?"} min
                       </div>
                     </div>
-                    <div className="text-gray-700"> {test.description} </div>
+                    <p className="text-sm text-muted-foreground">{test.description ?? ""}</p>
                   </div>
-                  <div className="flex justify-end">
-                    <Button onClick={() => debutTest(test)}>
-                      Faire le test
-                    </Button>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-medium">{test.nom_groupe ?? ""}</p>
                   </div>
                 </div>
-              );
-            })}
-        </div>
+                <div className="flex justify-end pt-4 border-t border-border">
+                  <Button onClick={() => debutTest(test)} size="lg">
+                    <Clock className="w-4 h-4" /> Faire le test
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

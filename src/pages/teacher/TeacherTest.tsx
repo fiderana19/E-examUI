@@ -16,27 +16,25 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { mock_tests } from "@/constants/mock";
+import StatusBadge from "@/components/StatusBadge";
 import { useAuth } from "@/context/AuthContext";
 import { useTest } from "@/context/TestContext";
 import { useDeleteTest } from "@/hooks/test/useDeleteTest";
 import { useGetAllTestByTeacherId } from "@/hooks/test/useGetAllTestByTeacherId";
 import { useLaunchTest } from "@/hooks/test/useLaunchTest";
 import {
-  ClockCircleOutlined,
-  CloseOutlined,
-  HourglassOutlined,
-  LoadingOutlined,
-  QuestionCircleOutlined,
-} from "@ant-design/icons";
-import {
+  Loader2,
   CalendarClock,
-  Check,
-  Edit,
+  Clock,
   Filter,
-  History,
   Plus,
   Trash,
+  Eye,
+  Edit,
+  Play,
+  HelpCircle,
+  FileText,
+  Timer,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -49,39 +47,21 @@ const TeacherTest: React.FC = () => {
     token ? JSON.parse(atob(token.split(".")[1])).id : 0,
   );
   const { mutateAsync: launchTest, isPending: launchLoading } = useLaunchTest({
-    action() {
-      refetch();
-    },
+    action() { refetch(); },
   });
   const { mutateAsync: deleteTest, isPending: deleteLoading } = useDeleteTest({
-    action() {
-      refetch();
-    },
+    action() { refetch(); },
   });
-  const [filtereds, setFiltereds] = useState<any[]>([]);
-  const [filterText, setFilterText] = useState<string>("Tout");
-  const [filterRef, setFilterRef] = useState<boolean>(false);
+  const [filterStatus, setFilterStatus] = useState<string>("Tout");
   const [selectedTest, setSelectedTest] = useState<number>(0);
 
-  useEffect(() => {
-    refetch();
-  }, [])
-
-  async function filterData(filter: string) {
-    setFilterRef(true);
-    setFilterText(filter);
-    const acc = mock_tests.filter(
-      (accounts: any) => accounts.status === filter,
-    );
-    setFiltereds(acc);
-  }
+  useEffect(() => { refetch(); }, []);
 
   const launchConfirm = async (data: any) => {
     await launchTest(data.id_test);
     updateIsFinished(false);
     const min = Number(data.duree_minutes) * 60;
     updateSecondsLeft(min + 10);
-
     navigate(`/teacher/test/launched/view/${data.id_test}`);
   };
 
@@ -89,344 +69,192 @@ const TeacherTest: React.FC = () => {
     await deleteTest(selectedTest);
   };
 
-  return (
-    <div className="pl-64 pr-6">
-      <TeacherNavigation />
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-10">
-          <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <CalendarClock /> Vos tests
+  const filteredTests = tests?.data?.filter((test: any) =>
+    filterStatus === "Tout" ? true : test.status === filterStatus
+  );
+
+  const renderTestCard = (test: any) => (
+    <div key={test.id_test} className="bg-card border border-border rounded-xl p-6 card-hover">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 flex-wrap mb-2">
+            <h3 className="text-lg font-semibold truncate">{test.titre ?? ""}</h3>
+            <StatusBadge status={test.status} />
           </div>
-          <div className="flex gap-2 items-center">
+          <p className="text-sm text-muted-foreground line-clamp-2">{test.description ?? ""}</p>
+        </div>
+        <div className="text-right shrink-0">
+          <p className="text-sm font-medium text-muted-foreground">{test?.nom_groupe ?? ""}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+        <div className="flex items-center gap-1.5">
+          <Timer className="w-4 h-4" />
+          <span>{test.duree_minutes ?? "?"} min</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <HelpCircle className="w-4 h-4" />
+          <span>{test.max_questions ?? "?"} questions</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <FileText className="w-4 h-4" />
+          <span>Note max: {test.note_max ?? "?"}</span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border">
+        {test.status === "En attente" && (
+          <>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="sm">
+                  <Play className="w-4 h-4" /> Lancer
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Lancement d'un test</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Procéder au lancement du test ?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                  <AlertDialogAction className="p-0">
+                    <Button disabled={launchLoading} onClick={() => launchConfirm(test)}>
+                      {launchLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                      Confirmer
+                    </Button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate(`/teacher/test/edit/${test.id_test}`)}
+            >
+              <Edit className="w-4 h-4" /> Modifier
+            </Button>
+          </>
+        )}
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => navigate(`/teacher/test/view/${test.id_test}`)}
+        >
+          <Eye className="w-4 h-4" /> Questions
+        </Button>
+        {test.status === "En attente" && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button size="sm" variant="destructive">
+                <Trash className="w-4 h-4" /> Supprimer
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Suppression d'un test</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Voulez-vous vraiment supprimer ce test ?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction className="p-0">
+                  <Button
+                    disabled={deleteLoading}
+                    onClick={() => deleteConfirm()}
+                    variant="destructive"
+                  >
+                    {deleteLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                    Supprimer
+                  </Button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+        {test.status === "Terminé" && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => navigate(`/teacher/result/view/${test.id_test}`)}
+          >
+            <FileText className="w-4 h-4" /> Résultats
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="ml-64 min-h-screen bg-background">
+      <TeacherNavigation />
+      <div className="p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Vos tests</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Gérez vos examens et questionnaires
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
             <Popover>
               <PopoverTrigger asChild>
-                <Button>
-                  <Filter /> {filterText}{" "}
+                <Button variant="outline">
+                  <Filter className="w-4 h-4" /> {filterStatus}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto mr-14">
-                <div className="mb-2 text-gray-700 font-medium">
-                  Fitrer par :
-                </div>
-                <div className="w-40 text-left">
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => {
-                      setFilterRef(false);
-                      setFilterText("Tout");
-                    }}
-                  >
-                    <CalendarClock /> Tous les tests
-                  </Button>
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => filterData("En attente")}
-                  >
-                    <HourglassOutlined /> En attente
-                  </Button>
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => filterData("En cours")}
-                  >
-                    <History /> En cours
-                  </Button>
-                  <Button
-                    className="w-full"
-                    variant={"ghost"}
-                    onClick={() => filterData("Terminé")}
-                  >
-                    <Check /> Terminé
-                  </Button>
+              <PopoverContent className="w-44 p-2" align="end">
+                <div className="space-y-1">
+                  {["Tout", "En attente", "En cours", "Terminé"].map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setFilterStatus(s)}
+                      className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                        filterStatus === s
+                          ? "bg-primary-custom/10 text-primary-custom font-medium"
+                          : "text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
                 </div>
               </PopoverContent>
             </Popover>
             <Button onClick={() => navigate("/teacher/test/create")}>
-              <Plus /> Nouveau test
+              <Plus className="w-4 h-4" /> Nouveau test
             </Button>
           </div>
         </div>
-        {tests?.data && tests.data.length < 1 && (
-          <div className="w-max mx-auto text-center text-gray-600 my-10">
-            <CloseOutlined className="text-7xl" />
-            <div className="mt-4 text-xl">Vous avez créé aucun test</div>
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+          </div>
+        ) : !filteredTests?.length ? (
+          <div className="text-center py-20">
+            <CalendarClock className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground mb-2">
+              {filterStatus === "Tout" ? "Vous n'avez créé aucun test" : "Aucun test avec ce statut"}
+            </h3>
+            <p className="text-sm text-muted-foreground/60 mb-6">
+              Créez votre premier test pour commencer
+            </p>
+            {filterStatus === "Tout" && (
+              <Button onClick={() => navigate("/teacher/test/create")}>
+                <Plus className="w-4 h-4" /> Créer un test
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredTests.map((test: any) => renderTestCard(test))}
           </div>
         )}
-        {
-          isLoading && <div className="text-5xl flex justify-center">
-            <LoadingOutlined />
-          </div>
-        }
-        <div className="">
-          {filterRef && tests?.data
-            ? filtereds.map((test: any, index: any) => {
-                return (
-                  <div key={index} className="shadow p-4 bg-white my-2">
-                    <div className="mb-4">
-                      <div className="flex justify-between">
-                        <div className="flex gap-4">
-                          <div className="font-bold text-lg">
-                            {" "}
-                            {test.titre}{" "}
-                          </div>
-                          <div className="border rounded-full px-2 bg-gray-400 text-white">
-                            <ClockCircleOutlined /> {test.duree_minutes}:00
-                          </div>
-                        </div>
-                        <div className="font-bold text-gray-800">
-                          {" "}
-                          {test.nom_groupe}{" "}
-                        </div>
-                        {test.status === "Terminé" ? (
-                          <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>Terminé</div>
-                          </div>
-                        ) : test.status === "En cours" ? (
-                          <div className="border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>En cours</div>
-                          </div>
-                        ) : (
-                          <div className="border rounded-full px-2 bg-yellow-200 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>En attente</div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex justify-between my-1">
-                        <div className="flex gap-4">
-                          <div className="font-bold text-lg text-gray-600">
-                            {test.max_questions} questions max
-                          </div>
-                        </div>
-                        <div className="font-bold text-gray-800">
-                          Note maximum : {test.note_max}
-                        </div>
-                      </div>
-                      <div className="text-gray-700"> {test.description} </div>
-                    </div>
-                    <div className="flex justify-end gap-2">
-                      {test.status === "En attente" && (
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <Button
-                              onClick={() => setSelectedTest(test.id_test)}
-                            >
-                              <History /> Lancer
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Lancement d'un test
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Proceder au lancement du test ?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <AlertDialogAction className="p-0">
-                                <Button disabled={launchLoading} onClick={() => launchConfirm(test)}>
-                                  { launchLoading && <LoadingOutlined /> }
-                                  Confirmer
-                                </Button>
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
-                      {test.status === "En attente" && (
-                        <Button
-                          onClick={() =>
-                            navigate(`/teacher/test/edit/${test.id_test}`)
-                          }
-                          variant={"secondary"}
-                        >
-                          <Edit /> Modifier
-                        </Button>
-                      )}
-                      <Button
-                        onClick={() =>
-                          navigate(`/teacher/test/view/${test.id_test}`)
-                        }
-                        variant={"secondary"}
-                      >
-                        <QuestionCircleOutlined /> Voir les questions
-                      </Button>
-                      {test.status === "En attente" && (
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <Button
-                              onClick={() => setSelectedTest(test.id_test)}
-                              variant={"destructive"}
-                            >
-                              <Trash /> Supprimer
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Suppression d'un test
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer ce test ?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <AlertDialogAction className="p-0">
-                                <Button
-                                  disabled={deleteLoading}
-                                  onClick={() => deleteConfirm()}
-                                  variant={"destructive"}
-                                >
-                                  { deleteLoading && <LoadingOutlined /> }
-                                  Supprimer
-                                </Button>
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
-                    </div>
-                  </div>
-                );
-              })
-            : tests?.data &&
-              tests.data.map((test: any, index: any) => {
-                return (
-                  <div key={index} className="shadow p-4 bg-white my-2">
-                    <div className="mb-4">
-                      <div className="flex justify-between">
-                        <div className="flex gap-4">
-                          <div className="font-bold text-lg">
-                            {" "}
-                            {test.titre}{" "}
-                          </div>
-                          <div className="border rounded-full px-2 bg-gray-400 text-white">
-                            <ClockCircleOutlined /> {test.duree_minutes}:00
-                          </div>
-                        </div>
-                        <div className="font-bold text-gray-800">
-                          {" "}
-                          {test.nom_groupe}{" "}
-                        </div>
-                        {test.status === "Terminé" ? (
-                          <div className="border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>Terminé</div>
-                          </div>
-                        ) : test.status === "En cours" ? (
-                          <div className="border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>En cours</div>
-                          </div>
-                        ) : (
-                          <div className="border rounded-full px-2 bg-yellow-200 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>En attente</div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex justify-between my-1">
-                        <div className="flex gap-4">
-                          <div className="font-bold text-lg text-gray-600">
-                            {test.max_questions} questions max
-                          </div>
-                        </div>
-                        <div className="font-bold text-gray-800">
-                          Note maximum : {test.note_max}
-                        </div>
-                      </div>
-                      <div className="text-gray-700"> {test.description} </div>
-                    </div>
-                    <div className="flex justify-end gap-2">
-                      {test.status === "En attente" && (
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <Button
-                              onClick={() => setSelectedTest(test.id_test)}
-                            >
-                              <History /> Lancer
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Lancement d'un test
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Proceder au lancement du test ?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <AlertDialogAction className="p-0">
-                                <Button disabled={launchLoading} onClick={() => launchConfirm(test)}>
-                                  { launchLoading && <LoadingOutlined />}
-                                  Confirmer
-                                </Button>
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
-                      {test.status === "En attente" && (
-                        <Button
-                          onClick={() =>
-                            navigate(`/teacher/test/edit/${test.id_test}`)
-                          }
-                          variant={"secondary"}
-                        >
-                          <Edit /> Modifier
-                        </Button>
-                      )}
-                      <Button
-                        onClick={() =>
-                          navigate(`/teacher/test/view/${test.id_test}`)
-                        }
-                        variant={"secondary"}
-                      >
-                        <QuestionCircleOutlined /> Voir les questions
-                      </Button>
-                      {test.status === "En attente" && (
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <Button
-                              onClick={() => setSelectedTest(test.id_test)}
-                              variant={"destructive"}
-                            >
-                              <Trash /> Supprimer
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Suppression d'un test
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Voulez-vous vraiment supprimer ce test ?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Annuler</AlertDialogCancel>
-                              <AlertDialogAction className="p-0">
-                                <Button
-                                  disabled={deleteLoading}
-                                  onClick={() => deleteConfirm()}
-                                  variant={"destructive"}
-                                >
-                                  { deleteLoading && <LoadingOutlined /> }
-                                  Supprimer
-                                </Button>
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-        </div>
       </div>
     </div>
   );

@@ -19,16 +19,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { mock_optionsqcm, mock_questions } from "@/constants/mock";
 import { useDeleteOption } from "@/hooks/option/useDeleteOption";
 import { useGetAllOptionByQuestionId } from "@/hooks/option/useGetAllOptionByQuestionId";
 import { usePostOption } from "@/hooks/option/usePostOption";
 import { useGetQuestionById } from "@/hooks/question/useGetQuestionById";
 import { OptionCreateInterface } from "@/interfaces/option.interface";
 import { OptionAddValidation } from "@/validation/option.validation";
-import { CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ChevronLeft, Plus, Trash } from "lucide-react";
+import {
+  ChevronLeft,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  Plus,
+  Trash,
+  ListChecks,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -36,21 +42,13 @@ import { useNavigate, useParams } from "react-router-dom";
 const TeacherQCMView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
-  const { data: options, refetch, isLoading: optionLoading } = useGetAllOptionByQuestionId(
-    Id ? Number(Id) : 0,
-  );
+  const { data: options, refetch, isLoading: optionLoading } = useGetAllOptionByQuestionId(Id ? Number(Id) : 0);
   const { data: question, isLoading: questionLoading, refetch: refetchQuestion } = useGetQuestionById(Id ? Number(Id) : 0);
   const { mutateAsync: deleteOption, isPending: deleteOptionLoading } = useDeleteOption({
-    action() {
-      refetch();
-      refetchQuestion();
-    },
+    action() { refetch(); refetchQuestion(); },
   });
   const { mutateAsync: createOption, isPending: createOptionLoading } = usePostOption({
-    action() {
-      refetch();
-      refetchQuestion();
-    },
+    action() { refetch(); refetchQuestion(); },
   });
   const navigate = useNavigate();
   const {
@@ -62,7 +60,7 @@ const TeacherQCMView: React.FC = () => {
   } = useForm<OptionCreateInterface>({
     resolver: yupResolver(OptionAddValidation),
     defaultValues: {
-      id_question: Id ? Id : "",
+      id_question: Id ?? "",
       est_correcte: false,
       texte_option: "",
     },
@@ -70,7 +68,7 @@ const TeacherQCMView: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<number>(0);
 
   useEffect(() => {
-    setValue("id_question", Id ? Id : "");
+    setValue("id_question", Id ?? "");
     setValue("est_correcte", false);
   }, []);
 
@@ -83,141 +81,140 @@ const TeacherQCMView: React.FC = () => {
     await deleteOption(selectedOption);
   };
 
-  const handleCheckboxChange = async (e: any) => {
-    const value = e.target.checked;
-
-    setValue("est_correcte", value);
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue("est_correcte", e.target.checked);
   };
 
   return (
-    <div className="pl-64 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      <div className="my-6">
-        <div className="">
-          <div className="px-10">
-            <div className="flex justify-between items-center">
-              <Button onClick={() => navigate(-1)} variant={"secondary"}>
-                <ChevronLeft />
-              </Button>
-              <div className="uppercase font-bold">
-                Les options de la question QCM
+      <div className="p-8 max-w-4xl mx-auto">
+        <Button
+          onClick={() => navigate(-1)}
+          variant="outline"
+          size="sm"
+          className="mb-6"
+        >
+          <ChevronLeft className="w-4 h-4" /> Retour
+        </Button>
+
+        {questionLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+          </div>
+        ) : question ? (
+          <>
+            <Card className="border-border overflow-hidden mb-8">
+              <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-4">
+                <div className="flex items-center gap-2 text-white">
+                  <ListChecks className="w-5 h-5" />
+                  <h1 className="text-lg font-semibold">Options de la question QCM</h1>
+                </div>
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                  <span className="bg-muted px-2 py-0.5 rounded font-medium">
+                    {question.type_question ?? ""}
+                  </span>
+                  <span className="font-medium text-primary-custom">
+                    {question.points ?? "?"} pt(s)
+                  </span>
+                </div>
+                <p className="font-medium mb-1">{question.texte_question ?? ""}</p>
+                {question.reponse_correcte && (
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium">Réponse correcte: </span>
+                    {question.reponse_correcte}
+                  </p>
+                )}
+              </div>
+            </Card>
+
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Options</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {options?.length ?? 0}/4 option(s)
+                </p>
               </div>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button disabled={options && options.length > 3}>
-                    <Plus /> Nouvelle option
+                    <Plus className="w-4 h-4" /> Nouvelle option
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto mr-16">
-                  <div className="mb-2 text-gray-700 font-medium">
-                    Nouvelle option
-                  </div>
-                  <form
-                    onSubmit={submit(handleSubmit)}
-                    className="w-64 mx-auto"
-                  >
-                    <Label className="mb-1">Option :</Label>
-                    <Controller
-                      control={control}
-                      name="texte_option"
-                      render={({ field: { value, onChange } }) => (
-                        <Input
-                          value={value}
-                          onChange={onChange}
-                          className={`${errors?.texte_option && "border border-red-500 text-red-500 rounded"}`}
+                <PopoverContent className="w-80" align="end">
+                  <div className="space-y-4">
+                    <h3 className="font-medium text-sm">Ajouter une option</h3>
+                    <form onSubmit={submit(handleSubmit)} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label className="text-xs">Option</Label>
+                        <Controller
+                          control={control}
+                          name="texte_option"
+                          render={({ field: { value, onChange } }) => (
+                            <Input
+                              value={value ?? ""}
+                              onChange={onChange}
+                              placeholder="Texte de l'option"
+                              className={errors?.texte_option ? "border-destructive" : ""}
+                            />
+                          )}
                         />
-                      )}
-                    />
-                    {errors?.texte_option && (
-                      <div className="text-xs w-full text-red-500 text-left">
-                        {errors?.texte_option.message}
+                        {errors?.texte_option && (
+                          <p className="text-xs text-destructive">{errors?.texte_option.message}</p>
+                        )}
                       </div>
-                    )}
-                    <div className="flex items-center gap-2 my-2">
-                      <input
-                        type="checkbox"
-                        id="est_correcte"
-                        onChange={handleCheckboxChange}
-                      />
-                      <Label htmlFor="est_correcte">Reponse correcte</Label>
-                    </div>
-                    <div className="flex justify-center mt-4">
-                      <Button disabled={createOptionLoading} type="submit">
-                        { createOptionLoading && <LoadingOutlined /> }
+                      <label className="flex items-center gap-2 text-sm cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="accent-primary-custom"
+                          onChange={handleCheckboxChange}
+                        />
+                        <span>Réponse correcte</span>
+                      </label>
+                      <Button disabled={createOptionLoading} type="submit" className="w-full">
+                        {createOptionLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                         Ajouter
                       </Button>
-                    </div>
-                  </form>
+                    </form>
+                  </div>
                 </PopoverContent>
               </Popover>
             </div>
-            <div className="my-2">
-              {
-                questionLoading && <div className="text-5xl flex justify-center">
-                  <LoadingOutlined />
-                </div>
-              }
-              {question && (
-                <Card className="mb-2 px-4">
-                  <div>
-                    <div className="flex justify-between">
-                      <div className="text-gray-600">
-                        Type: {question.type_question}
-                      </div>
-                      <div className="my-1 font-semibold">
-                        Note pour la question : {question.points} point(s)
-                      </div>
-                    </div>
-                    <div className="font-semibold">
-                      Question : {question.texte_question}{" "}
-                    </div>
-                    <div className="text-gray-700">
-                      Reponse correcte : {question.reponse_correcte}
-                    </div>
-                  </div>
-                </Card>
-              )}
-            </div>
-            <div className="px-10 my-4">
-              {
-                optionLoading && <div className="text-5xl flex justify-center">
-                  <LoadingOutlined />
-                </div>
-              }
-              {options &&
-                options.map((option: any, index: any) => {
-                  return (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center my-2 gap-4"
-                    >
-                      <div className="flex gap-2">
-                        <div
-                          className={`${option.est_correcte ? "text-green-500" : "text-red-400"}`}
-                        >
-                          {option.est_correcte ? (
-                            <CheckCircleOutlined />
-                          ) : (
-                            <CloseCircleOutlined />
-                          )}
-                        </div>
-                        <div> {option.texte_option} </div>
+
+            {optionLoading ? (
+              <div className="flex justify-center py-16">
+                <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+              </div>
+            ) : options?.length > 0 ? (
+              <div className="space-y-2">
+                {options.map((option: any, index: number) => (
+                  <Card key={index} className="border-border">
+                    <div className="p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {option.est_correcte ? (
+                          <CheckCircle className="w-5 h-5 text-six-custom shrink-0" />
+                        ) : (
+                          <XCircle className="w-5 h-5 text-destructive/60 shrink-0" />
+                        )}
+                        <span className={option.est_correcte ? "font-medium" : "text-muted-foreground"}>
+                          {option.texte_option ?? ""}
+                        </span>
                       </div>
                       <AlertDialog>
-                        <AlertDialogTrigger>
+                        <AlertDialogTrigger asChild>
                           <Button
+                            size="icon"
+                            variant="destructive"
                             onClick={() => setSelectedOption(option.id_option)}
-                            size={"icon"}
-                            variant={"destructive"}
                           >
-                            <Trash />
+                            <Trash className="w-4 h-4" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Suppression d'une option
-                            </AlertDialogTitle>
+                            <AlertDialogTitle>Suppression d'une option</AlertDialogTitle>
                             <AlertDialogDescription>
                               Voulez-vous vraiment supprimer cette option ?
                             </AlertDialogDescription>
@@ -227,10 +224,10 @@ const TeacherQCMView: React.FC = () => {
                             <AlertDialogAction className="p-0">
                               <Button
                                 disabled={deleteOptionLoading}
-                                onClick={() => deleteConfirm()}
-                                variant={"destructive"}
+                                onClick={deleteConfirm}
+                                variant="destructive"
                               >
-                                { deleteOptionLoading && <LoadingOutlined /> }
+                                {deleteOptionLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                                 Supprimer
                               </Button>
                             </AlertDialogAction>
@@ -238,11 +235,20 @@ const TeacherQCMView: React.FC = () => {
                         </AlertDialogContent>
                       </AlertDialog>
                     </div>
-                  );
-                })}
-            </div>
-          </div>
-        </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <ListChecks className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-muted-foreground mb-2">Aucune option</h3>
+                <p className="text-sm text-muted-foreground/60">
+                  Ajoutez des options pour cette question QCM
+                </p>
+              </div>
+            )}
+          </>
+        ) : null}
       </div>
     </div>
   );

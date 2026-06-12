@@ -1,6 +1,7 @@
 import TeacherNavigation from "@/components/Navigation/TeacherNavigation";
 import { styles, TableHeader, TableRow } from "@/components/ResultPDF";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Sheet,
   SheetContent,
@@ -8,9 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { mockResultData } from "@/constants/mock";
 import { useGetTentativeForResultByTestId } from "@/hooks/tentative/useGetTentativeForResultByTestId";
-import { CloseOutlined, FilePdfOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Document,
   Page,
@@ -19,17 +18,29 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
-import { BookText, ChevronLeft } from "lucide-react";
+import {
+  Loader2,
+  ChevronLeft,
+  FileText,
+  Users,
+  TrendingUp,
+  TrendingDown,
+  FileDown,
+  Eye,
+  ClipboardList,
+} from "lucide-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { formatDate } from "../../../utils/dateFixation";
 
 const TeacherResultView: React.FC = () => {
   const req = useParams();
   const Id = req.id;
   const navigate = useNavigate();
-  const { data: results, isLoading } = useGetTentativeForResultByTestId(
-    Id ? Number(Id) : 0,
-  );
+  const { data: results, isLoading } = useGetTentativeForResultByTestId(Id ? Number(Id) : 0);
+
+  const firstResult = results?.[0];
+  const testData = firstResult?.test;
 
   const ResultDocument = () => (
     <Document>
@@ -38,151 +49,161 @@ const TeacherResultView: React.FC = () => {
           <View style={styles.flexBetween}>
             <View style={styles.flexNormal}>
               <Text style={styles.headerTitle}>Classe: </Text>
-              <Text style={styles.headerSubtitle}>
-                {results[0].test?.group.nom_groupe}
-              </Text>
+              <Text style={styles.headerSubtitle}>{testData?.group?.nom_groupe ?? ""}</Text>
             </View>
             <View style={styles.flexNormal}>
               <Text style={styles.headerTitle}>Test:</Text>
-              <Text style={styles.headerSubtitle}>
-                {results[0].test?.titre}
-              </Text>
+              <Text style={styles.headerSubtitle}>{testData?.titre ?? ""}</Text>
             </View>
             <View style={styles.flexNormal}>
               <Text style={styles.headerTitle}>Session:</Text>
-              <Text style={styles.headerSubtitle}>
-                {results[0].test?.date_declechement}
-              </Text>
+              <Text style={styles.headerSubtitle}>{formatDate(testData?.date_declechement)}</Text>
             </View>
           </View>
         </View>
-
         <View style={styles.summary}>
-          <Text style={styles.summaryText}>
-            Total participants: {results[0].total}
-          </Text>
-          <Text style={styles.summaryText}>
-            Égal ou au-dessus de la moyenne: {results[0].sup}
-          </Text>
-          <Text style={styles.summaryText}>
-            En dessous de la moyenne:{results[0].sous}
-          </Text>
+          <Text style={styles.summaryText}>Total participants: {firstResult?.total ?? ""}</Text>
+          <Text style={styles.summaryText}>Égal ou au-dessus de la moyenne: {firstResult?.sup ?? ""}</Text>
+          <Text style={styles.summaryText}>En dessous de la moyenne: {firstResult?.sous ?? ""}</Text>
         </View>
-
         <View style={styles.table}>
           <TableHeader />
-          {results &&
-            results[0]?.test?.tentatives?.map(
-              (resultat: any, index: number) => (
-                <TableRow key={index} data={resultat} index={index} />
-              ),
-            )}
+          {testData?.tentatives?.map((resultat: any, index: number) => (
+            <TableRow key={index} data={resultat} index={index} />
+          ))}
         </View>
       </Page>
     </Document>
   );
 
   return (
-    <div className="pl-64 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      {
-        isLoading && <div className="text-5xl flex justify-center">
-          <LoadingOutlined />
-        </div>
-      }
-      {results && (
-        <div className="my-6">
-          <div className="flex justify-between items-center mb-4">
-            <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-              <Button
-                onClick={() => navigate("/teacher/result")}
-                variant={"secondary"}
-              >
-                <ChevronLeft />
-              </Button>
-              Resultat
-            </div>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline">
-                  <FilePdfOutlined /> Generer
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Resultat</SheetTitle>
-                </SheetHeader>
-                <div>
-                  {mockResultData && (
-                    <PDFViewer className="h-screen w-full">
-                      <ResultDocument />
-                    </PDFViewer>
-                  )}
+      <div className="p-8 max-w-6xl mx-auto">
+        <Button onClick={() => navigate("/teacher/result")} variant="outline" size="sm" className="mb-6">
+          <ChevronLeft className="w-4 h-4" /> Retour
+        </Button>
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
+          </div>
+        ) : firstResult && testData ? (
+          <>
+            <Card className="border-border overflow-hidden mb-8">
+              <div className="bg-gradient-to-r from-teal-500 to-cyan-600 px-6 py-4">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-3">
+                    <ClipboardList className="w-5 h-5 text-white" />
+                    <h1 className="text-lg font-semibold text-white">Résultats: {testData?.titre ?? ""}</h1>
+                  </div>
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="secondary" size="sm">
+                        <Eye className="w-4 h-4" /> Aperçu PDF
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent className="w-[90vw] sm:max-w-3xl">
+                      <SheetHeader>
+                        <SheetTitle>Résultat</SheetTitle>
+                      </SheetHeader>
+                      <div className="h-[calc(100vh-8rem)] mt-4">
+                        <PDFViewer className="w-full h-full border-0">
+                          <ResultDocument />
+                        </PDFViewer>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
                 </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-          <div className="">
-            <div className="border p-2">
-              <div>Groupe: {results[0].test?.group.nom_groupe}</div>
-              <div>Examen {results[0].test?.titre}</div>
-              <div>Session du {results[0].test?.date_declechement}</div>
-            </div>
-            <div className="p-2">
-              <div>Total participants: {results[0].total}</div>
-              <div>Egal ou au dessus de la moyenne: {results[0].sup}</div>
-              <div>En dessous de la moyenne: {results[0].sous}</div>
-            </div>
-            <table className=" min-w-full divide-y divide-gray-200 my-4">
-              <thead>
-                <tr>
-                  <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Matricule
-                  </th>
-                  <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Nom
-                  </th>
-                  <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Note / 20
-                  </th>
-                  <th className="lg:px-6 px-2 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Heure de soumission
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {results[0].test?.tentatives.map((res: any, index: any) => {
-                  return (
-                    <tr
-                      className="cursor-pointer"
-                      onClick={() =>
-                        navigate(
-                          `/teacher/result/response/view/${res.id_tentative}`,
-                        )
-                      }
-                      key={index}
-                    >
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {res.utilisateur.matricule}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {res.utilisateur.nom}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {res.note_obtenue < 10 && "0"}
-                        {res.note_obtenue}
-                      </td>
-                      <td className="lg:px-6 px-2 py-4 xl:whitespace-nowrap whitespace-normal text-sm leading-5 text-gray-900">
-                        {res.heure_soumission}
-                      </td>
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <span>{testData?.group?.nom_groupe ?? ""}</span>
+                  <span>•</span>
+                  <span>Session du {formatDate(testData?.date_declechement)}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50">
+                    <Users className="w-8 h-8 text-primary-custom" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">Participants</p>
+                      <p className="text-2xl font-bold">{firstResult?.total ?? "0"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 rounded-lg bg-six-custom/5">
+                    <TrendingUp className="w-8 h-8 text-six-custom" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">≥ Moyenne</p>
+                      <p className="text-2xl font-bold text-six-custom">{firstResult?.sup ?? "0"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 rounded-lg bg-destructive/5">
+                    <TrendingDown className="w-8 h-8 text-destructive" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">&lt; Moyenne</p>
+                      <p className="text-2xl font-bold text-destructive">{firstResult?.sous ?? "0"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-teal-500 to-cyan-600">
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                        Matricule
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                        Nom
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                        Note / 20
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                        Heure de soumission
+                      </th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {testData?.tentatives?.map((res: any, index: number) => (
+                      <tr
+                        key={index}
+                        onClick={() =>
+                          res?.id_tentative && navigate(`/teacher/result/response/view/${res.id_tentative}`)
+                        }
+                        className="cursor-pointer transition-colors hover:bg-muted/50"
+                      >
+                        <td className="px-6 py-4 text-sm font-medium">
+                          {res?.utilisateur?.matricule ?? "---"}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {res?.utilisateur?.nom ?? "---"}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <span className={`font-semibold ${
+                            res?.note_obtenue !== undefined && res?.note_obtenue !== null && res.note_obtenue >= 10
+                              ? "text-six-custom" : "text-destructive"
+                          }`}>
+                            {res?.note_obtenue !== undefined && res?.note_obtenue !== null
+                              ? (res.note_obtenue < 10 ? "0" : "") + res.note_obtenue
+                              : "---"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                          {res?.heure_soumission ?? "---"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { useGetAllTestForCorrectionByTeacherId } from "@/hooks/test/useGetAllTestForCorrectionByTeacherId";
-import { CloseOutlined, HourglassOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Edit } from "lucide-react";
+import StatusBadge from "@/components/StatusBadge";
+import { FileEdit, Loader2, Search, XCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "../../utils/dateFixation";
@@ -17,86 +17,72 @@ const TeacherCorrection: React.FC = () => {
     token ? Number(JSON.parse(atob(token.split(".")[1])).id) : 0,
   );
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  useEffect(() => { refetch(); }, []);
+
+  const filtered = tests?.filter((test: any) =>
+    !searchRef || test.titre?.toLowerCase().includes(searchRef.toLowerCase())
+  );
 
   return (
-    <div className="pl-64 pr-6">
+    <div className="ml-64 min-h-screen bg-background">
       <TeacherNavigation />
-      <div className="my-6">
-        <div className="flex justify-between items-center mb-10">
-          <div className="text-gray-800 text-xl font-bold flex items-center gap-2">
-            <Edit /> Vos corrections à faire
+      <div className="p-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Vos corrections</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Corrigez les copies soumises par les étudiants
+            </p>
           </div>
-          <Input
-            className="w-48"
-            onChange={(e) => setSearchRef(e.target.value)}
-            placeholder="Titre du test..."
-          />
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              className="pl-9"
+              value={searchRef}
+              onChange={(e) => setSearchRef(e.target.value)}
+              placeholder="Titre du test..."
+            />
+          </div>
         </div>
-        {
-          isLoading && <div className="text-5xl flex justify-center">
-            <LoadingOutlined />
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary-custom" />
           </div>
-        }
-        {tests && tests.length < 1 && (
-          <div className="w-max mx-auto text-center text-gray-600 my-10">
-            <CloseOutlined className="text-7xl" />
-            <div className="mt-4 text-xl">
-              Vous avez aucune correction à faire
-            </div>
+        ) : !filtered?.length ? (
+          <div className="text-center py-20">
+            <XCircle className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-muted-foreground">
+              {searchRef ? "Aucun test trouvé" : "Vous avez aucune correction à faire"}
+            </h3>
+            <p className="text-sm text-muted-foreground/60 mt-1">
+              {searchRef ? "Essayez un autre terme de recherche" : "Les tests à corriger apparaîtront ici"}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filtered.map((test: any, index: any) => (
+              <div key={index} className="bg-card border border-border rounded-xl p-5 card-hover">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="font-semibold truncate">{test.titre ?? ""}</h3>
+                      <StatusBadge status={test.status} />
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <span>du {formatDate(test?.date_declechement)}</span>
+                      <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+                      <span>{test?.nom_groupe ?? ""}</span>
+                    </div>
+                  </div>
+                  <Button onClick={() => navigate(`/teacher/correction/view/${test.id_test}`)}>
+                    <FileEdit className="w-4 h-4" /> Corriger
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
-        <div className="">
-          {tests &&
-            tests.map((test: any, index: any) => {
-              if (searchRef && !test.titre.includes(searchRef)) {
-                return null;
-              }
-              return (
-                <div key={index} className="shadow px-4 py-2 bg-white my-2">
-                  <div className="flex justify-between">
-                    <div className="flex gap-4 text-lg">
-                      <div className=""> {test.titre} du </div>
-                      <div className="text-gray-800 font-bold">
-                        {formatDate(test.date_declechement)}
-                      </div>
-                      <div className="flex">
-                        {test.status === "Terminé" ? (
-                          <div className="text-xs border rounded-full px-2 bg-green-400 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>Terminé</div>
-                          </div>
-                        ) : test.status === "En cours" ? (
-                          <div className="text-xs border rounded-full px-2 bg-gray-400 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>En cours</div>
-                          </div>
-                        ) : (
-                          <div className="text-xs border rounded-full px-1 bg-yellow-200 text-white flex items-center gap-2">
-                            <HourglassOutlined /> <div>En attente</div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="font-bold text-gray-800">
-                      {" "}
-                      {test.nom_groupe}{" "}
-                    </div>
-                  </div>
-                  <div className="flex justify-end my-1">
-                    <Button
-                      onClick={() =>
-                        navigate(`/teacher/correction/view/${test.id_test}`)
-                      }
-                      variant={"secondary"}
-                    >
-                      <Edit /> Corriger
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
       </div>
     </div>
   );
