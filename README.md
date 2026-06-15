@@ -1,7 +1,7 @@
 # E-Exam UI
 
 A React 19 single-page application for an online examination platform.  
-Companion front-end to the [back-eExam](https://github.com/your-org/back-eExam) Laravel API.
+Companion front-end to the [back-eExam](https://github.com/fiderana19/back-eExam) Laravel API.
 
 Three roles — **Admin**, **Teacher** (Enseignant), **Student** (Étudiant) — with full CRUD for tests, questions, groups, announcements, and results, plus a real-time secured exam room with anti-cheat protection.
 
